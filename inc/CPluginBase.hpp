@@ -45,7 +45,7 @@ namespace PluginManager
                 bIsFullyInitialized = false;
 
                 // Unregister flownodes
-                if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && gEnv->pSystem->IsQuitting() )
+                if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
                 {
                     // Flowsystem is required
                     IFlowSystem* pFlow = gEnv->pFlowSystem;
