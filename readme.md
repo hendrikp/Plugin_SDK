@@ -24,33 +24,20 @@ to recompile it see C++ Integration.
 
 CVars
 =====
-* pm_list
-
-  List one info row for all plugins
-
-* pm_dump
-
-  Dump info on a specific plugins
-
-* pm_dumpall
-
-  Dump info on all plugins
-
-* pm_unload
-
-  Unload a specific plugin using its name
-
-* pm_unloadall
-
-  Unload all plugins with the exception of the plugin manager
-
-* pm_reload
-
-  Reload a specific plugin using its path
-
-* pm_reloadall
-
-  Reload all plugins
+* ```pm_list```
+  * List one info row for all plugins
+* ```pm_dump```
+  * Dump info on a specific plugins
+* ```pm_dumpall```
+  * Dump info on all plugins
+* ```pm_unload```
+  * Unload a specific plugin using its name
+* ```pm_unloadall```
+  * Unload all plugins with the exception of the plugin manager
+* ```pm_reload```
+  * Reload a specific plugin using its path
+* ```pm_reloadall```
+  * Reload all plugins
 
 C++ Integration
 ===============
