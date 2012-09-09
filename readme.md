@@ -88,6 +88,12 @@ Source Files
     return pOut; // <--
 ```
 
+Compiling
+---------
+Either add the project file to your CryGame solution and the plugin manager as dependency for each plugin.
+
+Or use the supplied seperate solution to compile the plugin manager.
+
 Contributing
 ------------
 * Fork it

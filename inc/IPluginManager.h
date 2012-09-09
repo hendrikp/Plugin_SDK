@@ -77,8 +77,6 @@ namespace PluginManager
         */
         virtual void ListAllPlugins() = 0;
     };
-
-    typedef boost::shared_ptr<IPluginManager> IPluginManagerPtr;
 };
 
 // Forces you to declare global PluginManager when including IPluginManager

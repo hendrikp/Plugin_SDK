@@ -90,6 +90,7 @@ namespace PluginManager
     {
         if ( gPluginManager )
         {
+            gPluginManager->ReloadAllPlugins();
             gPluginManager->InitializePluginRange( IM_BeforeFramework, IM_BeforeFramework_3 );
         }
     }

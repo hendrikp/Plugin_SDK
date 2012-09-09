@@ -243,7 +243,14 @@ namespace PluginManager
     void CPluginManager::ReloadAllPlugins()
     {
         ICryPak* pCryPak = gEnv->pCryPak;
-        string sPluginsPath = pCryPak->GetGameFolder();
+
+        string sPluginsPath;
+#if defined(WIN64)
+        sPluginsPath = "..\\Bin64\\";
+#elif defined(WIN32)
+        sPluginsPath = "..\\Bin64\\";
+#endif
+
         sPluginsPath += PLUGIN_FOLDER;
 
         // create plugin directory if it doesnt exist
@@ -292,16 +299,16 @@ namespace PluginManager
             // Check if its a plugin
             void* fptr = CryGetProcAddress( hModule, "GetPluginInterface" );
 
-            // Don't reload PluginManager...
-            if ( fptr == GetBase() )
-            {
-                return true;
-            }
-
             if ( fptr )
             {
                 // its a plugin create the baseinterface
                 IPluginBase* iface =  fGetPluginInterface( fptr )( gsBaseInterfaceVersion );
+
+                // Don't reload PluginManager...
+                if ( iface == GetBase() )
+                {
+                    return true;
+                }
 
                 if ( iface )
                 {
