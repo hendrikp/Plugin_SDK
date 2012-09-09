@@ -12,9 +12,8 @@ https://github.com/hendrikp/Plugin_SDK
 
 Extraction
 ==========
-Extract the Files to your cryengine SDK Folder
-so that the Code and BinXX directory match up.
-(Select the correct FreeSDK version)
+Extract the files to your Cryengine SDK Folder
+so that the Code and BinXX/Plugins directory match up.
 
 If you have a custom GameDll then you will need
 to recompile it see C++ Integration.
