@@ -1,14 +1,11 @@
 Plugin SDK for CryEngine SDK
 =====================================
-This is still a work in progress!
+This is still a work in progress, a plugin sample and plugins themselves will follow.
+
+Tested on CryEngine 3 FreeSDK Version 3.4 (32/64 Bit)
 
 Purpose is to create a tailored way for automatically loading plugins.
 For redistribution please see license.txt.
-
-Stable Release:
-* CryEngine 3 FreeSDK Version 3.4
-* DirectX 11 and 9
-* 32/64 Bit
 
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
