@@ -40,7 +40,15 @@
     <None Include="..\LICENSE.txt" />
     <None Include="..\authors.txt" />
     <None Include="..\readme.md" />
-    <None Include="..\.gitignore" />
+    <None Include="..\.gitignore">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\tools\codestyle.astylerc">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\tools\stylecode.bat">
+      <Filter>Tools</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -54,6 +62,9 @@
     </Filter>
     <Filter Include="Flownodes">
       <UniqueIdentifier>{77602502-aefa-4f57-882a-e00675a9a78f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools">
+      <UniqueIdentifier>{4a46776a-27ef-489c-8e23-5cf4379ce9a9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
