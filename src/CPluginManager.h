@@ -71,8 +71,10 @@ namespace PluginManager
 
             const char* ListAuthors() const
             {
-                return "Hendrik \"hendrikp\" Polczynski\r\nRaphael \"MrHankey89\" Leiteritz";
+                return "Hendrik \"hendrikp\" Polczynski,\nRaphael \"MrHankey89\" Leiteritz";
             };
+
+            const char* ListCVars() const;
 
             const char* GetStatus() const;
 

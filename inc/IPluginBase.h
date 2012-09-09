@@ -4,14 +4,6 @@
 
 #define PLUGIN_FOLDER "Plugins"
 
-/*
-#if defined(WIN64)
-#define PLUGIN_FOLDER "\\Bin64\\Plugins"
-#else // WIN32
-#define PLUGIN_FOLDER "\\Bin32\\Plugins"
-#endif
-*/
-
 #pragma once
 
 namespace PluginManager

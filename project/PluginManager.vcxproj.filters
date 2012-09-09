@@ -12,13 +12,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\resource.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\StdAfx.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="..\inc\IPluginBase.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -33,6 +29,9 @@
     </ClInclude>
     <ClInclude Include="..\inc\CPluginBase.hpp">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

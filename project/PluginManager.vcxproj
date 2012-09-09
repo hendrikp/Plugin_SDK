@@ -228,9 +228,8 @@ stylecode.bat</Command>
     <ClInclude Include="..\inc\IPluginManager.h" />
     <ClInclude Include="..\inc\IPluginManager_impl.h" />
     <ClInclude Include="..\src\CPluginManager.h" />
-    <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\StdAfx.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="..\src\StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\CPluginManager.cpp" />

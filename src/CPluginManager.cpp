@@ -153,6 +153,11 @@ namespace PluginManager
         return true;
     }
 
+    const char* CPluginManager::ListCVars() const
+    {
+        return "pm_list,\n" "pm_dump,\n" "pm_dumpall,\n" "pm_unload,\n" "pm_unloadall,\n" "pm_reload,\n" "pm_reloadall,\n";
+    }
+
     bool CPluginManager::Check( const char* sAPIVersion ) const
     {
         if ( !sAPIVersion )
@@ -474,13 +479,13 @@ namespace PluginManager
 
         if ( iface )
         {
-            LogAlways( "\r\nPlugin: Name(%s) Version(%s) Category(%s) Status(%s)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ) );
-            LogAlways( "Authors: %s", SAFESTR( iface->ListAuthors() ) );
-            LogAlways( "CVars: {%s}", SAFESTR( iface->ListCVars() ) );
-            LogAlways( "Nodes: {%s}", SAFESTR( iface->ListNodes() ) );
-            LogAlways( "GameObjects: {%s}", SAFESTR( iface->ListGameObjects() ) );
-            LogAlways( "Interface: Concrete(%s) Extended(%s)", SAFESTR( iface->GetCurrentConcreteInterfaceVersion() ), SAFESTR( iface->GetCurrentExtendedInterfaceVersion() ) );
-            LogAlways( "Flags: Unloading(%s) Initialized(%s) FullyInitialized(%s)", BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ) );
+            LogAlways( "\nPlugin: Name(%s) Version(%s) Category(%s) Status(%s)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ) );
+            LogAlways( "   Authors: %s", SAFESTR( iface->ListAuthors() ) );
+            LogAlways( "   CVars: {%s}", SAFESTR( iface->ListCVars() ) );
+            LogAlways( "   Nodes: {%s}", SAFESTR( iface->ListNodes() ) );
+            LogAlways( "   GameObjects: {%s}", SAFESTR( iface->ListGameObjects() ) );
+            LogAlways( "   Interface: Concrete(%s) Extended(%s)", SAFESTR( iface->GetCurrentConcreteInterfaceVersion() ), SAFESTR( iface->GetCurrentExtendedInterfaceVersion() ) );
+            LogAlways( "   Flags: Unloading(%s) Initialized(%s) FullyInitialized(%s)", BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ) );
         }
     }
 
