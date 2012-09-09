@@ -75,7 +75,7 @@ namespace PluginManager
 
             virtual int GetInitializationMode() const
             {
-                return int( IM_BeforeFramework );
+                return int( IM_Default );
             };
 
             virtual bool Check( const char* sAPIVersion ) const = 0;

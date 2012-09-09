@@ -212,9 +212,16 @@ namespace PluginManager
 
     void CPluginManager::UnloadPlugin( const char* sPluginName )
     {
-        tPluginNameMap::iterator pluginIter = m_Plugins.find( sPluginName );
+        if ( !sPluginName )
+        {
+            return;
+        }
 
-        LogAlways( "Unloading: Name(%s)", sPluginName );
+        string sSafeName = sPluginName; // Needs to be copied since dll will be unloaded and then old dll string literal is invalid
+
+        tPluginNameMap::iterator pluginIter = m_Plugins.find( sSafeName.c_str() );
+
+        LogAlways( "Unloading: Name(%s)", sSafeName.c_str() );
 
         if ( pluginIter != m_Plugins.end() )
         {
@@ -230,7 +237,7 @@ namespace PluginManager
                 CryFreeLibrary( pluginIter->second.first );
                 m_Plugins.erase( pluginIter );
 
-                LogAlways( "Unloaded: Name(%s)", sPluginName );
+                LogAlways( "Unloaded: Name(%s)", sSafeName.c_str() );
             }
         }
 
