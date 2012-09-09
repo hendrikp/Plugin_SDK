@@ -50,7 +50,7 @@ Compiler Settings
 * Set the Dropdowns to All Configurations, All Platforms
 * Add to C/C++ -> General -> Additional Include Directories:
 
-    ;$(SolutionDir)..\Plugin_Manager\inc
+    ;$(SolutionDir)..\Plugin_SDK\inc
 
 * Apply those properties and close the dialog
 
