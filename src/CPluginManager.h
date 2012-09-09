@@ -20,16 +20,59 @@ namespace PluginManager
 {
     typedef std::map<string, std::pair<HINSTANCE, IPluginBase*> > tPluginNameMap; //!< plugin name registry type
 
+    /**
+    * @brief List All Plugins
+    * Console CVar Command
+    * Usage: pm_list
+    */
     void Command_ListAll( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Dump infos about a specific plugin
+    * Console CVar Command
+    * Usage: dump PLUGINNAME
+    */
     void Command_Dump( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Dump infos about all loaded plugins
+    * Console CVar Command
+    * Usage: pm_dumpall
+    */
     void Command_DumpAll( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Unload a specific plugin.
+    * Console CVar Command
+    * Usage: pm_unload PLUGINNAME
+    * @attention can break dependencies if used incorrectly.
+    */
     void Command_Unload( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Unload all plugins (in the reverse order)
+    * Console CVar Command
+    * Usage: pm_unload PLUGINNAME
+    */
     void Command_UnloadAll( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Reload a specific plugin
+    * Console CVar Command
+    * Usage: pm_reload PLUGINPATH
+    * e.g. pm_reload Plugins/Plugin_Test.dll
+    */
     void Command_Reload( IConsoleCmdArgs* pArgs );
+
+    /**
+    * @brief Reload and initialize all plugins (in the correct order)
+    * Console CVar Command
+    * Usage: pm_reloadall
+    */
     void Command_ReloadAll( IConsoleCmdArgs* pArgs );
 
     /**
-    * @brief Plugin Manager System manages the resources
+    * @brief Plugin Manager manages the plugin resources
     */
     class CPluginManager :
         public CPluginBase,

@@ -25,9 +25,12 @@ CG2AutoRegFlowNodeBase* CG2AutoRegFlowNodeBase::m_pLast = 0; //!< pointer to las
 #define WIN32_LEAN_AND_MEAN
 #include <Windows.h>
 
+/**
+* @brief DLL Entry point.
+* Has no function(yet?) in this plugin system.
+*/
 BOOL APIENTRY DllMain( HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved )
 {
-    // Placeholder not used by this plugin...
     switch ( ul_reason_for_call )
     {
         case DLL_PROCESS_ATTACH:

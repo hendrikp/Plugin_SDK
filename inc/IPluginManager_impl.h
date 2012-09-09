@@ -80,6 +80,12 @@ namespace PluginManager
         return false; // Failure
     }
 
+    /**
+    * @brief Initialize plugins before the framework
+    * Only sensible if the plugin has no game objects and flownodes.
+    * @attention the global environment is not full initialized.
+    * @see InitPluginsLast
+    */
     void InitPluginsBeforeFramework()
     {
         if ( gPluginManager )
@@ -88,6 +94,10 @@ namespace PluginManager
         }
     }
 
+    /**
+    * @brief Initialize plugins after the game is initialized.
+    * Most sensible for all plugins.
+    */
     void InitPluginsLast()
     {
         if ( gPluginManager )
