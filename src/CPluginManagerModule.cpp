@@ -9,10 +9,10 @@ extern "C"
 {
     GAME_API PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion )
     {
-		// This function should not create a new interface class each call.
+        // This function should not create a new interface class each call.
         static PluginManager::CPluginManager modulePlugin;
         gPluginManager = &modulePlugin;
-		gsBaseInterfaceVersion = sInterfaceVersion;
+        gsBaseInterfaceVersion = sInterfaceVersion;
         return modulePlugin.GetBase();
     }
 }

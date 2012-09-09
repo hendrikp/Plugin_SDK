@@ -13,8 +13,8 @@
 --add-brackets
 --align-pointer=type
 --align-reference=type
---convert-tabs
 --indent=spaces=4
+--convert-tabs
 --lineend=windows
 --mode=c
 --suffix=none

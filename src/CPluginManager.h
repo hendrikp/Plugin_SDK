@@ -20,13 +20,13 @@ namespace PluginManager
 {
     typedef std::map<string, std::pair<HINSTANCE, IPluginBase*> > tPluginNameMap; //!< plugin name registry type
 
-	void Command_ListAll( IConsoleCmdArgs* pArgs );
-	void Command_Dump( IConsoleCmdArgs* pArgs );
-	void Command_DumpAll( IConsoleCmdArgs* pArgs );
-	void Command_Unload( IConsoleCmdArgs* pArgs );
-	void Command_UnloadAll( IConsoleCmdArgs* pArgs );
-	void Command_Reload( IConsoleCmdArgs* pArgs );
-	void Command_ReloadAll( IConsoleCmdArgs* pArgs );
+    void Command_ListAll( IConsoleCmdArgs* pArgs );
+    void Command_Dump( IConsoleCmdArgs* pArgs );
+    void Command_DumpAll( IConsoleCmdArgs* pArgs );
+    void Command_Unload( IConsoleCmdArgs* pArgs );
+    void Command_UnloadAll( IConsoleCmdArgs* pArgs );
+    void Command_Reload( IConsoleCmdArgs* pArgs );
+    void Command_ReloadAll( IConsoleCmdArgs* pArgs );
 
     /**
     * @brief Plugin Manager System manages the resources
@@ -52,7 +52,7 @@ namespace PluginManager
 
             bool Check( const char* sAPIVersion ) const;
 
-			bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager );
+            bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager );
 
             const char* GetVersion() const
             {
@@ -94,15 +94,15 @@ namespace PluginManager
 
             void UnloadAllPlugins();
 
-			void UnloadPlugin( const char* sPluginName );
+            void UnloadPlugin( const char* sPluginName );
 
             void ReloadAllPlugins();
 
             bool ReloadPlugin( const char* sPluginPath, bool bInitialize = false );
 
-			bool InitializePlugin(  const char* sPluginName );
+            bool InitializePlugin(  const char* sPluginName );
 
-			void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
+            void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
 
             IPluginBase* GetPluginByName( const char* sPluginName );
 
@@ -110,7 +110,7 @@ namespace PluginManager
 
             void DumpAllPlugins();
 
-			void ListAllPlugins();
+            void ListAllPlugins();
     };
 }
 

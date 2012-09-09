@@ -45,7 +45,7 @@ namespace PluginManager
         /**
         * @brief Initialize a plugin directly
         * @param sPluginName Name of the plugin to unload.
-		* @return success
+        * @return success
         */
         virtual bool InitializePlugin(  const char* sPluginName ) = 0;
 

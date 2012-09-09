@@ -22,13 +22,13 @@ namespace PluginManager
     enum eInitMode
     {
         IM_BeforeFramework = 0, //!< Initialize this plugin before the framework
-		IM_Min = IM_BeforeFramework,
-		IM_BeforeFramework_2 = 1, //!< For additional ordering of dependencies 
-		IM_BeforeFramework_3 = 2, //!< For additional ordering of dependencies 
+        IM_Min = IM_BeforeFramework,
+        IM_BeforeFramework_2 = 1, //!< For additional ordering of dependencies
+        IM_BeforeFramework_3 = 2, //!< For additional ordering of dependencies
         IM_Last = 3, //!< Initialize this plugin as last step in the initializiation
-		IM_Last_2 = 4, //!< For additional ordering of dependencies 
-		IM_Last_3 = 5, //!< For additional ordering of dependencies 
-		IM_Max = IM_Last_3,
+        IM_Last_2 = 4, //!< For additional ordering of dependencies
+        IM_Last_3 = 5, //!< For additional ordering of dependencies
+        IM_Max = IM_Last_3,
         IM_Default = IM_Last, //!< Default is initialize in the end
     };
 
@@ -55,13 +55,13 @@ namespace PluginManager
         * @brief Set if ready to initialize dependencies
         * @return Ready to initialize dependencies
         */
-		virtual bool IsInitialized() = 0;
+        virtual bool IsInitialized() = 0;
 
         /**
         * @brief Set if ready to used and all dependencies were initialized
         * @return Ready to be used
         */
-		virtual bool IsFullyInitialized() = 0;
+        virtual bool IsFullyInitialized() = 0;
 
         /**
         * @brief Return eInitMode

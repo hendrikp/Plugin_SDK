@@ -24,54 +24,54 @@ namespace PluginManager
     {
         private:
             bool bIsUnloading;
-			bool bIsInitialized;
-			bool bIsFullyInitialized;
+            bool bIsInitialized;
+            bool bIsFullyInitialized;
 
         public:
             CPluginBase()
             {
                 bIsUnloading = false;
-				bIsInitialized = false;
-				bIsFullyInitialized = false;
+                bIsInitialized = false;
+                bIsFullyInitialized = false;
             };
 
             ~CPluginBase() {};
 
             // IPluginBase
-			virtual void CPluginBase::Release()
-			{
-				bIsUnloading = true;
-				bIsInitialized = false;
-				bIsFullyInitialized = false;
+            virtual void CPluginBase::Release()
+            {
+                bIsUnloading = true;
+                bIsInitialized = false;
+                bIsFullyInitialized = false;
 
-				// Unregister flownodes
-				if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && gEnv->pSystem->IsQuitting())
-				{
-					// Flowsystem is required
-					IFlowSystem* pFlow = gEnv->pFlowSystem;
+                // Unregister flownodes
+                if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && gEnv->pSystem->IsQuitting() )
+                {
+                    // Flowsystem is required
+                    IFlowSystem* pFlow = gEnv->pFlowSystem;
 
-					// Unregister all flownodes of this plugin
-					for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
-					{
-						pFlow->UnregisterType( pFactory->m_sClassName );
-					}
-				}
-			};
+                    // Unregister all flownodes of this plugin
+                    for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                    {
+                        pFlow->UnregisterType( pFactory->m_sClassName );
+                    }
+                }
+            };
 
             virtual bool IsUnloading()
             {
                 return bIsUnloading;
             };
 
-			virtual bool IsInitialized()
-			{
+            virtual bool IsInitialized()
+            {
                 return bIsInitialized;
-			};
+            };
 
-			virtual bool IsFullyInitialized()
-			{
+            virtual bool IsFullyInitialized()
+            {
                 return bIsFullyInitialized;
-			};
+            };
 
             virtual int GetInitializationMode() const
             {
@@ -80,47 +80,49 @@ namespace PluginManager
 
             virtual bool Check( const char* sAPIVersion ) const = 0;
 
-			virtual bool CPluginBase::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
-			{
-				// Initialize Module
-				ModuleInitISystem( env.pSystem, GetName() );
+            virtual bool CPluginBase::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
+            {
+                // Initialize Module
+                ModuleInitISystem( env.pSystem, GetName() );
 
-				// Flowsystem is required
-				IFlowSystem* pFlow = env.pFlowSystem;
+                // Flowsystem is required
+                IFlowSystem* pFlow = env.pFlowSystem;
 
-				if ( pFlow )
-				{
-					// Register all flownodes of this plugin in the crygame loading this plugin
-					for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
-					{
-						pFlow->RegisterType( pFactory->m_sClassName, pFactory );
-					}
-				} else if(CG2AutoRegFlowNodeBase::m_pFirst)
-				{
-					LogWarning("Flownodes couldn't be registered");
-				}
+                if ( pFlow )
+                {
+                    // Register all flownodes of this plugin in the crygame loading this plugin
+                    for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                    {
+                        pFlow->RegisterType( pFactory->m_sClassName, pFactory );
+                    }
+                }
+
+                else if ( CG2AutoRegFlowNodeBase::m_pFirst )
+                {
+                    LogWarning( "Flownodes couldn't be registered" );
+                }
 
 #if !defined(PLUGINMANAGER_EXPORTS)
-				gPluginManager = (IPluginManager*)pPluginManager->GetConcreteInterface(NULL);
+                gPluginManager = ( IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
 #endif
 
-				bIsInitialized = true;
+                bIsInitialized = true;
 
-				return true;
-			};
+                return true;
+            };
 
             virtual bool CheckDependencies() const
             {
 #if !defined(PLUGINMANAGER_EXPORTS)
                 return gPluginManager && gPluginManager->GetBase();
 #else
-				return true;
+                return true;
 #endif
             };
 
             virtual bool InitDependencies()
             {
-				bIsFullyInitialized = true;
+                bIsFullyInitialized = true;
                 return true;
             }
 
@@ -185,41 +187,41 @@ namespace PluginManager
             };
 
             // IPluginLog
-			virtual void CPluginBase::LogAlways( const char* sFormat, ... ) const
-			{
-				va_list ArgList;
-				va_start( ArgList, sFormat );
-				LogV( ILog::eAlways, sFormat, ArgList );
-				va_end( ArgList );
-			}
+            virtual void CPluginBase::LogAlways( const char* sFormat, ... ) const
+            {
+                va_list ArgList;
+                va_start( ArgList, sFormat );
+                LogV( ILog::eAlways, sFormat, ArgList );
+                va_end( ArgList );
+            }
 
-			virtual void CPluginBase::LogWarning( const char* sFormat, ... ) const
-			{
-				va_list ArgList;
-				va_start( ArgList, sFormat );
-				LogV( ILog::eWarningAlways, sFormat, ArgList );
-				va_end( ArgList );
-			}
+            virtual void CPluginBase::LogWarning( const char* sFormat, ... ) const
+            {
+                va_list ArgList;
+                va_start( ArgList, sFormat );
+                LogV( ILog::eWarningAlways, sFormat, ArgList );
+                va_end( ArgList );
+            }
 
-			virtual void CPluginBase::LogError( const char* sFormat, ... ) const
-			{
-				va_list ArgList;
-				va_start( ArgList, sFormat );
-				LogV( ILog::eErrorAlways, sFormat, ArgList );
-				va_end( ArgList );
-			}
+            virtual void CPluginBase::LogError( const char* sFormat, ... ) const
+            {
+                va_list ArgList;
+                va_start( ArgList, sFormat );
+                LogV( ILog::eErrorAlways, sFormat, ArgList );
+                va_end( ArgList );
+            }
 
-			virtual void CPluginBase::LogV( ILog::ELogType nType, const char* sFormat, va_list ArgList ) const
-			{
-				string strFormat = "[";
-				strFormat += GetName();
-				strFormat += "] ";
-				strFormat += sFormat;
+            virtual void CPluginBase::LogV( ILog::ELogType nType, const char* sFormat, va_list ArgList ) const
+            {
+                string strFormat = "[";
+                strFormat += GetName();
+                strFormat += "] ";
+                strFormat += sFormat;
 
-				if ( gEnv && gEnv->pSystem && gEnv->pLog )
-				{
-					gEnv->pLog->LogV( nType, strFormat.c_str(), ArgList );
-				}
-			};
-	};
+                if ( gEnv && gEnv->pSystem && gEnv->pLog )
+                {
+                    gEnv->pLog->LogV( nType, strFormat.c_str(), ArgList );
+                }
+            };
+    };
 }
