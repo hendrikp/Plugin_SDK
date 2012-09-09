@@ -7,7 +7,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\src;$(ProjectDir)..\..\SDKs;$(ProjectDir)..\..\SDKs\boost;$(DXSDK_DIR)Include\;$(ProjectDir)..\..\CryEngine\CryCommon;$(ProjectDir)..\..\CryEngine\CryAction;$(ProjectDir)..\..\Game\GameDll;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\inc;$(ProjectDir)..\src;$(ProjectDir)..\..\SDKs;$(ProjectDir)..\..\Plugin_SDK\inc;$(ProjectDir)..\..\SDKs\boost;$(DXSDK_DIR)Include\;$(ProjectDir)..\..\CryEngine\CryCommon;$(ProjectDir)..\..\CryEngine\CryAction;$(ProjectDir)..\..\Game\GameDll;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\$(PlatformShortName);$(DXSDK_DIR)Lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
