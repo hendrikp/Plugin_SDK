@@ -1,4 +1,4 @@
-Plugin SDK for CryEngine3 FreeSDK
+Plugin SDK for CryEngine SDK
 =====================================
 This is still a work in progress!
 
@@ -11,7 +11,7 @@ Stable Release:
 * 32/64 Bit
 
 Feature requests/latest version on github.
-???
+https://github.com/hendrikp/Plugin_SDK
 
 Extraction
 ==========
@@ -82,4 +82,4 @@ Contributing
 * Create a branch (`git checkout -b my_PluginSDK`)
 * Commit your changes (`git commit -am "Added ...."`)
 * Push to the branch (`git push origin my_PluginSDK`)
-* Open a [Pull Request][1]
+* Open a Pull Request

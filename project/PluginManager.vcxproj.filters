@@ -40,6 +40,7 @@
     <None Include="..\LICENSE.txt" />
     <None Include="..\authors.txt" />
     <None Include="..\readme.md" />
+    <None Include="..\.gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

@@ -198,6 +198,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\.gitignore" />
     <None Include="..\authors.txt" />
     <None Include="..\changelog.txt" />
     <None Include="..\license.txt" />
