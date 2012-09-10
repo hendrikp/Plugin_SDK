@@ -27,9 +27,9 @@ CVars
 * ```pm_dumpall```
   Dump info on all plugins
 * ```pm_unload```
-  Unload a specific plugin using its name
+  Unload a specific plugin using its name. Works only limited for plugins containing resources that are in use (the CryEngine usage of those objects needs to be fully cleaned up beforehand).
 * ```pm_unloadall```
-  Unload all plugins with the exception of the plugin manager
+  Unload all plugins with the exception of the plugin manager. Works only limited for plugins containing resources that are in use (the CryEngine usage of those objects needs to be fully cleaned up beforehand).
 * ```pm_reload```
   Reload a specific plugin using its path
 * ```pm_reloadall```

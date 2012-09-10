@@ -76,17 +76,32 @@ namespace PluginManager
     */
     class CPluginManager :
         public CPluginBase,
-        public IPluginManager
+        public IPluginManager,
+        public IGameFrameworkListener
     {
         private:
-            tPluginNameMap m_Plugins; // All Plugins
+            tPluginNameMap m_Plugins; //!< All Plugins
+            tPluginNameMap m_UnloadingPlugins; //!< Plugins marked for cleanup
+
+            /**
+            * @brief Internal Cleanup of unused plugins.
+            */
+            void PluginGarbageCollector();
+
+        public:
+            // IGameFrameworkListener
+            void OnPostUpdate( float fDeltaTime );
+            void OnSaveGame( ISaveGame* pSaveGame ) {};
+            void OnLoadGame( ILoadGame* pLoadGame ) {};
+            void OnLevelEnd( const char* nextLevel ) {};
+            void OnActionEvent( const SActionEvent& event ) {};
 
         public:
             CPluginManager();
             ~CPluginManager();
 
             // IPluginBase
-            void Release();
+            bool Release( bool bForce = false );
 
             int GetInitializationMode() const
             {

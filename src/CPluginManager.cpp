@@ -90,67 +90,92 @@ namespace PluginManager
         gPluginManager = NULL;
     }
 
-    void CPluginManager::Release()
+    bool CPluginManager::Release( bool bForce )
     {
         // Should be called while Game is still active otherwise there might be leaks/problems
-        CPluginBase::Release();
+        bool bRet = CPluginBase::Release( bForce );
 
-        // Depending on your plugin you might not want to unregister anything
-        // if the System is quitting.
-        // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
-
-        // Unregister CVars
-        if ( gEnv && gEnv->pConsole )
+        if ( bRet )
         {
-            gEnv->pConsole->RemoveCommand( "pm_list" );
-            gEnv->pConsole->RemoveCommand( "pm_dump" );
-            gEnv->pConsole->RemoveCommand( "pm_dumpall" );
-            gEnv->pConsole->RemoveCommand( "pm_unload" );
-            gEnv->pConsole->RemoveCommand( "pm_unloadall" );
-            gEnv->pConsole->RemoveCommand( "pm_reload" );
-            gEnv->pConsole->RemoveCommand( "pm_reloadall" );
+            // Depending on your plugin you might not want to unregister anything
+            // if the System is quitting.
+            // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
+
+            // Unregister CVars
+            if ( gEnv && gEnv->pConsole )
+            {
+                gEnv->pConsole->RemoveCommand( "pm_list" );
+                gEnv->pConsole->RemoveCommand( "pm_dump" );
+                gEnv->pConsole->RemoveCommand( "pm_dumpall" );
+                gEnv->pConsole->RemoveCommand( "pm_unload" );
+                gEnv->pConsole->RemoveCommand( "pm_unloadall" );
+                gEnv->pConsole->RemoveCommand( "pm_reload" );
+                gEnv->pConsole->RemoveCommand( "pm_reloadall" );
+            }
+
+            // Unregister game objects
+            if ( gEnv && gEnv->pGameFramework )
+            {
+                // ...
+            }
+
+            // Unregister listeners
+            if ( gEnv && gEnv->pGameFramework )
+            {
+                gEnv->pGameFramework->UnregisterListener( this );
+            }
+
+            // Cleanup all plugins (special case only in manager...)
+            UnloadAllPlugins();
+
+            // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
+            gPluginManager->UnloadPlugin( GetName() );
+            m_bCanUnload = true;
+
+            // special case only in manager...
+            PluginGarbageCollector();
         }
 
-        // Unregister game objects
-        if ( gEnv && gEnv->pGameFramework )
-        {
-            // ...
-        }
-
-        // Cleanup all plugins (special case only in manager...)
-        UnloadAllPlugins();
-
-        // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-        gPluginManager->UnloadPlugin( GetName() );
+        return bRet;
     };
 
     bool CPluginManager::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
     {
-        CPluginBase::Init( env, startupParams, gPluginManager->GetBase() );
-
         // Save Startup parameters
         gStartupInitParams = startupParams;
 
-        // Register CVars
-        if ( gEnv && gEnv->pConsole )
+        bool bRet = CPluginBase::Init( env, startupParams, gPluginManager->GetBase() );
+
+        if ( bRet )
         {
-            gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
-            gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
-            gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
-            gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
-            gEnv->pConsole->AddCommand( "pm_unloadall", Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
-            gEnv->pConsole->AddCommand( "pm_reload", Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
-            gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
+            // Register CVars
+            if ( gEnv && gEnv->pConsole )
+            {
+                gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
+                gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
+                gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
+                gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
+                gEnv->pConsole->AddCommand( "pm_unloadall", Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
+                gEnv->pConsole->AddCommand( "pm_reload", Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
+                gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
+            }
+
+            // Register Game Objects
+            // ...
+
+            // Register Listeners
+            if ( gEnv->pGameFramework )
+            {
+                gEnv->pGameFramework->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
+            }
+
+            // Register the plugin manager itself (plugin manager only, plugins don't need to do this)
+            LogAlways( "Plugin Manager initialized!" );
+
+            m_Plugins[ GetName() ] = std::pair<HINSTANCE, IPluginBase*>( GetModuleHandle( PLUGIN_FILENAME ), GetBase() );
         }
 
-        // Register Game Objects
-        // ...
-
-        // Register the plugin manager itself (plugin manager only, plugins don't need to do this)
-        LogAlways( "Plugin Manager initialized!" );
-        m_Plugins[ GetName() ] = std::pair<HINSTANCE, IPluginBase*>( CryLoadLibrary( PLUGIN_PATH ), GetBase() );
-
-        return true;
+        return bRet;
     }
 
     const char* CPluginManager::ListCVars() const
@@ -207,6 +232,8 @@ namespace PluginManager
             }
         }
 
+        PluginGarbageCollector();
+
         LogAlways( "Unloaded all plugins!" );
     };
 
@@ -217,33 +244,78 @@ namespace PluginManager
             return;
         }
 
-        string sSafeName = sPluginName; // Needs to be copied since dll will be unloaded and then old dll string literal is invalid
-
-        tPluginNameMap::iterator pluginIter = m_Plugins.find( sSafeName.c_str() );
-
-        LogAlways( "Unloading: Name(%s)", sSafeName.c_str() );
+        tPluginNameMap::iterator pluginIter = m_Plugins.find( sPluginName );
 
         if ( pluginIter != m_Plugins.end() )
         {
             if ( !pluginIter->second.second->IsUnloading() )
             {
+                LogAlways( "Trying to unload: Name(%s)", sPluginName );
+
                 // Let the plugin first clean itself up
                 pluginIter->second.second->Release();
+                PluginGarbageCollector();
             }
 
             else
             {
-                // Clean library up if plugin has itself cleaned up
-                CryFreeLibrary( pluginIter->second.first );
+                // Mark library for cleanup and remove from active plugin list (other plugins might still depend on it)
+                m_UnloadingPlugins[pluginIter->first] = pluginIter->second;
                 m_Plugins.erase( pluginIter );
 
-                LogAlways( "Unloaded: Name(%s)", sSafeName.c_str() );
+                LogAlways( "Marked for unload: Name(%s)", sPluginName );
             }
         }
 
         else
         {
             LogWarning( "Nothing to unload." );
+        }
+    }
+
+    // IGameFrameworkListener
+    void CPluginManager::OnPostUpdate( float fDeltaTime )
+    {
+        static int nCounter = 1;
+
+        // Don't collect garbage every frame
+        if ( ++nCounter % 50 == 0 )
+        {
+            nCounter = 1;
+            PluginGarbageCollector();
+        }
+    }
+
+    void CPluginManager::PluginGarbageCollector()
+    {
+        if ( m_UnloadingPlugins.size() )
+        {
+            bool bUnloadedSomething = false;
+
+            for ( tPluginNameMap::iterator pluginIter = m_UnloadingPlugins.begin(); pluginIter != m_UnloadingPlugins.end(); ++pluginIter )
+            {
+                if ( pluginIter->second.second->DllCanUnloadNow() )
+                {
+                    LogAlways( "Garbage Collector Unloading: Name(%s)", SAFESTR( pluginIter->second.second->GetName() ) );
+                    CryFreeLibrary( pluginIter->second.first );
+                    pluginIter = m_UnloadingPlugins.erase( pluginIter );
+                    bUnloadedSomething = true;
+
+                    if ( pluginIter == m_UnloadingPlugins.end() )
+                    {
+                        break;
+                    }
+                }
+            }
+
+            // A shame unregistering flownodes types still will produce later on in sandbox (then when clicked on)
+            // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
+            /*
+            if ( bUnloadedSomething && gEnv && gEnv->pFlowSystem )
+            {
+                // Also this will unload all custom flownodes
+                gEnv->pFlowSystem->ReloadAllNodeTypes();
+            }*/
         }
     }
 

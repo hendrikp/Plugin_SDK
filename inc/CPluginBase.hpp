@@ -22,55 +22,95 @@ namespace PluginManager
         public IPluginBase,
         public IPluginLog
     {
-        private:
-            bool bIsUnloading;
-            bool bIsInitialized;
-            bool bIsFullyInitialized;
+        protected:
+            bool m_bIsUnloading; //!< flag that the plugin is currently unloading and can't be used anymore
+            bool m_bIsInitialized; //!< flag that everything for dependencies is now initialized
+            bool m_bIsFullyInitialized; //!< flag that all dependencies are fully initialized and the plugin can be used now
+            bool m_bCanUnload; //!< flag that plugin is fully released and the dll can be unloaded
+            int m_nReferences; //!< reference counter
 
         public:
             CPluginBase()
             {
-                bIsUnloading = false;
-                bIsInitialized = false;
-                bIsFullyInitialized = false;
+                m_nReferences = 1;
+                m_bIsUnloading = false;
+                m_bIsInitialized = false;
+                m_bIsFullyInitialized = false;
+                m_bCanUnload = false;
             };
 
-            ~CPluginBase() {};
+            virtual ~CPluginBase()
+            {
+                Release( true );
+            };
 
             // IPluginBase
-            virtual void CPluginBase::Release()
+            virtual void AddRef()
             {
-                bIsUnloading = true;
-                bIsInitialized = false;
-                bIsFullyInitialized = false;
-
-                // Unregister flownodes
-                if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                if ( ++m_nReferences > 0 )
                 {
-                    // Flowsystem is required
-                    IFlowSystem* pFlow = gEnv->pFlowSystem;
-
-                    // Unregister all flownodes of this plugin
-                    for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
-                    {
-                        pFlow->UnregisterType( pFactory->m_sClassName );
-                    }
+                    m_bIsUnloading = false;
+                    m_bCanUnload = false;
                 }
             };
 
+            virtual bool CPluginBase::Release( bool bForce = false )
+            {
+                if ( --m_nReferences <= 0 || bForce )
+                {
+                    m_bIsUnloading = true;
+                    m_nReferences = 0;
+
+                    if ( m_bIsInitialized )
+                    {
+#if !defined(PLUGINMANAGER_EXPORTS)
+                        gPluginManager->GetBase()->Release();
+#endif
+                    }
+
+                    if ( m_bIsFullyInitialized )
+                    {
+                        // Unregister flownodes
+                        if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                        {
+                            // Flowsystem is required
+                            IFlowSystem* pFlow = gEnv->pFlowSystem;
+
+                            // Unregister all flownodes of this plugin
+                            for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                            {
+                                // A shame unregistering flownodes types still will produce later on in sandbox (then when clicked on)
+                                // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
+                                pFlow->UnregisterType( pFactory->m_sClassName );
+                            }
+                        }
+                    }
+
+                    m_bIsInitialized = false;
+                    m_bIsFullyInitialized = false;
+                }
+
+                return m_bIsUnloading && m_nReferences == 0;
+            };
+
+            virtual bool DllCanUnloadNow()
+            {
+                return m_bCanUnload;
+            }
+
             virtual bool IsUnloading()
             {
-                return bIsUnloading;
+                return m_bIsUnloading;
             };
 
             virtual bool IsInitialized()
             {
-                return bIsInitialized;
+                return m_bIsInitialized;
             };
 
             virtual bool IsFullyInitialized()
             {
-                return bIsFullyInitialized;
+                return m_bIsFullyInitialized;
             };
 
             virtual int GetInitializationMode() const
@@ -84,9 +124,39 @@ namespace PluginManager
             {
                 // Initialize Module
                 ModuleInitISystem( env.pSystem, GetName() );
+                m_bIsInitialized = true;
 
+#if !defined(PLUGINMANAGER_EXPORTS)
+                gPluginManager = ( IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
+
+                if ( gPluginManager && pPluginManager )
+                {
+                    pPluginManager->AddRef();
+                }
+
+                else
+                {
+                    m_bIsInitialized = false;
+                }
+
+#endif
+
+                return m_bIsInitialized;
+            };
+
+            virtual bool CheckDependencies() const
+            {
+#if !defined(PLUGINMANAGER_EXPORTS)
+                return gEnv && gEnv->pSystem && gPluginManager && gPluginManager->GetBase();
+#else
+                return gEnv && gEnv->pSystem;
+#endif
+            };
+
+            virtual bool InitDependencies()
+            {
                 // Flowsystem is required
-                IFlowSystem* pFlow = env.pFlowSystem;
+                IFlowSystem* pFlow = gEnv->pFlowSystem;
 
                 if ( pFlow )
                 {
@@ -102,28 +172,8 @@ namespace PluginManager
                     LogWarning( "Flownodes couldn't be registered" );
                 }
 
-#if !defined(PLUGINMANAGER_EXPORTS)
-                gPluginManager = ( IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
-#endif
-
-                bIsInitialized = true;
-
-                return true;
-            };
-
-            virtual bool CheckDependencies() const
-            {
-#if !defined(PLUGINMANAGER_EXPORTS)
-                return gPluginManager && gPluginManager->GetBase();
-#else
-                return true;
-#endif
-            };
-
-            virtual bool InitDependencies()
-            {
-                bIsFullyInitialized = true;
-                return true;
+                m_bIsFullyInitialized = true;
+                return  m_bIsFullyInitialized;
             }
 
             virtual const char* GetVersion() const

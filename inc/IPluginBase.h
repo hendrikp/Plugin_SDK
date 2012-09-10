@@ -32,10 +32,24 @@ namespace PluginManager
     struct IPluginBase
     {
         /**
-        * @brief Unregisters the Plugin and Unload the DLL
+        * @brief Increment reference counter
+        * @attention Dependencies should use this to prevent unloading of DLL's required.
+        */
+        virtual void AddRef() = 0;
+
+        /**
+        * @brief Unregisters the Plugin and Unload the DLL if reference counter reaches zero
+        * @param bForce Force an unload even if there are additional references
+        * @return true if plugin was cleaned up and can unload.
         * @attention The Plugin should clean everything up, it registered in the engine so that the plugin can be reloaded.
         */
-        virtual void Release() = 0;
+        virtual bool Release( bool bForce = false ) = 0;
+
+        /**
+        * @brief Returns true if no more references exist and the dll can now unload
+        * @return Plugin DLL can be unloaded now
+        */
+        virtual bool DllCanUnloadNow() = 0;
 
         /**
         * @brief Set while Plugin is cleaning up itself
