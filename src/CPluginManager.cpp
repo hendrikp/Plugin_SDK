@@ -327,7 +327,7 @@ namespace PluginManager
 #if defined(WIN64)
         sPluginsPath = "..\\Bin64\\";
 #elif defined(WIN32)
-        sPluginsPath = "..\\Bin64\\";
+        sPluginsPath = "..\\Bin32\\";
 #endif
 
         sPluginsPath += PLUGIN_FOLDER;
