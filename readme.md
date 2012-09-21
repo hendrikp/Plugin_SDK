@@ -74,7 +74,7 @@ Source Files
 * Add in the middle of the function (before ```REGISTER_COMMAND("g_loadMod", RequestLoadMod,VF_NULL,"");```) the following:
 
 ```C++
-	PluginManager::InitPluginManager(startupParams, "3.4"); // Update the CryEngine SDK Version!
+	PluginManager::InitPluginManager(startupParams); // Update the CryEngine SDK Version!
 	PluginManager::InitPluginsBeforeFramework();
     REGISTER_COMMAND("g_loadMod", RequestLoadMod,VF_NULL,""); // <--
 ```
