@@ -14,7 +14,7 @@ namespace PluginManager
     * @param sSDKVersion CryEngine SDK Version
     * @param sBaseInterfaceVersion Plugin SDK Base Interface Version
     */
-    bool InitPluginManager( SSystemInitParams& startupParams, const char* sSDKVersion, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
+    bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
     {
         HINSTANCE hModule = CryLoadLibrary( PLUGIN_FOLDER "\\" PLUGIN_TEXT "_"  "Manager" CrySharedLibrayExtension );
 
@@ -31,7 +31,10 @@ namespace PluginManager
 
                 if ( iface )
                 {
-                    if ( iface->Check( sSDKVersion ) )
+                    char* buildVersion = new char[255];
+                    startupParams.pSystem->GetBuildVersion().ToShortString( buildVersion );
+
+                    if ( iface->Check( buildVersion ) )
                     {
                         // plugin link library found
                         if ( !iface->IsInitialized() ) // Initialize plugins in order
