@@ -192,7 +192,7 @@ namespace PluginManager
 
         gsSDKInterfaceVersion = sAPIVersion;
 
-        if ( strcmp( sAPIVersion, "3.4" ) == 0 )
+        if ( strcmp( sAPIVersion, "3.4.0" ) == 0 )
         {
             return true;
         }
