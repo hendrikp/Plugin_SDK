@@ -370,7 +370,20 @@ namespace PluginManager
 
         LogAlways( "Loading: File(%s)", sPluginPath );
 
+        // Save the current directory so we can reset it after loading plugins
+        char actualDirectory[MAX_PATH];
+        GetCurrentDirectory( MAX_PATH, actualDirectory );
+
+        // Change the current directory so we can handle plugin dependencies properly.
+#if defined(WIN64)
+        SetCurrentDirectory( ( string( actualDirectory ).append( "\\Bin64\\Plugins" ) ).c_str() );
+#elif defined(WIN32)
+        SetCurrentDirectory( ( string( actualDirectory ).append( "\\Bin32\\Plugins" ) ).c_str() );
+#endif
+
         HINSTANCE hModule = CryLoadLibrary( sPluginPath );
+
+        SetCurrentDirectory( actualDirectory );
 
         // Plugin link library found?
         if ( hModule )
