@@ -10,6 +10,13 @@ For redistribution please see license.txt.
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
 
+Creating a new plugin
+=====================
+For now please use as base 
+https://github.com/hendrikp/Plugin_Crash (Searcgh & Replace "Crash" with your plugin name"
+
+In the future there will be a Visual Studio plugin wizard.
+
 Extraction
 ==========
 Extract the files to your Cryengine SDK Folder
@@ -74,7 +81,7 @@ Source Files
 * Add in the middle of the function (before ```REGISTER_COMMAND("g_loadMod", RequestLoadMod,VF_NULL,"");```) the following:
 
 ```C++
-	PluginManager::InitPluginManager(startupParams); // Update the CryEngine SDK Version!
+	PluginManager::InitPluginManager(startupParams);
 	PluginManager::InitPluginsBeforeFramework();
     REGISTER_COMMAND("g_loadMod", RequestLoadMod,VF_NULL,""); // <--
 ```
