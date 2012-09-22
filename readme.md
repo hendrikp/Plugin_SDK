@@ -13,7 +13,7 @@ https://github.com/hendrikp/Plugin_SDK
 Creating a new plugin
 =====================
 For now please use as base 
-https://github.com/hendrikp/Plugin_Crash (Searcgh & Replace "Crash" with your plugin name"
+https://github.com/hendrikp/Plugin_Crash (Search & Replace "Crash" with your plugin name)
 
 In the future there will be a Visual Studio plugin wizard.
 
