@@ -226,5 +226,5 @@ extern "C"
     * @arg NULL for most current.
     * @return NULL or concrete interface in the requested version is avaible.
     */
-    GAME_API PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion );
+    DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion );
 }
