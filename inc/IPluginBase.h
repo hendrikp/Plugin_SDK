@@ -2,7 +2,11 @@
 
 #define PLUGIN_TEXT "Plugin"
 
-#define PLUGIN_FOLDER "Plugins"
+#ifdef WIN64
+#define PLUGIN_FOLDER "Bin64\\Plugins"
+#else if WIN32
+#define PLUGIN_FOLDER "Bin32\\Plugins"
+#endif
 
 #pragma once
 
