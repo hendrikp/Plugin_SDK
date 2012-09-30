@@ -103,7 +103,7 @@ Or use the supplied seperate solution to compile the plugin manager.
 
 Code Style
 ----------
-In general orient yourself on the CryEngine FreeSDK. Exception prove the rule.
+In general look how its done in the CryEngine FreeSDK. Exceptions prove the rule.
 
 * For variables (e.g. sTestMe or m_sTestMe)
   * lower camel casing
@@ -120,6 +120,7 @@ In general orient yourself on the CryEngine FreeSDK. Exception prove the rule.
   * integers defintions begin with n/d/i
   * floats and doubles defintions begin with f
   * rest not defined
+* Macros in capitals and word seperated by _
 * Dont use RTTI
 * Everything should be in a namespace
 * Use tools/stylecode.bat before committing changes
