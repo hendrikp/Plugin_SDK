@@ -10,20 +10,22 @@ For redistribution please see license.txt.
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
 
+Installation / Integration
+==========================
+Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
+
+Its now possible to have plugins in their own plugin subdirectory (e.g. "C:\ce3.4.0\Bin32\Plugins\Plugin_Sample\Plugin_Sample.dll") to handle plugins with many additional link library dependencies.
+
+If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see C++ Integration.
+
 Creating a new plugin
 =====================
+Please choose a unique name for your plugin, each plugin must have its own name.
+
 For now please use as base 
 https://github.com/hendrikp/Plugin_Crash (Search & Replace "Crash" with your plugin name)
 
 In the future there will be a Visual Studio plugin wizard.
-
-Extraction
-==========
-Extract the files to your Cryengine SDK Folder
-so that the Code and BinXX/Plugins directory match up.
-
-If you have a custom GameDll then you will need
-to recompile it see C++ Integration.
 
 CVars
 =====
