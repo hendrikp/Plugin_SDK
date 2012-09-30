@@ -11,7 +11,6 @@ namespace PluginManager
     * This code must be called once in the game dll GameStartup
     * @return success
     * @param startupParams CryEngine Startup Params
-    * @param sSDKVersion CryEngine SDK Version
     * @param sBaseInterfaceVersion Plugin SDK Base Interface Version
     */
     bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
@@ -31,7 +30,7 @@ namespace PluginManager
 
                 if ( iface )
                 {
-                    char* buildVersion = new char[255];
+                    char buildVersion[MAX_PATH];
                     startupParams.pSystem->GetBuildVersion().ToShortString( buildVersion );
 
                     if ( iface->Check( buildVersion ) )
