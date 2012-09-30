@@ -33,6 +33,9 @@
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\Nodes\G2FlowBaseNode.h">
+      <Filter>Flownodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Changelog.txt" />
