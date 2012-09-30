@@ -40,7 +40,7 @@ namespace PluginManager
                         {
                             if ( !iface->Init( *gEnv, startupParams, NULL ) )
                             {
-                                CryLogAlways( "Init failed" );
+                                CryLogAlways( "[" PLUGIN_TEXT "_Manager] Init failed" );
                             }
                         }
 
@@ -50,14 +50,14 @@ namespace PluginManager
                             {
                                 if ( !iface->InitDependencies() )
                                 {
-                                    CryLogAlways( "InitDependencies failed" );
+                                    CryLogAlways( "[" PLUGIN_TEXT "_Manager] InitDependencies failed" );
                                 }
 
                             }
 
                             else
                             {
-                                CryLogAlways( "CheckDependencies failed" );
+                                CryLogAlways( "[" PLUGIN_TEXT "_Manager] CheckDependencies failed" );
                             }
                         }
 
@@ -71,12 +71,27 @@ namespace PluginManager
 
                             else
                             {
-                                CryLogAlways( "Concrete Interface not available in the requested version" );
+                                CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Concrete Interface not available in the requested version" );
                             }
                         }
                     }
                 }
+
+                else
+                {
+                    CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Base Interface couldn't be retrieved" );
+                }
             }
+
+            else
+            {
+                CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Plugin entry point GetPluginInterface not found" );
+            }
+        }
+
+        else
+        {
+            CryLogAlways(  "[" PLUGIN_TEXT "_Manager] CryLoadLibrary Module couldn't be loaded" );
         }
 
         return false; // Failure
