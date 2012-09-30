@@ -12,9 +12,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\StdAfx.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\inc\IPluginBase.h">
       <Filter>Headers</Filter>
     </ClInclude>
@@ -24,14 +21,17 @@
     <ClInclude Include="..\inc\IPluginManager_impl.h">
       <Filter>Headers</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CPluginManager.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
     <ClInclude Include="..\inc\CPluginBase.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\CPluginManager.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\inc\StdAfx.h">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -58,9 +58,6 @@
     </Filter>
     <Filter Include="Resource">
       <UniqueIdentifier>{be19b22b-8206-44d9-b069-117adbe986ee}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Flownodes">
-      <UniqueIdentifier>{77602502-aefa-4f57-882a-e00675a9a78f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{4a46776a-27ef-489c-8e23-5cf4379ce9a9}</UniqueIdentifier>
