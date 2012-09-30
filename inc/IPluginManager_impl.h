@@ -15,7 +15,7 @@ namespace PluginManager
     */
     bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
     {
-		string sPluginManagerPath = PLUGIN_FOLDER "\\" PLUGIN_TEXT "_"  "Manager" CrySharedLibrayExtension;
+        string sPluginManagerPath = PLUGIN_FOLDER "\\" PLUGIN_TEXT "_"  "Manager" CrySharedLibrayExtension;
         HINSTANCE hModule = CryLoadLibrary( sPluginManagerPath );
 
         // Plugin link library found?
@@ -74,18 +74,18 @@ namespace PluginManager
                             {
                                 CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Concrete Interface not available in the requested version" );
                             }
-						}
+                        }
 
-						else
-						{
-							CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Couldn't be fully initialized" );
-						}
-					}
+                        else
+                        {
+                            CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Couldn't be fully initialized" );
+                        }
+                    }
 
-					else
-					{
-						CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Not compatible with this CryEngine SDK version(%s)", buildVersion );
-					}
+                    else
+                    {
+                        CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Not compatible with this CryEngine SDK version(%s)", buildVersion );
+                    }
                 }
 
                 else
