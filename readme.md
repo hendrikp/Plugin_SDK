@@ -101,10 +101,43 @@ Either add the project file to your CryGame solution and the plugin manager as d
 
 Or use the supplied seperate solution to compile the plugin manager.
 
+Code Style
+----------
+In general orient yourself on the CryEngine FreeSDK. Exception prove the rule.
+
+* For variables (e.g. sTestMe or m_sTestMe)
+  * lower camel casing
+  * hungarian notation
+  * m_ prefix for member variables
+* For functions (e.g. DoSomething)
+  * upper camel casing
+* Naming conventions
+  * class declarations begin with C
+  * structur declarations begin with S
+  * interface declarations begin with I
+  * char*/all string definitions with s
+  * pointer defintions begin with p
+  * integers defintions begin with n/d/i
+  * floats and doubles defintions begin with f
+  * rest not defined
+* Dont use RTTI
+* Everything should be in a namespace
+* Use tools/stylecode.bat before committing changes
+* The rest will be fixed when your pull gets merged
+
+Contribution Guideline
+----------------------
+* Change as little as possible to have the effect you want
+* Discuss major/version changes beforehand
+* Update the doxygen documentation
+
 Contributing
 ------------
 * Fork it
 * Create a branch (`git checkout -b my_PluginSDK`)
+* Put your name into authors.txt
 * Commit your changes (`git commit -am "Added ...."`)
 * Push to the branch (`git push origin my_PluginSDK`)
 * Open a Pull Request
+
+
