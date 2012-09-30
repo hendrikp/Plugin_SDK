@@ -192,7 +192,7 @@ namespace PluginManager
 
         gsSDKInterfaceVersion = sAPIVersion;
 
-        if ( strcmp( sAPIVersion, "3.4.0" ) == 0 )
+        if ( SFileVersion( sAPIVersion ) == SFileVersion( "3.4.0" ) )
         {
             return true;
         }
@@ -308,7 +308,7 @@ namespace PluginManager
                 }
             }
 
-            // A shame unregistering flownodes types still will produce later on in sandbox (then when clicked on)
+            // A shame unregistering flownodes types still will produce errors later on in sandbox (when clicked on)
             // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
             /*
             if ( bUnloadedSomething && gEnv && gEnv->pFlowSystem )
