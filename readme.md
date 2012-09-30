@@ -109,6 +109,7 @@ In general look how its done in the CryEngine FreeSDK. Exceptions prove the rule
   * lower camel casing
   * hungarian notation
   * m_ prefix for member variables
+  * g prefix for global variables (in general dont use globals and when still needed then static)
 * For functions (e.g. DoSomething)
   * upper camel casing
 * Naming conventions
