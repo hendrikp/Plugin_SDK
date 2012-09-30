@@ -14,7 +14,8 @@
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
 #define PLUGIN_FILENAME TEXT(PLUGIN_TEXT "_" PLUGIN_NAME CrySharedLibrayExtension) //!< Filename of the Plugin
 
-#define PLUGIN_PATH PLUGIN_FOLDER "\\" PLUGIN_FILENAME //!< Full Path of the plugin
+#define PATH_SEPERATOR "\\"
+#define PLUGIN_PATH PLUGIN_FOLDER PATH_SEPERATOR PLUGIN_FILENAME //!< Full Path of the plugin
 
 namespace PluginManager
 {
@@ -87,6 +88,21 @@ namespace PluginManager
             * @brief Internal Cleanup of unused plugins.
             */
             void PluginGarbageCollector();
+
+            /**
+            * @brief Internal Helper to load link libraries in their own directory
+            * @param sPluginPath dll path coming from CryPak
+            */
+            HMODULE LoadLibraryWithinOwnDirectory( const char* sPluginPath ) const;
+
+            /**
+            * @brief Internal Helper to load link libraries from a path
+            * @param sPath Path in which to search for plugins
+            *  in depth = 0 its a directory with plugins or subdirectories that contain plugins
+            *  in depth = 1 its a plugin subdirectory with plugin specific non lazy load dependencies
+            * @param nDepth current subdirectory depth (this is currently max 1)
+            */
+            void LoadPluginsFromDirectory( const char* sPath, int nDepth = 0 );
 
         public:
             // IGameFrameworkListener

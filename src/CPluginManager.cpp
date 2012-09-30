@@ -3,7 +3,7 @@
 #include <StdAfx.h>
 #include <CPluginManager.h>
 
-#define SAFESTR(x) ((const char*)(x?x:""))
+#define SAFESTR(x) (((const char*)x)?((const char*)x):"")
 #define BOOLSTR(x) (x?"true":"false")
 
 namespace PluginManager
@@ -323,11 +323,12 @@ namespace PluginManager
     {
         ICryPak* pCryPak = gEnv->pCryPak;
 
+        // The CryPak CWD seems to be Game
         string sPluginsPath;
 #if defined(WIN64)
-        sPluginsPath = "..\\Bin64\\";
+        sPluginsPath = ".." PATH_SEPERATOR "Bin64" PATH_SEPERATOR;
 #elif defined(WIN32)
-        sPluginsPath = "..\\Bin32\\";
+        sPluginsPath = ".." PATH_SEPERATOR "Bin32" PATH_SEPERATOR;
 #endif
 
         sPluginsPath += PLUGIN_FOLDER;
@@ -338,52 +339,128 @@ namespace PluginManager
             pCryPak->MakeDir( sPluginsPath.c_str() );
         }
 
-        sPluginsPath += "\\";
-
-        LogAlways( "Loading plugins from '%s'", sPluginsPath.c_str() );
-
-        _finddata_t fileData;
-
-        string sSearchPath = sPluginsPath + "*" CrySharedLibrayExtension;
-
-        intptr_t hFileFind = intptr_t( INVALID_HANDLE_VALUE );
-        int hNextFile = int( INVALID_HANDLE_VALUE );
-
-        for ( hNextFile = hFileFind = pCryPak->FindFirst( sSearchPath.c_str(), &fileData, 0, true );
-                hNextFile != int( INVALID_HANDLE_VALUE );
-                hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
-        {
-            ReloadPlugin( sPluginsPath + fileData.name );
-        }
-
-        pCryPak->FindClose( hFileFind );
+        // Load Plugins from the main directory and then also recursively load subdirectories (max depth 1)
+        LoadPluginsFromDirectory( sPluginsPath.c_str() );
 
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
     }
 
-    bool CPluginManager::ReloadPlugin( const char* sPluginPath, bool bInitialize )
+    void CPluginManager::LoadPluginsFromDirectory( const char* sPath, int nDepth )
+    {
+        // This limits the search to one subdirectory under Plugins
+        if ( nDepth > 1 || !sPath )
+        {
+            return;
+        }
+
+        ICryPak* pCryPak = gEnv->pCryPak;
+
+        // Append Path Seperator if not present
+        string sSearchDirectory = sPath;
+
+        if ( sSearchDirectory.Right( 1 ).at( 0 ) != PATH_SEPERATOR[0] )
+        {
+            sSearchDirectory += PATH_SEPERATOR;
+        }
+
+        // Append wildcard search
+        string sSearchFilter = sSearchDirectory;
+        sSearchFilter += "*";
+
+        string sPluginExtension = CrySharedLibrayExtension;
+
+        LogAlways( "Loading plugins from '%s'", sSearchFilter.c_str() );
+
+        _finddata_t fileData;
+
+        intptr_t hFileFind = intptr_t( INVALID_HANDLE_VALUE );
+        int hNextFile = int( INVALID_HANDLE_VALUE );
+
+        // dll hasn't to be in a pak in fact shouldn't be since its not supported by CryLoadLibrary
+        // so set AllowFilesystem = true
+        for ( hNextFile = hFileFind = pCryPak->FindFirst( sSearchFilter, &fileData, 0, true );
+                hNextFile != int( INVALID_HANDLE_VALUE );
+                hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
+        {
+            // Don't work with . and ..
+            if ( !fileData.name[0] || ( '.' == fileData.name[0] && !fileData.name[1] ) || ( '.' == fileData.name[0] && '.' == fileData.name[1] && !fileData.name[2] ) )
+            {
+                continue;
+            }
+
+            if ( fileData.attrib & FILE_ATTRIBUTE_DIRECTORY )
+            {
+                LoadPluginsFromDirectory( sSearchDirectory + fileData.name );
+            }
+
+            else if ( !_stricmp( string( fileData.name ).Right( sPluginExtension.length() ), sPluginExtension ) )
+            {
+                ReloadPlugin( sSearchDirectory + fileData.name );
+            }
+        }
+
+        pCryPak->FindClose( hFileFind );
+    }
+
+    HMODULE CPluginManager::LoadLibraryWithinOwnDirectory( const char* sPluginPath ) const
     {
         if ( !sPluginPath )
         {
-            return false;
+            return NULL;
         }
 
-        LogAlways( "Loading: File(%s)", sPluginPath );
+        HINSTANCE hModule = NULL;
 
         // Save the current directory so we can reset it after loading plugins
-        char actualDirectory[MAX_PATH];
-        GetCurrentDirectory( MAX_PATH, actualDirectory );
+        DWORD nPathLen = GetCurrentDirectory( 0, NULL );
+        string sCurrentDirectory;
+        {
+            char* sTempPath = new char[nPathLen + 1];
+            GetCurrentDirectory( nPathLen + 1, sTempPath );
+            sCurrentDirectory = sTempPath;
+            delete [] sTempPath;
+        }
+
+        // CryPak is used because its cross platform not because libraries can actually be in a pak.
+        // We have to format the path a bit to work with the same data as crypak.
+        string sAbsPluginDirectory = sCurrentDirectory;  // fallback cwd
+        string sAbsPluginPath = sPluginPath; // fallback relative
+        {
+            string sCryPakPluginPath = sPluginPath;
+
+            size_t nStartPos = sCryPakPluginPath.find_first_of( PATH_SEPERATOR );
+            size_t nEndPos = sCryPakPluginPath.find_last_of( PATH_SEPERATOR );
+
+            if ( nStartPos != string::npos && nEndPos != string::npos && nStartPos != nEndPos )
+            {
+                sAbsPluginDirectory += sCryPakPluginPath.Mid( nStartPos, nEndPos - nStartPos );
+                sAbsPluginPath = sAbsPluginDirectory + sCryPakPluginPath.Mid( nEndPos );
+            }
+
+            else
+            {
+                LogError( "LoadLibraryWithinOwnDirectory invalid directory(%s)", sCryPakPluginPath.c_str() );
+            }
+        }
+
+        // Log before modifying working directory, else log will be written into plugin directory
+        LogAlways( "Loading: File(%s) CWD(%s)", sAbsPluginPath.c_str(), sAbsPluginDirectory.c_str() );
 
         // Change the current directory so we can handle plugin dependencies properly.
-#if defined(WIN64)
-        SetCurrentDirectory( ( string( actualDirectory ).append( "\\Bin64\\Plugins" ) ).c_str() );
-#elif defined(WIN32)
-        SetCurrentDirectory( ( string( actualDirectory ).append( "\\Bin32\\Plugins" ) ).c_str() );
-#endif
+        SetCurrentDirectory( sAbsPluginDirectory );
 
-        HINSTANCE hModule = CryLoadLibrary( sPluginPath );
+        // Load the library and non lazy linked dependencies
+        hModule = CryLoadLibrary( sPluginPath );
 
-        SetCurrentDirectory( actualDirectory );
+        // Change the current directory so we can handle plugin dependencies properly.
+        SetCurrentDirectory( sCurrentDirectory );
+
+        return hModule;
+    }
+
+    bool CPluginManager::ReloadPlugin( const char* sPluginPath, bool bInitialize )
+    {
+        HINSTANCE hModule = LoadLibraryWithinOwnDirectory( sPluginPath );
 
         // Plugin link library found?
         if ( hModule )
@@ -394,11 +471,12 @@ namespace PluginManager
             if ( fptr )
             {
                 // its a plugin create the baseinterface
-                IPluginBase* iface =  fGetPluginInterface( fptr )( gsBaseInterfaceVersion );
+                IPluginBase* iface = fGetPluginInterface( fptr )( gsBaseInterfaceVersion );
 
                 // Don't reload PluginManager...
                 if ( iface == GetBase() )
                 {
+                    CryFreeLibrary( hModule );
                     return true;
                 }
 
@@ -415,10 +493,7 @@ namespace PluginManager
 
                             if ( pluginIter == m_Plugins.end() )
                             {
-                                if ( gsSDKInterfaceVersion )
-                                {
-                                    LogAlways( "Loaded: Name(%s) Version(%s) Category(%s)", sPluginName.c_str(), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ) );
-                                }
+                                LogAlways( "Loaded: Name(%s) Version(%s) Category(%s)", sPluginName.c_str(), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ) );
 
                                 m_Plugins[sPluginName] = std::pair<HINSTANCE, IPluginBase*>( hModule, iface );
 
@@ -443,25 +518,25 @@ namespace PluginManager
 
                         else
                         {
-                            LogError( "Plugin has no name." );
+                            LogError( "Plugin has no name" );
                         }
                     }
 
                     else
                     {
-                        LogError( "CryEngine SDK interface version not compatible." );
+                        LogError( "CryEngine SDK interface version(%s) not compatible", SAFESTR( gsSDKInterfaceVersion.c_str() ) );
                     }
                 }
 
                 else
                 {
-                    LogError( "Plugin SDK base interface version not compatible." );
+                    LogError( "Plugin SDK base interface version(%s) not compatible", SAFESTR( gsBaseInterfaceVersion.c_str() ) );
                 }
             }
 
             else
             {
-                LogError( "Not a plugin." );
+                LogError( "Not a plugin, GetPluginInterface signature not present" );
             }
 
             CryFreeLibrary( hModule );
@@ -469,7 +544,7 @@ namespace PluginManager
 
         else
         {
-            LogError( "Path not found." );
+            LogError( "Path(%s) not found or dependencies not present", SAFESTR( sPluginPath ) );
         }
 
         return false;
