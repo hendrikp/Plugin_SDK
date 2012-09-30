@@ -117,10 +117,11 @@ In general look how its done in the CryEngine FreeSDK. Exceptions prove the rule
   * interface declarations begin with I
   * char*/all string definitions with s
   * pointer defintions begin with p
-  * integers defintions begin with n/d/i
-  * floats and doubles defintions begin with f
-  * rest not defined
-* Macros in capitals and word seperated by _
+  * integers defintions begin with n/i
+  * floats begin with f
+  * doubles begin with d
+  * rest can be looked up e.g. here http://www.yolinux.com/TUTORIALS/LinuxTutorialC++CodingStyle.html
+* Macros in capitals and words seperated by _
 * Dont use RTTI
 * Everything should be in a namespace
 * Use tools/stylecode.bat before committing changes
