@@ -79,7 +79,7 @@ namespace PluginManager
                             // Unregister all flownodes of this plugin
                             for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
                             {
-                                // A shame unregistering flownodes types still will produce later on in sandbox (then when clicked on)
+                                // A shame unregistering flownodes types still will produce errors later on in sandbox (then when clicked on)
                                 // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
                                 pFlow->UnregisterType( pFactory->m_sClassName );
                             }
