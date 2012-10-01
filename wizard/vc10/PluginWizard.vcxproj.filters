@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{c76e4347-2111-44ee-9e27-d96000d056a0}</UniqueIdentifier>
+      <Extensions>txt</Extensions>
+    </Filter>
+    <Filter Include="HTML Files">
+      <UniqueIdentifier>{d0a72eed-8711-49b8-969f-86771aebe613}</UniqueIdentifier>
+      <Extensions>htm</Extensions>
+    </Filter>
+    <Filter Include="Image Files">
+      <UniqueIdentifier>{57ca8bed-0b4d-4a85-8534-00dd0a9a962c}</UniqueIdentifier>
+      <Extensions>bmp</Extensions>
+    </Filter>
+    <Filter Include="Script Files">
+      <UniqueIdentifier>{2eb03f9b-1ad7-4c10-b630-970e76fa7b58}</UniqueIdentifier>
+      <Extensions>js</Extensions>
+    </Filter>
+    <Filter Include="Miscellaneous Files">
+      <UniqueIdentifier>{5b70fa67-be4f-423a-8ccd-aab39d16e6fe}</UniqueIdentifier>
+      <Extensions>vsz;vsdir;ico;vcxproj;csproj;css;inf</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\1033\Templates.inf">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="PluginWizard.vsz">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="Scripts\1033\default.js">
+      <Filter>Script Files</Filter>
+    </None>
+    <None Include="default.vcxproj">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="PluginWizard.vsdir">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="PluginWizard.ico">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="HTML\1033\default.htm">
+      <Filter>HTML Files</Filter>
+    </None>
+    <None Include="Images\PluginWizard.gif" />
+    <None Include="Images\PluginWizard_Background.gif" />
+    <None Include="1033\NewStyles.css">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="1033\Images\DottedHori.gif" />
+    <None Include="1033\Images\DottedVert.gif" />
+    <None Include="1033\Images\spacer.gif" />
+    <None Include="Templates\1033\license.txt">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="Templates\1033\readme.md">
+      <Filter>Template Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Templates\1033\StdAfx.h">
+      <Filter>Template Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\resource.h">
+      <Filter>Template Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\CPluginSample.h">
+      <Filter>Template Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\IPluginSample.h">
+      <Filter>Template Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Templates\1033\StdAfx.cpp">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Templates\1033\CPluginSample.cpp">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Templates\1033\CPluginSampleModule.cpp">
+      <Filter>Template Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Templates\1033\version.rc">
+      <Filter>Template Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,10 @@
+readme.md
+license.txt
+StdAfx.cpp
+StdAfx.h
+CPluginSampleModule.cpp
+CPluginSample.cpp
+CPluginSample.h
+IPluginSample.h
+resource.h
+version.rc
