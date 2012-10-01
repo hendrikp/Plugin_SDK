@@ -8,7 +8,7 @@
 
 extern "C"
 {
-    GAME_API PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion )
+    DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion )
     {
         // This function should not create a new interface class each call.
         static [!output PROJECT_NAME_SAFE]Plugin::CPlugin[!output PROJECT_NAME_SAFE] modulePlugin;

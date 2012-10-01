@@ -2,11 +2,6 @@
 
 #pragma once
 
-#include <CryModuleDefs.h>
-#define eCryModule eCryM_Plugin[!output PROJECT_NAME_SAFE]
-#define RWI_NAME_TAG "RayWorldIntersection(Game)"
-#define PWI_NAME_TAG "PrimitiveWorldIntersection(Game)"
-
 // Insert your headers here
 #include <platform.h>
 #include <algorithm>
@@ -27,33 +22,15 @@
 #include <IGameplayRecorder.h>
 #include <ISerialize.h>
 
+#ifndef _FORCEDLL
+#define _FORCEDLL
+#endif
+
 #ifndef [!output PROJECT_NAME_SAFE_UPPERCASE]PLUGIN_EXPORTS
 #define [!output PROJECT_NAME_SAFE_UPPERCASE]PLUGIN_EXPORTS
 #endif
 
-#ifdef [!output PROJECT_NAME_SAFE_UPPERCASE]PLUGIN_EXPORTS
-#define GAME_API DLL_EXPORT
-#else
-#define GAME_API DLL_IMPORT
-#endif
-
 #pragma warning(disable: 4018)  // conditional expression is constant
-
-inline void GameWarning( const char* format, ... ) PRINTF_PARAMS( 1, 2 );
-inline void GameWarning( const char* format, ... )
-{
-    if ( !format )
-    {
-        return;
-    }
-
-    va_list args;
-    va_start( args, format );
-    GetISystem()->WarningV( VALIDATOR_MODULE_GAME, VALIDATOR_WARNING, 0, NULL, format, args );
-    va_end( args );
-}
-
-#define PLAYER_REFACTORING 1
 
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
