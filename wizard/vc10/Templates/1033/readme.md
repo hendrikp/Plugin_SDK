@@ -1,7 +1,5 @@
 [!output PROJECT_NAME] Plugin for CryEngine SDK
 =====================================
-This is still a work in progress, a plugin sample and plugins themselves will follow.
-
 TODO: Describe where you tested it.
 
 TODO: Describe the purpose of your plugin
