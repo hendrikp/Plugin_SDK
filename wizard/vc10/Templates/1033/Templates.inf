@@ -1,10 +1,10 @@
-OpenFile | readme.md
+readme.md
 license.txt
 StdAfx.cpp
 StdAfx.h
 CPluginSampleModule.cpp
-OpenFile | CPluginSample.cpp
-OpenFile | CPluginSample.h
-OpenFile | IPluginSample.h
+CPluginSample.cpp
+CPluginSample.h
+IPluginSample.h
 resource.h
 version.rc
