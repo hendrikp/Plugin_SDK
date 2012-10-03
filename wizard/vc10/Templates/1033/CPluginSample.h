@@ -3,7 +3,6 @@
 #pragma once
 
 #include <Game.h>
-#include <map>
 
 #include <IPluginManager.h>
 #include <IPluginBase.h>
@@ -13,14 +12,11 @@
 
 #define PLUGIN_NAME "[!output PROJECT_NAME_SAFE]"
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
-#define PLUGIN_FILENAME TEXT(PLUGIN_TEXT "_" PLUGIN_NAME CrySharedLibrayExtension) //!< Filename of the Plugin
-
-#define PLUGIN_PATH PLUGIN_FOLDER "\\" PLUGIN_FILENAME //!< Full Path of the plugin
 
 namespace [!output PROJECT_NAME_SAFE]Plugin
 {
     /**
-    * @brief Plugin Manager manages the plugin resources
+    * @brief provides information and manages the resources of this plugin.
     */
     class CPlugin[!output PROJECT_NAME_SAFE] :
         public PluginManager::CPluginBase,
@@ -44,7 +40,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             const char* GetVersion() const
             {
-                return "1.0";
+                return "[!output PLUGIN_VERSION]";
             };
 
             const char* GetName() const
@@ -54,12 +50,12 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             const char* GetCategory() const
             {
-                return "General";
+                return "[!output PLUGIN_CATEGORY]";
             };
 
             const char* ListAuthors() const
             {
-                return "..."; // TODO: add your name here
+                return "[!output PLUGIN_AUTHOR]"; // TODO: add your name here
             };
 
             const char* ListCVars() const;

@@ -1,5 +1,6 @@
 readme.md
 license.txt
+authors.txt
 StdAfx.cpp
 StdAfx.h
 CPluginSampleModule.cpp

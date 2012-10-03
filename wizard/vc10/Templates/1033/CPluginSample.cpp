@@ -47,21 +47,25 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager );
 
-        // Register CVars
+        // Register CVars/Commands
         if ( gEnv && gEnv->pConsole )
         {
+            // TODO: Register CVARs/Commands here if you have some
             // ...
         }
 
         // Register Game Objects
+        // TODO: Register Game Objects here if you have some
         // ...
+
+        // Note: Autoregister Flownodes will be automatically registered
 
         return true;
     }
 
     const char* CPlugin[!output PROJECT_NAME_SAFE]::ListCVars() const
     {
-        return "...";
+        return "..."; // TODO: Enter CVARs/Commands here if you have some
     }
 
     bool CPlugin[!output PROJECT_NAME_SAFE]::Check( const char* sAPIVersion ) const
@@ -71,7 +75,8 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
             return false;
         }
 
-        if ( SFileVersion( sAPIVersion ) == SFileVersion( "3.4.0" ) )
+        // TODO: You could add a more complex version check here (e.g. if you support multiple versions)
+        if ( SFileVersion( sAPIVersion ) == SFileVersion( "[!output PLUGIN_COMPATIBLITY]" ) )
         {
             return true;
         }
@@ -84,5 +89,5 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         return "OK";
     }
 
-    // TODO: add your plugin concrete interface implementation
+    // TODO: Add your plugin concrete interface implementation
 }

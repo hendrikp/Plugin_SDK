@@ -164,7 +164,9 @@ div.itemTextCheckboxIndentB      { position: relative;
 input                          { font-family: Tahoma, MS Sans Serif, Arial, Sans Serif;
                                 font-weight: normal;
                                  font-size: 8pt;
-                                color: buttontext; }
+                                color: buttontext;
+    width: 235px;
+}
 
 select                          { font-family: Tahoma, MS Sans Serif, Arial, Sans Serif;
                                 font-weight: normal;
@@ -285,10 +287,12 @@ input.sidebtn21A              { width: 153px;
                                 bottom: 6px; }
 
 /****THIS IS THE STANDARD TABBED WIZARD, TWO COLUMN SELECTION BOX**************/
-select.sidebtn                  { width: 193px;
+select.sidebtn                  { width: 238px;
                                 position: relative;
                                 top: 4px;
-                                bottom: -3px; }
+                                bottom: -4px;
+    left: 0px;
+}
 
 select.sidebtnNoWidth          { position: relative;
                                 top: 4px;

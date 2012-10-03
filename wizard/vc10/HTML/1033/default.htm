@@ -1,18 +1,20 @@
 <HTML DIR="LTR">
 
 <HEAD>
-    <TITLE>'PluginWizard'</TITLE>
+    <TITLE>Plugin SDK for CryEngine - Plugin Wizard</TITLE>
     <META NAME="vs_targetSchema" CONTENT="http://schemas.microsoft.com/intellisense/ie5">
     <LINK ID="LINKURL" REL="stylesheet" HREF="../../1033/NewStyles.css">
 
-    <!--  -->
     <!-- The SYMBOL tag is used to set the default values for the user-defined symbols.-->
-    <!--  -->
 
-    <SYMBOL NAME='WIZARD_DIALOG_TITLE' TYPE=text VALUE='CryEngine Plugin Project'></SYMBOL>
-    <SYMBOL NAME='PLUGIN_VERSION_STRING' TYPE=text VALUE='1.0.0'></SYMBOL>
+    <!-- Here come the plugin properties symbols -->
+    <SYMBOL NAME='WIZARD_DIALOG_TITLE' TYPE=text VALUE='Plugin SDK for CryEngine - Plugin Project'></SYMBOL>
+    <SYMBOL NAME='PLUGIN_VERSION' TYPE=text VALUE='1.0.0'></SYMBOL>
+    <SYMBOL NAME='PLUGIN_AUTHOR' TYPE=text VALUE="Firstname 'alias' Lastname <mail at ? dot ?>"></SYMBOL>
     <SYMBOL NAME='PLUGIN_CATEGORY' TYPE=select-one VALUE='Utility'></SYMBOL>
-    <SYMBOL NAME='APP_TYPE_SUMMARY' TYPE=text VALUE='This wizard creates a basic project to be used as a base for Plugin development using the CryEngine Plugin SDK'></SYMBOL>
+    <SYMBOL NAME='PLUGIN_COMPATIBLITY' TYPE=text VALUE='3.4.0'></SYMBOL>
+
+    <SYMBOL NAME='APP_TYPE_SUMMARY' TYPE=text VALUE='This wizard creates a basic project to be used as a base for Plugin development using the Plugin SDK for CryEngine.'></SYMBOL>
 </HEAD>
 
 <BODY BGCOLOR="BUTTONFACE" TOPMARGIN="0" LEFTMARGIN="0" RIGHTMARGIN="0" BOTTOMMARGIN="0" ONLOAD="InitDocument(document);" ONKEYDOWN="OnKey();" ONKEYPRESS="OnPress();">
@@ -56,8 +58,8 @@
        </TD>
       
        <TD VALIGN="TOP" HEIGHT="65">
-        <H4 CLASS="HEAD" ID="HEAD">Welcome to the 'Plugin Wizard'</H4>
-        <P CLASS="SUBHEAD" ID="SUBHEAD">This wizard creates a basic project to be used as a base for Plugin development using the CryEngine Plugin SDK</P>
+        <H4 CLASS="HEAD" ID="HEAD">Welcome to the Plugin Wizard</H4>
+        <P CLASS="SUBHEAD" ID="SUBHEAD">This wizard creates a basic project to be used as a base for plugin development using the Plugin SDK for CryEngine.</P>
        </TD>
       
        <TD VALIGN="TOP" HEIGHT="65" WIDTH="12">
@@ -104,27 +106,58 @@
                   &nbsp;
                 </TD>
                 <TD VALIGN="TOP" COLSPAN="3">
-                 <SPAN CLASS="itemTextTop">
-                    <LABEL FOR="PLUGIN_VERSION_STRING" TITLE="Plugin Version" ID="AUT_ID" ><U>V</U>ersion</LABEL>
-                    <BR/>
-                      <INPUT TYPE="text" ID="PLUGIN_VERSION_STRING" ACCESSKEY="V" 
-                      TITLE="Plugin Version" value="1.0.0">
-                </SPAN>
 
-                <P CLASS="ElementSpacer">&nbsp;</P>
-                
-                 <SPAN CLASS="itemText">
+                    <!-- Here come the plugin properties UI fields -->
+
+                    <SPAN CLASS="itemTextTop">
+                        <LABEL FOR="PLUGIN_VERSION" TITLE="Plugin Version" ID="AUT_ID" ><U>V</U>ersion</LABEL>
+                        <BR/>
+                        <INPUT TYPE="text" ID="PLUGIN_VERSION" ACCESSKEY="V" TITLE="Plugin Version" value="1.0.0">
+                    </SPAN>
+
+                    <P CLASS="ElementSpacer">&nbsp;</P>
+
+                    <SPAN CLASS="itemText">
+                        <LABEL FOR="PLUGIN_COMPATIBLITY" TITLE="Plugin Compatibility" ID="AUT_ID7" >Com<U>p</U>atiblity (CryEngine SDK Version)</LABEL>
+                        <BR/>
+                        <INPUT TYPE="text" ID="PLUGIN_COMPATIBLITY" ACCESSKEY="P" TITLE="Plugin Compatibility" value="3.4.0">
+                    </SPAN>
+
+                    <P CLASS="ElementSpacer">&nbsp;</P>
+
+                    <SPAN CLASS="itemText">
                         <LABEL FOR="PLUGIN_CATEGORY" TITLE="Category" ID="AUT_ID5" >Ca<U>t</u>egory:</LABEL>
                         <BR>
-                        <SELECT CLASS="sideBtn" SIZE="1" ID="PLUGIN_CATEGORY" ACCESSKEY="T" TITLE="Plugin Category.">
-                         <OPTION VALUE="option1" SELECTED>Utility</OPTION>
-                        <OPTION VALUE="option2">Bugfix</OPTION>
+                        <SELECT CLASS="sideBtn" SIZE="1" ID="PLUGIN_CATEGORY" ACCESSKEY="T" TITLE="Plugin Category">
+                            <OPTION VALUE="Flownode" SELECTED>Flownode</OPTION>
+                            <OPTION VALUE="Script">Script</OPTION>
+                            <OPTION VALUE="Visual">Visual (e.g. Camera, Effects, UI, Shader)</OPTION>
+                            <OPTION VALUE="Entity">Entity (e.g. AI, Types)</OPTION>
+                            <OPTION VALUE="Console">Console (e.g. Commands/CVars)</OPTION>
+                            <OPTION VALUE="Hardware">Hardware (e.g. Connection to Hardware)</OPTION>
+                            <OPTION VALUE="Framework">Framework (e.g. Scriptlanguage)</OPTION>
+                            <OPTION VALUE="Other">Other</OPTION>
+                            <OPTION VALUE="General">General</OPTION>
+                            <OPTION VALUE="Utility">Utility</OPTION>
+                            <OPTION VALUE="Bugfix">Bugfix</OPTION>
                         </SELECT>
-                 </SPAN>
+                    </SPAN>
+
+                    <P CLASS="ElementSpacer">&nbsp;</P>
+
+                    <SPAN CLASS="itemText">
+                        <LABEL FOR="PLUGIN_AUTHOR" TITLE="Plugin Author" ID="AUT_ID6" ><U>A</U>uthor</LABEL>
+                        <BR/>
+                        <INPUT TYPE="text" ID="PLUGIN_AUTHOR" ACCESSKEY="A" TITLE="Plugin Author" value="Firstname 'alias' Lastname <mail at ? dot ?>">
+                    </SPAN>
+
+                    <P CLASS="ElementSpacer">&nbsp;</P>
+
+                    <SPAN CLASS="itemText">
+                        Please note that you can also update everything later in the sourcecode.
+                    </SPAN>
                   </TD>
-                  <TD VALIGN="TOP" WIDTH="12">
-                  &nbsp;
-                  </TD>
+                  <TD VALIGN="TOP" WIDTH="12">&nbsp;</TD>
                 </TR>
               <TR>
                 <TD VALIGN="TOP" HEIGHT="100%" COLSPAN="7">
