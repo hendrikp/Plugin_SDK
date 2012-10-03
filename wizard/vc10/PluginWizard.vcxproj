@@ -82,11 +82,11 @@
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\..\project\Plugin_Settings.props" />
     <None Include="1033\Images\DottedHori.gif" />
     <None Include="1033\Images\DottedVert.gif" />
     <None Include="1033\Images\spacer.gif" />
     <None Include="1033\NewStyles.css" />
-    <None Include="default.vcxproj" />
     <None Include="HTML\1033\default.htm">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -96,6 +96,10 @@
     <None Include="PluginWizard.vsdir" />
     <None Include="PluginWizard.vsz" />
     <None Include="Scripts\1033\default.js" />
+    <None Include="Templates\1033\authors.txt" />
+    <None Include="Templates\1033\default.vcxproj">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Templates\1033\license.txt" />
     <None Include="Templates\1033\readme.md" />
     <None Include="Templates\1033\Templates.inf" />
