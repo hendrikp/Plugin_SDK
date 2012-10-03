@@ -171,7 +171,7 @@ function CreateCustomInfFile()
         var TemporaryFolder = 2;
         var tfolder = fso.GetSpecialFolder(TemporaryFolder);
         var strTempFolder = tfolder.Drive + '\\' + tfolder.Name;
-
+        
         var strWizTempFile = strTempFolder + "\\" + fso.GetTempName();
 
         var strTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
@@ -194,11 +194,13 @@ function GetTargetName(strName, strProjectName)
         // TODO: set the name of the rendered file based on the template filename
         var strTarget = strName;
 
+        /*
         if (strName == 'readme.txt')
             strTarget = 'ReadMe.txt';
 
         if (strName == 'sample.txt')
             strTarget = 'Sample.txt';
+        */
 
         return strTarget;
     }
@@ -234,6 +236,7 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
                 var strExt = strName.substr(strName.lastIndexOf("."));
                 if(strExt==".bmp" || strExt==".ico" || strExt==".gif" || strExt==".rtf" || strExt==".css")
                     bCopyOnly = true;
+
                 wizard.RenderTemplate(strTemplate, strFile, bCopyOnly);
                 proj.Object.AddFile(strFile);
             }
