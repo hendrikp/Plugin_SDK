@@ -10,12 +10,12 @@
 namespace [!output PROJECT_NAME_SAFE]Plugin
 {
     /**
-    * @brief plugin manager interface
+    * @brief plugin [!output PROJECT_NAME_SAFE] concrete interface
     */
     struct IPlugin[!output PROJECT_NAME_SAFE]
     {
         /**
-        * @brief Get PluginManager base interface
+        * @brief Get Plugin base interface
         */
         virtual PluginManager::IPluginBase* GetBase() = 0;
 
