@@ -14,8 +14,18 @@ function OnFinish(selProj, selObj)
         // Safe Project Name in Uppercase
         wizard.AddSymbol('PROJECT_NAME_SAFE_UPPERCASE', strProjectName.toUpperCase());
 
+        // Render Files that require it
         var strTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
-        wizard.RenderTemplate(strTemplatePath + "\\Plugin_Settings.props", "Plugin_Settings.props", true);
+
+        // Plugin properties directly used without modification from Plugin SDK (so this isn't reqiured anymore)
+        //wizard.RenderTemplate(strTemplatePath + "\\Plugin_Settings.props", "Plugin_Settings.props", true); 
+        
+        // The project file needs to be rendered
+        wizard.RenderTemplate(strTemplatePath + "\\default.vcxproj", strTemplatePath + "\\default_tmp.vcxproj", false, true);
+
+        // files need to be renamed...
+
+        // TODO: look into creating temp dir to create renamed files and temp project. (see CreateCustomInfFile)
 
         selProj = CreateCustomProject(strProjectName, strProjectPath);
         AddConfig(selProj, strProjectName);
@@ -27,6 +37,10 @@ function OnFinish(selProj, selObj)
         InfFile.Delete();
 
         selProj.Object.Save();
+
+        // delete temp rendered project
+        var fso = new ActiveXObject('Scripting.FileSystemObject');
+        DelFile(fso, strTemplatePath + "\\default_tmp.vcxproj"); 
     }
     catch(e)
     {
@@ -42,7 +56,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
     {
         var strProjTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
         var strProjTemplate = '';
-        strProjTemplate = strProjTemplatePath + '\\default.vcxproj';
+        strProjTemplate = strProjTemplatePath + '\\default_tmp.vcxproj';
 
         var Solution = dte.Solution;
         var strSolutionName = "";
@@ -78,6 +92,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
             if (fxtarget.length == 2)
             prj.Object.TargetFrameworkVersion = parseInt(fxtarget[0]) * 0x10000 + parseInt(fxtarget[1])
         }
+
         return prj;
     }
     catch(e)
@@ -105,9 +120,11 @@ function AddFilters(proj)
 
 function AddConfig(proj, strProjectName)
 {
-    try
-    {
+    try {
 
+        // Not required everything contained in vcxproj
+
+        /*
         var config = proj.Object.Configurations('Debug');
         config.ConfigurationType = typeDynamicLibrary;
 
@@ -125,14 +142,7 @@ function AddConfig(proj, strProjectName)
 
         var LinkTool = config.Tools('VCLinkerTool');
         // TODO: Add linker settings
-
-        /*config = proj.Object.Configurations('Profile')
-
-        var CLTool = config.Tools('VCCLCompilerTool');
-        // TODO: Add compiler settings
-
-        var LinkTool = config.Tools('VCLinkerTool');
-        // TODO: Add linker settings*/
+        */
     }
     catch(e)
     {
