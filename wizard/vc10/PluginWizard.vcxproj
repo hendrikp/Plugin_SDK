@@ -29,7 +29,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{C1CE238E-401C-4D58-8198-D9B415A34FC6}</ProjectGuid>
     <Keyword>CustomAppWizProj</Keyword>
-    <ProjectName>CryEngine Plugin Project</ProjectName>
+    <ProjectName>PluginWizard</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
