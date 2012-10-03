@@ -175,7 +175,7 @@ function CreateCustomInfFile()
         var strWizTempFile = strTempFolder + "\\" + fso.GetTempName();
 
         var strTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
-        var strInfFile = strTemplatePath + '\Templates.inf';
+        var strInfFile = strTemplatePath + '\\Templates.inf';
         wizard.RenderTemplate(strInfFile, strWizTempFile);
 
         var WizTempFile = fso.GetFile(strWizTempFile);
