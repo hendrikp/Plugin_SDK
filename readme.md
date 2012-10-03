@@ -18,6 +18,23 @@ Its now possible to have plugins in their own plugin subdirectory (e.g. "C:\ce3.
 
 If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see C++ Integration.
 
+Installing the Visual Studio 2010 Plugin Wizard
+-----------------------------------------------
+An Installer is in planning, until then:
+
+* Copy the following 3 files to "Documents\Visual Studio 2010\Wizards\PluginWizard"
+  * "PluginWizard.vsz"
+  * "PluginWizard.vsdir"
+  * "PluginWizard.ico"
+
+* Open the file "PluginWizard.vsz" with a text editor
+  * Fix the path so it points to your Plugin SDK Wizard installation directory ```Param="ABSOLUTE_PATH = C:\cryengine3_3.4.0\Code\Plugin_SDK\wizard\vc10```
+
+* The Wizard should now work, please note the following things (otherwise the wizard won't work)
+  * the project name shouldn't contain "Plugin" as this will be added automatically
+  * untick the checkbox to create solution directory
+  * only create projects in the Code directory e.g. "C:\cryengine3_3.4.0\Code"
+
 Creating a new plugin
 =====================
 Please choose a unique name for your plugin, each plugin must have its own name.
