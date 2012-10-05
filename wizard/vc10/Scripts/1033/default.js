@@ -30,9 +30,14 @@ function OnFinish(selProj, selObj)
         //wizard.RenderTemplate(strTemplatePath + "\\Plugin_Settings.props", "Plugin_Settings.props", true); 
         
         // The project file needs to be rendered
-        //wizard.RenderTemplate(strTemplatePath + "\\default.vcxproj", strTemplatePath + "\\default_tmp.vcxproj", false, true);
+        wizard.RenderTemplate(strTemplatePath + "\\default.vcxproj", strProjectPath + "\\default.vcxproj", false, true);
 
         selProj = CreateCustomProject(strProjectName, strProjectPath);
+
+        // delete temp rendered project
+        var fso = new ActiveXObject('Scripting.FileSystemObject');
+        DelFile(fso, strProjectPath + "\\default.vcxproj"); 
+
         AddConfig(selProj, strProjectName);
         AddFilters(selProj); //SetupFilters(selProj);
 
@@ -74,10 +79,6 @@ function OnFinish(selProj, selObj)
                 window.visible = true;
             }
         }
-
-        // delete temp rendered project
-        //var fso = new ActiveXObject('Scripting.FileSystemObject');
-        //DelFile(fso, strTemplatePath + "\\default_tmp.vcxproj"); 
     }
     catch(e)
     {
@@ -92,9 +93,11 @@ function CreateCustomProject(strProjectName, strProjectPath)
 {
     try
     {
-        var strProjTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
+        //var strProjTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
         var strProjTemplate = '';
-        strProjTemplate = strProjTemplatePath + '\\default.vcxproj';
+
+        //strProjTemplate = strProjTemplatePath + '\\default.vcxproj';
+        strProjTemplate = strProjectPath + '\\default.vcxproj'; 
 
         var Solution = dte.Solution;
         var strSolutionName = "";
@@ -202,7 +205,12 @@ function AddConfig(proj, strProjectName)
 
 function PchSettings(proj)
 {
-    // specify pch settings
+    var precompiledheader = proj.Object.Files("StdAfx.cpp");
+
+    for (var iConfig = 1; iConfig <= precompiledheader.FileConfigurations.Count; iConfig++)
+    {
+        precompiledheader.FileConfigurations(iConfig).Tool.UsePrecompiledHeader = pchCreateUsingSpecific;
+    }
 }
 
 function DelFile(fso, strWizTempFile)
@@ -337,11 +345,6 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
         throw e;
     }
 }
-
-function DoOpenFile(strTarget) {
-    return false;
-}
-
 
 // SIG // Begin signature block
 // SIG // MIIXPgYJKoZIhvcNAQcCoIIXLzCCFysCAQExCzAJBgUr
