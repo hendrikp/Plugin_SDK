@@ -22,6 +22,7 @@
     <ProjectGuid>{90193419-7421-4233-BEBD-148D6566622B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PluginManager</RootNamespace>
+    <ProjectName>Manager</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
