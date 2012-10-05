@@ -2,19 +2,25 @@
 
 function OnFinish(selProj, selObj)
 {
-    try 
-    {
-        var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
-        strProjectPath += "\\project";
+    try {
 
-        if (!CanUseDrive(strProjectPath))
-            return VS_E_WIZARDBACKBUTTONPRESS;
-
+        // Create Project Name
         var strProjectName = wizard.FindSymbol('PROJECT_NAME');
+        strProjectName = strProjectName.replace("Plugin_", ""); // done this way so directory existence checks still works
 
         // Safe Project Name
         strProjectName = CreateCPPName(CreateSafeName(strProjectName)).replace(/[^\w\s]/gi, '');
+        wizard.RemoveSymbol('PROJECT_NAME');
+        wizard.AddSymbol('PROJECT_NAME', strProjectName);
         wizard.AddSymbol('PROJECT_NAME_SAFE', strProjectName);
+        wizard.RemoveSymbol('VS_SOLUTION_NAME');
+        wizard.AddSymbol('VS_SOLUTION_NAME', "Plugin_" + strProjectName);
+
+        var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
+        strProjectPath += "\\..\\Plugin_" + strProjectName + "\\project";
+
+        if (!CanUseDrive(strProjectPath))
+            return VS_E_WIZARDBACKBUTTONPRESS;
 
         // Safe Project Name in Uppercase
         wizard.AddSymbol('PROJECT_NAME_SAFE_UPPERCASE', strProjectName.toUpperCase());
@@ -107,7 +113,8 @@ function CreateCustomProject(strProjectName, strProjectPath)
             strSolutionName = wizard.FindSymbol("VS_SOLUTION_NAME");
             if (strSolutionName.length)
             {
-                var strSolutionPath = strProjectPath.substr(0, strProjectPath.length - strProjectName.length);
+                //var strSolutionPath = strProjectPath.substr(0, strProjectPath.length - strProjectName.length);
+                var strSolutionPath = strProjectPath;
                 Solution.Create(strSolutionPath, strSolutionName);
             }
         }
