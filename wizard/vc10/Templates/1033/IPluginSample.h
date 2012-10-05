@@ -19,6 +19,6 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         */
         virtual PluginManager::IPluginBase* GetBase() = 0;
 
-        // TODO: Add your custom abstract functions here
+        // TODO: Add your concrete interface declaration here
     };
 };

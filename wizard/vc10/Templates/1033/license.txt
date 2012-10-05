@@ -1,4 +1,4 @@
-Copyright (c) 2012, The authors of the [!output PROJECT_NAME_SAFE] Plugin project
+Copyright (c) [!output CURRENT_YEAR], The authors of the [!output PROJECT_NAME_SAFE] Plugin project
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

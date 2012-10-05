@@ -16,7 +16,7 @@
 namespace [!output PROJECT_NAME_SAFE]Plugin
 {
     /**
-    * @brief provides information and manages the resources of this plugin.
+    * @brief Provides information and manages the resources of this plugin.
     */
     class CPlugin[!output PROJECT_NAME_SAFE] :
         public PluginManager::CPluginBase,
@@ -45,7 +45,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             const char* GetName() const
             {
-                return "[!output PROJECT_NAME_SAFE]";
+                return PLUGIN_NAME;
             };
 
             const char* GetCategory() const
@@ -55,7 +55,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             const char* ListAuthors() const
             {
-                return "[!output PLUGIN_AUTHOR]"; // TODO: add your name here
+                return "[!output PLUGIN_AUTHOR]";
             };
 
             const char* ListCVars() const;
@@ -78,7 +78,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
                 return static_cast<IPluginBase*>( this );
             };
 
-            // TODO: add your concrete interface implementation
+            // TODO: Add your concrete interface implementation
     };
 
     extern CPlugin[!output PROJECT_NAME_SAFE]* gPlugin;

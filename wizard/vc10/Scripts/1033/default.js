@@ -7,19 +7,26 @@ function OnFinish(selProj, selObj)
         var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
         strProjectPath += "\\project";
 
+        if (!CanUseDrive(strProjectPath))
+            return VS_E_WIZARDBACKBUTTONPRESS;
+
         var strProjectName = wizard.FindSymbol('PROJECT_NAME');
 
         // Safe Project Name
-        strProjectName = strProjectName.replace(/[^\w\s]/gi, '');
+        strProjectName = CreateCPPName(CreateSafeName(strProjectName)).replace(/[^\w\s]/gi, '');
         wizard.AddSymbol('PROJECT_NAME_SAFE', strProjectName);
 
         // Safe Project Name in Uppercase
         wizard.AddSymbol('PROJECT_NAME_SAFE_UPPERCASE', strProjectName.toUpperCase());
 
+        // Current Year for Copyright
+        var currentTime = new Date();
+        wizard.AddSymbol('CURRENT_YEAR', currentTime.getFullYear());
+
         // Render Files that require it
         var strTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
 
-        // Plugin properties directly used without modification from Plugin SDK (so this isn't reqiured anymore)
+        // Plugin properties directly used without modification from Plugin SDK (so this isn't required anymore)
         //wizard.RenderTemplate(strTemplatePath + "\\Plugin_Settings.props", "Plugin_Settings.props", true); 
         
         // The project file needs to be rendered
@@ -27,14 +34,46 @@ function OnFinish(selProj, selObj)
 
         selProj = CreateCustomProject(strProjectName, strProjectPath);
         AddConfig(selProj, strProjectName);
-        SetupFilters(selProj);
+        AddFilters(selProj); //SetupFilters(selProj);
 
         var InfFile = CreateCustomInfFile();
+
         AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
+        //AddFilesToProject(selProj, strProjectName, null, InfFile);
+
         PchSettings(selProj);
+
         InfFile.Delete();
 
         selProj.Object.Save();
+
+        // Open files
+        var rgoFiles = [
+            selProj.Object.Files("readme.md").Object,
+            selProj.Object.Files("CPlugin" + strProjectName + ".h").Object,
+            selProj.Object.Files("CPlugin" + strProjectName + ".cpp").Object,
+            selProj.Object.Files("IPlugin" + strProjectName + ".h").Object
+         ];
+
+        for (var iFileToOpen = 0; iFileToOpen < rgoFiles.length; iFileToOpen++) {
+            var oFileToOpen = rgoFiles[iFileToOpen];
+
+            var vsViewKind = vsViewKindPrimary;
+
+            switch (oFileToOpen.Object.FileType) {
+                case eFileTypeCppForm:
+                case eFileTypeCppClass:
+                case eFileTypeCppControl:
+                case eFileTypeCppWebService:
+                    vsViewKind = vsViewKindDesigner;
+            }
+
+            var window = oFileToOpen.Open(vsViewKind);
+
+            if (window) {
+                window.visible = true;
+            }
+        }
 
         // delete temp rendered project
         //var fso = new ActiveXObject('Scripting.FileSystemObject');
@@ -106,14 +145,20 @@ function AddFilters(proj)
     try
     {
         // Add the folders to your project
-        var group = proj.Object.AddFilter("Source Files");
-        group.Filter = ".cpp;.cxx;.c";
+        var L_strSource_Text = "Source Files";
+        var group = proj.Object.AddFilter(L_strSource_Text);
+        group.Filter = "cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx";
+        group.UniqueIdentifier = "{4FC737F1-C7A5-4376-A066-2A32D752A2FF}";
 
-        group = proj.Object.AddFilter("Headers");
-        group.Filter = ".h;.hpp";
+        var L_strHeader_Text = "Header Files";
+        group = proj.Object.AddFilter(L_strHeader_Text);
+        group.Filter = "h;hpp;hxx;hm;inl;inc;xsd";
+        group.UniqueIdentifier = "{93995380-89BD-4b04-88EB-625FBE52EBFB}";
 
-        group = proj.Object.AddFilter("Resources");
-        group.Filter = ".rc;resource.h";
+        var L_strResources_Text = "Resource Files";
+        group = proj.Object.AddFilter(L_strResources_Text);
+        group.Filter = "rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms";
+        group.UniqueIdentifier = "{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}";
 
         group = proj.Object.AddFilter("Flownodes");
     }
@@ -157,7 +202,7 @@ function AddConfig(proj, strProjectName)
 
 function PchSettings(proj)
 {
-    // TODO: specify pch settings
+    // specify pch settings
 }
 
 function DelFile(fso, strWizTempFile)
@@ -273,7 +318,16 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
                     bCopyOnly = true;
 
                 wizard.RenderTemplate(strTemplate, strFile, bCopyOnly);
-                proj.Object.AddFile(strFile);
+
+                // Filter / add
+                if (strFile.indexOf('resource.h') !== -1) 
+                {      
+                    var projFilters = proj.Object.Filters;
+                    var filterRc = projFilters.Item("Resource Files");
+                    filterRc.AddFile(strFile);
+                } else {
+                    proj.Object.AddFile(strFile);
+                }
             }
         }
         strTextStream.Close();
