@@ -5,6 +5,8 @@ function OnFinish(selProj, selObj)
     try 
     {
         var strProjectPath = wizard.FindSymbol('PROJECT_PATH');
+        strProjectPath += "\\project";
+
         var strProjectName = wizard.FindSymbol('PROJECT_NAME');
 
         // Safe Project Name
@@ -21,11 +23,7 @@ function OnFinish(selProj, selObj)
         //wizard.RenderTemplate(strTemplatePath + "\\Plugin_Settings.props", "Plugin_Settings.props", true); 
         
         // The project file needs to be rendered
-        wizard.RenderTemplate(strTemplatePath + "\\default.vcxproj", strTemplatePath + "\\default_tmp.vcxproj", false, true);
-
-        // files need to be renamed...
-
-        // TODO: look into creating temp dir to create renamed files and temp project. (see CreateCustomInfFile)
+        //wizard.RenderTemplate(strTemplatePath + "\\default.vcxproj", strTemplatePath + "\\default_tmp.vcxproj", false, true);
 
         selProj = CreateCustomProject(strProjectName, strProjectPath);
         AddConfig(selProj, strProjectName);
@@ -39,13 +37,14 @@ function OnFinish(selProj, selObj)
         selProj.Object.Save();
 
         // delete temp rendered project
-        var fso = new ActiveXObject('Scripting.FileSystemObject');
-        DelFile(fso, strTemplatePath + "\\default_tmp.vcxproj"); 
+        //var fso = new ActiveXObject('Scripting.FileSystemObject');
+        //DelFile(fso, strTemplatePath + "\\default_tmp.vcxproj"); 
     }
     catch(e)
     {
         if (e.description.length != 0)
             SetErrorInfo(e);
+
         return e.number
     }
 }
@@ -56,7 +55,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
     {
         var strProjTemplatePath = wizard.FindSymbol('TEMPLATES_PATH');
         var strProjTemplate = '';
-        strProjTemplate = strProjTemplatePath + '\\default_tmp.vcxproj';
+        strProjTemplate = strProjTemplatePath + '\\default.vcxproj';
 
         var Solution = dte.Solution;
         var strSolutionName = "";
@@ -76,7 +75,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
 
         var oTarget = wizard.FindSymbol("TARGET");
         var prj;
-        if (wizard.FindSymbol("WIZARD_TYPE") == vsWizardAddSubProject)  // vsWizardAddSubProject
+        if (wizard.FindSymbol("WIZARD_TYPE") == vsWizardAddSubProject)
         {
             var prjItem = oTarget.AddFromTemplate(strProjTemplate, strProjectNameWithExt);
             prj = prjItem.SubProject;
@@ -85,6 +84,7 @@ function CreateCustomProject(strProjectName, strProjectPath)
         {
             prj = oTarget.AddFromTemplate(strProjTemplate, strProjectPath, strProjectNameWithExt);
         }
+
         var fxtarget = wizard.FindSymbol("TARGET_FRAMEWORK_VERSION");
         if (fxtarget != null && fxtarget != "")
         {
@@ -109,8 +109,13 @@ function AddFilters(proj)
         var group = proj.Object.AddFilter("Source Files");
         group.Filter = ".cpp;.cxx;.c";
 
-        group = proj.Object.AddFilter("Header");
-        gorup.Filter = ".h;.hpp";
+        group = proj.Object.AddFilter("Headers");
+        group.Filter = ".h;.hpp";
+
+        group = proj.Object.AddFilter("Resources");
+        group.Filter = ".rc;resource.h";
+
+        group = proj.Object.AddFilter("Flownodes");
     }
     catch(e)
     {
@@ -201,16 +206,36 @@ function GetTargetName(strName, strProjectName)
 {
     try
     {
-        // TODO: set the name of the rendered file based on the template filename
         var strTarget = strName;
 
-        /*
-        if (strName == 'readme.txt')
-            strTarget = 'ReadMe.txt';
+        var strProjectNameSafe = wizard.FindSymbol('PROJECT_NAME_SAFE');
 
-        if (strName == 'sample.txt')
-            strTarget = 'Sample.txt';
-        */
+        if (strName == "readme.md")
+            strTarget = "..\\readme.md";
+
+        if (strName == "license.txt")
+            strTarget = "..\\license.txt";
+
+        if (strName == "authors.txt")
+            strTarget = "..\\authors.txt";
+
+        if (strName == "CPluginSample.h")
+            strTarget = "..\\src\\CPlugin" + strProjectNameSafe + ".h";
+
+        if (strName == "CPluginSample.cpp")
+            strTarget = "..\\src\\CPlugin" + strProjectNameSafe + ".cpp";
+
+        if (strName == "CPluginSampleModule.cpp")
+            strTarget = "..\\src\\CPlugin" + strProjectNameSafe + "Module.cpp";
+
+        if (strName == "StdAfx.cpp")
+            strTarget = "..\\src\\StdAfx.cpp";
+
+        if (strName == "StdAfx.h")
+            strTarget = "..\\src\\StdAfx.h";
+
+        if (strName == "IPluginSample.h")
+            strTarget = "..\\inc\\IPlugin" + strProjectNameSafe + ".h";
 
         return strTarget;
     }
@@ -257,6 +282,10 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
     {
         throw e;
     }
+}
+
+function DoOpenFile(strTarget) {
+    return false;
 }
 
 

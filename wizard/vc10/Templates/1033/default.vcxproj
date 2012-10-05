@@ -59,45 +59,45 @@
     
     <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
         <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-        <Import Project="..\Plugin_SDK\project\Plugin_Settings.props" />
+        <Import Project="..\..\Plugin_SDK\project\Plugin_Settings.props" />
     </ImportGroup>
 
     <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
         <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-        <Import Project="..\Plugin_SDK\project\Plugin_Settings.props" />
+        <Import Project="..\..\Plugin_SDK\project\Plugin_Settings.props" />
     </ImportGroup>
     
     <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
         <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-        <Import Project="..\Plugin_SDK\project\Plugin_Settings.props" />
+        <Import Project="..\..\Plugin_SDK\project\Plugin_Settings.props" />
     </ImportGroup>
 
     <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
         <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-        <Import Project="..\Plugin_SDK\project\Plugin_Settings.props" />
+        <Import Project="..\..\Plugin_SDK\project\Plugin_Settings.props" />
     </ImportGroup>
     
     <PropertyGroup Label="UserMacros" />
     
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
         <LinkIncremental>false</LinkIncremental>
-        <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\Plugin_[!output PROJECT_NAME_SAFE]</OutDir>
-        <TargetName>Plugin_[!output PROJECT_NAME_SAFE]</TargetName>
+        <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\Plugin_$(ProjectName)</OutDir>
+        <TargetName>Plugin_$(ProjectName)</TargetName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
         <LinkIncremental>false</LinkIncremental>
-        <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\Plugin_[!output PROJECT_NAME_SAFE]</OutDir>
-        <TargetName>Plugin_[!output PROJECT_NAME_SAFE]</TargetName>
+        <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\Plugin_$(ProjectName)</OutDir>
+        <TargetName>Plugin_$(ProjectName)</TargetName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
         <LinkIncremental>false</LinkIncremental>
-        <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\Plugin_[!output PROJECT_NAME_SAFE]</OutDir>
-        <TargetName>Plugin_[!output PROJECT_NAME_SAFE]</TargetName>
+        <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\Plugin_$(ProjectName)</OutDir>
+        <TargetName>Plugin_$(ProjectName)</TargetName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
         <LinkIncremental>false</LinkIncremental>
-        <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\Plugin_[!output PROJECT_NAME_SAFE]</OutDir>
-        <TargetName>Plugin_[!output PROJECT_NAME_SAFE]</TargetName>
+        <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\Plugin_$(ProjectName)</OutDir>
+        <TargetName>Plugin_$(ProjectName)</TargetName>
     </PropertyGroup>
 
     <ItemDefinitionGroup></ItemDefinitionGroup>
