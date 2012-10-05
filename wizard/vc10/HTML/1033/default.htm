@@ -9,9 +9,9 @@
 
     <!-- Here come the plugin properties symbols -->
     <SYMBOL NAME='WIZARD_DIALOG_TITLE' TYPE=text VALUE='Plugin SDK for CryEngine - Plugin Project'></SYMBOL>
-    <SYMBOL NAME='PLUGIN_VERSION' TYPE=text VALUE='1.0.0'></SYMBOL>
+    <SYMBOL NAME='PLUGIN_VERSION' TYPE=text VALUE='1.0.0.0'></SYMBOL>
     <SYMBOL NAME='PLUGIN_AUTHOR' TYPE=text VALUE="Firstname 'alias' Lastname <mail at ? dot ?>"></SYMBOL>
-    <SYMBOL NAME='PLUGIN_CATEGORY' TYPE=select-one VALUE='Utility'></SYMBOL>
+    <SYMBOL NAME='PLUGIN_CATEGORY' TYPE=select-one VALUE='Other'></SYMBOL>
     <SYMBOL NAME='PLUGIN_COMPATIBLITY' TYPE=text VALUE='3.4.0'></SYMBOL>
 
     <SYMBOL NAME='APP_TYPE_SUMMARY' TYPE=text VALUE='This wizard creates a basic project to be used as a base for Plugin development using the Plugin SDK for CryEngine.'></SYMBOL>
@@ -129,14 +129,14 @@
                         <LABEL FOR="PLUGIN_CATEGORY" TITLE="Category" ID="AUT_ID5" >Ca<U>t</u>egory:</LABEL>
                         <BR>
                         <SELECT CLASS="sideBtn" SIZE="1" ID="PLUGIN_CATEGORY" ACCESSKEY="T" TITLE="Plugin Category">
-                            <OPTION VALUE="Flownode" SELECTED>Flownode</OPTION>
+                            <OPTION VALUE="Flownode">Flownode</OPTION>
                             <OPTION VALUE="Script">Script</OPTION>
                             <OPTION VALUE="Visual">Visual (e.g. Camera, Effects, UI, Shader)</OPTION>
                             <OPTION VALUE="Entity">Entity (e.g. AI, Types)</OPTION>
                             <OPTION VALUE="Console">Console (e.g. Commands/CVars)</OPTION>
                             <OPTION VALUE="Hardware">Hardware (e.g. Connection to Hardware)</OPTION>
                             <OPTION VALUE="Framework">Framework (e.g. Scriptlanguage)</OPTION>
-                            <OPTION VALUE="Other">Other</OPTION>
+                            <OPTION VALUE="Other" SELECTED>Other</OPTION>
                             <OPTION VALUE="General">General</OPTION>
                             <OPTION VALUE="Utility">Utility</OPTION>
                             <OPTION VALUE="Bugfix">Bugfix</OPTION>
@@ -235,8 +235,6 @@
      </TD>
   </TR>
 </TABLE>
-
-
 </BODY>
 </HTML>
 
