@@ -390,7 +390,7 @@ namespace PluginManager
 
             if ( fileData.attrib & FILE_ATTRIBUTE_DIRECTORY )
             {
-                LoadPluginsFromDirectory( sSearchDirectory + fileData.name );
+                LoadPluginsFromDirectory( sSearchDirectory + fileData.name, nDepth + 1 );
             }
 
             else if ( !_stricmp( string( fileData.name ).Right( sPluginExtension.length() ), sPluginExtension ) )
