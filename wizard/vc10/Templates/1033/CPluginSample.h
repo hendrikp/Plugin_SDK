@@ -36,7 +36,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             bool Check( const char* sAPIVersion ) const;
 
-            bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager );
+            bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory );
 
             const char* GetVersion() const
             {

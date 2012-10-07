@@ -42,10 +42,10 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         gPluginManager->UnloadPlugin( GetName() );
     };
 
-    bool CPlugin[!output PROJECT_NAME_SAFE]::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
+    bool CPlugin[!output PROJECT_NAME_SAFE]::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )
     {
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
-        CPluginBase::Init( env, startupParams, pPluginManager );
+        CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
 
         // Register CVars/Commands
         if ( gEnv && gEnv->pConsole )
@@ -55,8 +55,11 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         }
 
         // Register Game Objects
-        // TODO: Register Game Objects here if you have some
-        // ...
+        if ( gEnv && gEnv->pGameFramework )
+        {
+            // TODO: Register Game Objects here if you have some
+            // ...
+        }
 
         // Note: Autoregister Flownodes will be automatically registered
 
