@@ -76,6 +76,37 @@ namespace PluginManager
         * @brief List all plugins to console
         */
         virtual void ListAllPlugins() = 0;
+
+        /**
+        * @brief Retrieve directory containing all plugins e.g. "C:\cryengine3_3.4.0\Bin32\Plugins"
+        * @return directory path without slash
+        */
+        virtual const char* GetDirectoryPlugins() const = 0;
+
+        /**
+        * @brief Retrieve directory containing all binaries e.g. "C:\cryengine3_3.4.0\Bin32"
+        * @return directory path without slash
+        */
+        virtual const char* GetDirectoryBinary() const = 0;
+
+        /**
+        * @brief Retrieve root engine directory e.g. "C:\cryengine3_3.4.0"
+        * @return directory path without slash
+        */
+        virtual const char* GetDirectoryRoot() const = 0;
+
+        /**
+        * @brief Retrieve Game directory e.g. "C:\cryengine3_3.4.0\Game"
+        * @return directory path without slash
+        */
+        virtual const char* GetDirectoryGame() const = 0;
+
+        /**
+        * @brief Retrieve User settings/cache directory e.g. "C:\cryengine3_3.4.0\USER"
+        * @return directory path without slash
+        */
+        virtual const char* GetDirectoryUser() const = 0;
+
     };
 };
 

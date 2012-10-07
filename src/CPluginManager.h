@@ -233,6 +233,32 @@ namespace PluginManager
             void DumpAllPlugins();
 
             void ListAllPlugins();
+
+            // Directory information functions
+            const char* GetDirectoryPlugins() const
+            {
+                return m_sPluginsDirectory;
+            };
+
+            const char* GetDirectoryBinary() const
+            {
+                return m_sBinaryDirectory;
+            };
+
+            const char* GetDirectoryRoot() const
+            {
+                return m_sRootDirectory;
+            };
+
+            const char* GetDirectoryGame() const
+            {
+                return m_sGameDirectory;
+            };
+
+            const char* GetDirectoryUser() const
+            {
+                return m_sUserDirectory;
+            };
     };
 }
 
