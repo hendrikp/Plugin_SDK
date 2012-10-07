@@ -84,8 +84,12 @@ namespace PluginManager
 
         /**
         * @brief Initialize the plugin so far that dependencies can do their dependency initialization.
+        * @param env CryEngine environment (Engine pointers)
+        * @param startupParams CryEngine startup parameters (Commandline)
+        * @param pPluginManager Plugin SDK plugin manager
+        * @param sPluginDirectory Absolute path in which your plugin was loaded (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins\Flite")
         */
-        virtual bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager ) = 0;
+        virtual bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory ) = 0;
 
         /**
         * @brief Check if all dependencies are avaible in compatible versions trough the Plugin Manager
@@ -141,6 +145,12 @@ namespace PluginManager
         * @return game objects of the plugin
         */
         virtual const char* ListGameObjects() const = 0;
+
+        /**
+        * @brief General plugin dump functionality
+        * @return all plugin internals for debugging purposes
+        */
+        virtual const char* Dump() const = 0;
 
         /**
         * @brief Current Status of the plugin

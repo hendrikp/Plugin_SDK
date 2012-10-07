@@ -120,7 +120,7 @@ namespace PluginManager
 
             virtual bool Check( const char* sAPIVersion ) const = 0;
 
-            virtual bool CPluginBase::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
+            virtual bool CPluginBase::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )
             {
                 // Initialize Module
                 ModuleInitISystem( env.pSystem, GetName() );
@@ -219,6 +219,11 @@ namespace PluginManager
             };
 
             virtual const char* ListGameObjects() const
+            {
+                return "";
+            };
+
+            virtual const char* Dump() const
             {
                 return "";
             };
