@@ -446,14 +446,24 @@ namespace PluginManager
         // Log before modifying working directory, else log will be written into plugin directory
         LogAlways( "Loading: File(%s) CWD(%s)", sAbsPluginPath.c_str(), sAbsPluginDirectory.c_str() );
 
-        // Change the current directory so we can handle plugin dependencies properly.
-        SetCurrentDirectory( sAbsPluginDirectory );
+        // Better not change the current directory (SetCurrentDirectory)
+        // (threadsafety: it's used internally for cachefile/logs which would be created sporadically in plugin directory)
+        // better use SetDllDirectory so we can still handle plugin dependencies properly.
+        nPathLen = GetDllDirectory( 0, NULL );
+        string sDllDirectory;
+        {
+            char* sTempPath = new char[nPathLen + 1];
+            GetDllDirectory( nPathLen + 1, sTempPath );
+            sDllDirectory = sTempPath;
+            delete [] sTempPath;
+        }
+        SetDllDirectory( sAbsPluginDirectory );
 
         // Load the library and non lazy linked dependencies
         hModule = CryLoadLibrary( sPluginPath );
 
-        // Change the current directory so we can handle plugin dependencies properly.
-        SetCurrentDirectory( sCurrentDirectory );
+        // Reset the dll directory to old value
+        SetDllDirectory( sDllDirectory );
 
         return hModule;
     }
