@@ -17,29 +17,37 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         gPlugin = NULL;
     }
 
-    void CPlugin[!output PROJECT_NAME_SAFE]::Release()
+    bool CPlugin[!output PROJECT_NAME_SAFE]::Release( bool bForce )
     {
         // Should be called while Game is still active otherwise there might be leaks/problems
-        CPluginBase::Release();
+        bool bRet = CPluginBase::Release( bForce );
 
-        // Depending on your plugin you might not want to unregister anything
-        // if the System is quitting.
-        // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
-
-        // Unregister CVars
-        if ( gEnv && gEnv->pConsole )
+        if ( bRet )
         {
-            // ...
+            // Depending on your plugin you might not want to unregister anything
+            // if the System is quitting.
+            // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
+
+            // Unregister CVars
+            if ( gEnv && gEnv->pConsole )
+            {
+                // ...
+            }
+
+            // Unregister game objects
+            if ( gEnv && gEnv->pGameFramework )
+            {
+                // ...
+            }
+
+            // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
+            gPluginManager->UnloadPlugin( GetName() );
+
+            // Allow Plugin Manager garbage collector to unload this plugin
+            AllowDllUnload();
         }
 
-        // Unregister game objects
-        if ( gEnv && gEnv->pGameFramework )
-        {
-            // ...
-        }
-
-        // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-        gPluginManager->UnloadPlugin( GetName() );
+        return bRet;
     };
 
     bool CPlugin[!output PROJECT_NAME_SAFE]::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )

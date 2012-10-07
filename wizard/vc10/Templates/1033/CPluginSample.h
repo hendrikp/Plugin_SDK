@@ -27,7 +27,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
             ~CPlugin[!output PROJECT_NAME_SAFE]();
 
             // IPluginBase
-            void Release();
+            bool Release( bool bForce = false );
 
             int GetInitializationMode() const
             {

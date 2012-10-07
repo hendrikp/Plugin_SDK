@@ -76,6 +76,17 @@ namespace PluginManager
                 return m_bCanUnload;
             }
 
+        protected:
+            /**
+            * @brief This can be used by a plugin to tell the manager that the dll can be unloaded.
+            * Call only after you cleaned up everything in the Release function
+            */
+            void AllowDllUnload()
+            {
+                m_bCanUnload = true;
+            }
+
+        public:
             virtual bool IsUnloading()
             {
                 return m_bIsUnloading;
