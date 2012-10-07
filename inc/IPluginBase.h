@@ -1,4 +1,4 @@
-/* CE3 Plugin Manager - for licensing and copyright see license.txt */
+/* Plugin SDK - for licensing and copyright see license.txt */
 
 #define PLUGIN_TEXT "Plugin"
 
