@@ -219,7 +219,7 @@ namespace PluginManager
 
     /**
     * @internal
-    * @brief Small Helper for verifying terminating slash
+    * @brief Small Helper for extracting directory from a path
     */
     string pathBaseName( const string sPath )
     {
@@ -230,6 +230,24 @@ namespace PluginManager
         if ( nEndPos != string::npos && nEndPos > 0 )
         {
             sRet = sPath.Left( nEndPos );
+        }
+
+        return sRet;
+    }
+
+    /**
+    * @internal
+    * @brief Small Helper for extracting file from a path
+    */
+    string pathFileName( const string sPath )
+    {
+        string sRet = sPath; // fallback
+
+        size_t nStartPos = sPath.find_last_of( PATH_SEPERATOR );
+
+        if ( nStartPos != string::npos && nStartPos + 1 < sPath.length() )
+        {
+            sRet = sPath.Mid( nStartPos + 1 );
         }
 
         return sRet;
@@ -605,7 +623,7 @@ namespace PluginManager
                             {
                                 LogAlways( "Loaded: Name(%s) Version(%s) Category(%s)", sPluginName.c_str(), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ) );
 
-                                m_Plugins[sPluginName] = SPluginInfo( iface, hModule, "", "" );
+                                m_Plugins[sPluginName] = SPluginInfo( iface, hModule, pathFileName( sPluginPath ), pathBaseName( sPluginPath ) );
 
                                 if ( bInitialize )
                                 {
