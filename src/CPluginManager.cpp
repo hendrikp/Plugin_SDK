@@ -783,6 +783,18 @@ namespace PluginManager
         return NULL;
     }
 
+    const char* CPluginManager::GetPluginDirectory( const char* sPluginName ) const
+    {
+        tPluginNameMap::const_iterator pluginIter = m_Plugins.find( sPluginName );
+
+        if ( pluginIter != m_Plugins.end() )
+        {
+            return pluginIter->second.m_sDirectory;
+        }
+
+        return NULL;
+    };
+
     void CPluginManager::DumpPlugin( const char* sPluginName )
     {
         IPluginBase* iface = GetPluginByName(  sPluginName );

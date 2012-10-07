@@ -115,11 +115,11 @@ namespace PluginManager
             tPluginNameMap m_Plugins; //!< All Plugins
             tPluginNameMap m_UnloadingPlugins; //!< Plugins marked for cleanup
 
-            string m_sPluginsDirectory; //!< Directory containing all plugins e.g. "C:\cryengine3_3.4.0\Bin32\Plugins"
-            string m_sBinaryDirectory; //!< Directory containing all binaries e.g. "C:\cryengine3_3.4.0\Bin32"
-            string m_sRootDirectory; //!< Root engine directory e.g. "C:\cryengine3_3.4.0"
-            string m_sGameDirectory; //!< Game directory e.g. "C:\cryengine3_3.4.0\Game"
-            string m_sUserDirectory; //!< User settings/cache directory e.g. "C:\cryengine3_3.4.0\USER"
+            string m_sPluginsDirectory; //!< Directory containing all plugins (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins")
+            string m_sBinaryDirectory; //!< Directory containing all binaries (e.g. "C:\cryengine3_3.4.0\Bin32")
+            string m_sRootDirectory; //!< Root engine directory (e.g. "C:\cryengine3_3.4.0")
+            string m_sGameDirectory; //!< Game directory (e.g. "C:\cryengine3_3.4.0\Game")
+            string m_sUserDirectory; //!< User settings/cache directory (e.g. "C:\cryengine3_3.4.0\USER")
 
             /**
             * @internal
@@ -227,6 +227,8 @@ namespace PluginManager
             void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
 
             IPluginBase* GetPluginByName( const char* sPluginName );
+
+            const char* GetPluginDirectory( const char* sPluginName ) const;
 
             void DumpPlugin( const char* sPluginName );
 

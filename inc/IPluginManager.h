@@ -63,9 +63,15 @@ namespace PluginManager
         virtual IPluginBase* GetPluginByName(  const char* sPluginName ) = 0;
 
         /**
+        * @brief Retrieve directory of a plugin (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins\Flite")
+        * @return directory path without slash
+        */
+        virtual const char* GetPluginDirectory( const char* sPluginName ) const = 0;
+
+        /**
         * @brief Dump infos on specific plugin to console
         */
-        virtual void DumpPlugin(  const char* sPluginName ) = 0;
+        virtual void DumpPlugin( const char* sPluginName ) = 0;
 
         /**
         * @brief Dump all plugins to console
@@ -78,35 +84,34 @@ namespace PluginManager
         virtual void ListAllPlugins() = 0;
 
         /**
-        * @brief Retrieve directory containing all plugins e.g. "C:\cryengine3_3.4.0\Bin32\Plugins"
+        * @brief Retrieve directory containing all plugins (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins")
         * @return directory path without slash
         */
         virtual const char* GetDirectoryPlugins() const = 0;
 
         /**
-        * @brief Retrieve directory containing all binaries e.g. "C:\cryengine3_3.4.0\Bin32"
+        * @brief Retrieve directory containing all binaries (e.g. "C:\cryengine3_3.4.0\Bin32")
         * @return directory path without slash
         */
         virtual const char* GetDirectoryBinary() const = 0;
 
         /**
-        * @brief Retrieve root engine directory e.g. "C:\cryengine3_3.4.0"
+        * @brief Retrieve root engine directory (e.g. "C:\cryengine3_3.4.0")
         * @return directory path without slash
         */
         virtual const char* GetDirectoryRoot() const = 0;
 
         /**
-        * @brief Retrieve Game directory e.g. "C:\cryengine3_3.4.0\Game"
+        * @brief Retrieve Game directory (e.g. "C:\cryengine3_3.4.0\Game")
         * @return directory path without slash
         */
         virtual const char* GetDirectoryGame() const = 0;
 
         /**
-        * @brief Retrieve User settings/cache directory e.g. "C:\cryengine3_3.4.0\USER"
+        * @brief Retrieve User settings/cache directory (e.g. "C:\cryengine3_3.4.0\USER")
         * @return directory path without slash
         */
         virtual const char* GetDirectoryUser() const = 0;
-
     };
 };
 
