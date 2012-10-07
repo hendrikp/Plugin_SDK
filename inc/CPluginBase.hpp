@@ -1,4 +1,4 @@
-/* CE3 Plugin Manager - for licensing and copyright see license.txt */
+/* Plugin SDK - for licensing and copyright see license.txt */
 
 #pragma once
 
@@ -13,62 +13,35 @@
 
 #include <Nodes/G2FlowBaseNode.h>
 
+#include <CPluginBaseMinimal.hpp>
+
 namespace PluginManager
 {
     /**
     * @brief Plugin Base Class
     */
     class CPluginBase :
-        public IPluginBase,
+        public CPluginBaseMinimal,
         public IPluginLog
     {
-        protected:
-            bool m_bIsUnloading; //!< flag that the plugin is currently unloading and can't be used anymore
-            bool m_bIsInitialized; //!< flag that everything for dependencies is now initialized
-            bool m_bIsFullyInitialized; //!< flag that all dependencies are fully initialized and the plugin can be used now
-            bool m_bCanUnload; //!< flag that plugin is fully released and the dll can be unloaded
-            int m_nReferences; //!< reference counter
-
         public:
             CPluginBase()
             {
-                m_nReferences = 1;
-                m_bIsUnloading = false;
-                m_bIsInitialized = false;
-                m_bIsFullyInitialized = false;
-                m_bCanUnload = false;
+                CPluginBaseMinimal::CPluginBaseMinimal();
             };
 
             virtual ~CPluginBase()
-            {
-                Release( true );
-            };
+            { };
 
             // IPluginBase
-            virtual void AddRef()
+            virtual bool Release( bool bForce = false )
             {
-                if ( ++m_nReferences > 0 )
+                bool bFlownodesPresent = m_bIsFullyInitialized;
+                bool bRet = CPluginBaseMinimal::Release( bForce );
+
+                if ( bRet )
                 {
-                    m_bIsUnloading = false;
-                    m_bCanUnload = false;
-                }
-            };
-
-            virtual bool CPluginBase::Release( bool bForce = false )
-            {
-                if ( --m_nReferences <= 0 || bForce )
-                {
-                    m_bIsUnloading = true;
-                    m_nReferences = 0;
-
-                    if ( m_bIsInitialized )
-                    {
-#if !defined(PLUGINMANAGER_EXPORTS)
-                        gPluginManager->GetBase()->Release();
-#endif
-                    }
-
-                    if ( m_bIsFullyInitialized )
+                    if ( bFlownodesPresent )
                     {
                         // Unregister flownodes
                         if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
@@ -85,72 +58,9 @@ namespace PluginManager
                             }
                         }
                     }
-
-                    m_bIsInitialized = false;
-                    m_bIsFullyInitialized = false;
                 }
 
-                return m_bIsUnloading && m_nReferences == 0;
-            };
-
-            virtual bool DllCanUnloadNow()
-            {
-                return m_bCanUnload;
-            }
-
-            virtual bool IsUnloading()
-            {
-                return m_bIsUnloading;
-            };
-
-            virtual bool IsInitialized()
-            {
-                return m_bIsInitialized;
-            };
-
-            virtual bool IsFullyInitialized()
-            {
-                return m_bIsFullyInitialized;
-            };
-
-            virtual int GetInitializationMode() const
-            {
-                return int( IM_Default );
-            };
-
-            virtual bool Check( const char* sAPIVersion ) const = 0;
-
-            virtual bool CPluginBase::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )
-            {
-                // Initialize Module
-                ModuleInitISystem( env.pSystem, GetName() );
-                m_bIsInitialized = true;
-
-#if !defined(PLUGINMANAGER_EXPORTS)
-                gPluginManager = ( IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
-
-                if ( gPluginManager && pPluginManager )
-                {
-                    pPluginManager->AddRef();
-                }
-
-                else
-                {
-                    m_bIsInitialized = false;
-                }
-
-#endif
-
-                return m_bIsInitialized;
-            };
-
-            virtual bool CheckDependencies() const
-            {
-#if !defined(PLUGINMANAGER_EXPORTS)
-                return gEnv && gEnv->pSystem && gPluginManager && gPluginManager->GetBase();
-#else
-                return gEnv && gEnv->pSystem;
-#endif
+                return bRet;
             };
 
             virtual bool InitDependencies()
@@ -172,29 +82,8 @@ namespace PluginManager
                     LogWarning( "Flownodes couldn't be registered" );
                 }
 
-                m_bIsFullyInitialized = true;
-                return  m_bIsFullyInitialized;
+                return CPluginBaseMinimal::InitDependencies( );
             }
-
-            virtual const char* GetVersion() const
-            {
-                return "1.0";
-            };
-
-            virtual const char* GetName() const
-            {
-                return "Undefined";
-            };
-
-            virtual const char* GetCategory() const
-            {
-                return "Undefined";
-            };
-
-            virtual const char* ListAuthors() const
-            {
-                return "";
-            };
 
             virtual const char* ListNodes() const
             {
@@ -211,46 +100,6 @@ namespace PluginManager
                 }
 
                 return sNodes;
-            };
-
-            virtual const char* ListCVars() const
-            {
-                return "";
-            };
-
-            virtual const char* ListGameObjects() const
-            {
-                return "";
-            };
-
-            virtual const char* Dump() const
-            {
-                return "";
-            };
-
-            virtual const char* GetStatus() const
-            {
-                return "Undefined";
-            };
-
-            virtual const char* GetCurrentConcreteInterfaceVersion() const
-            {
-                return "0";
-            };
-
-            virtual void* GetConcreteInterface( const char* sInterfaceVersion )
-            {
-                return NULL;
-            };
-
-            virtual const char* GetCurrentExtendedInterfaceVersion() const
-            {
-                return "0";
-            };
-
-            virtual void* GetExtendedInterface( const char* sInterfaceVersion )
-            {
-                return NULL;
             };
 
             // IPluginLog

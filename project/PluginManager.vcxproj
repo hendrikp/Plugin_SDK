@@ -225,6 +225,7 @@ stylecode.bat</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\CPluginBase.hpp" />
+    <ClInclude Include="..\inc\CPluginBaseMinimal.hpp" />
     <ClInclude Include="..\inc\IPluginBase.h" />
     <ClInclude Include="..\inc\IPluginManager.h" />
     <ClInclude Include="..\inc\IPluginManager_impl.h" />
