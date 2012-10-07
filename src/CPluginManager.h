@@ -17,9 +17,40 @@
 #define PATH_SEPERATOR "\\"
 #define PLUGIN_PATH PLUGIN_FOLDER PATH_SEPERATOR PLUGIN_FILENAME //!< Full Path of the plugin
 
+#define SAFESTR(x) (((const char*)x)?((const char*)x):"") //!< Helper to avoid NULL str problems
+#define BOOLSTR(x) (x?"true":"false") //!< Helper to concert boolean values
+
 namespace PluginManager
 {
-    typedef std::map<string, std::pair<HINSTANCE, IPluginBase*> > tPluginNameMap; //!< plugin name registry type
+    /**
+    * @brief Store some information about each plugin in manager
+    */
+    struct SPluginInfo
+    {
+        HINSTANCE m_hModule;
+        IPluginBase* m_pBase;
+
+        string m_sFile;
+        string m_sDirectory;
+
+        SPluginInfo()
+        {
+            m_hModule = NULL;
+            m_pBase = NULL;
+            m_sFile = "";
+            m_sDirectory = "";
+        }
+
+        SPluginInfo( IPluginBase* pBase, HINSTANCE hModule, const char* sFile, const char* sDirectory )
+        {
+            m_hModule = hModule;
+            m_pBase = pBase;
+            m_sFile = SAFESTR( sFile );
+            m_sDirectory = SAFESTR( sDirectory );
+        };
+    };
+
+    typedef std::map<string, SPluginInfo> tPluginNameMap; //!< plugin name registry type
 
     /**
     * @brief List All Plugins
@@ -84,19 +115,34 @@ namespace PluginManager
             tPluginNameMap m_Plugins; //!< All Plugins
             tPluginNameMap m_UnloadingPlugins; //!< Plugins marked for cleanup
 
+            string m_sPluginsDirectory; //!< Directory containing all plugins e.g. "C:\cryengine3_3.4.0\Bin32\Plugins"
+            string m_sBinaryDirectory; //!< Directory containing all binaries e.g. "C:\cryengine3_3.4.0\Bin32"
+            string m_sRootDirectory; //!< Root engine directory e.g. "C:\cryengine3_3.4.0"
+            string m_sGameDirectory; //!< Game directory e.g. "C:\cryengine3_3.4.0\Game"
+            string m_sUserDirectory; //!< User settings/cache directory e.g. "C:\cryengine3_3.4.0\USER"
+
             /**
-            * @brief Internal Cleanup of unused plugins.
+            * @internal
+            * @brief Internal Refresh/Initialize paths
+            */
+            void CPluginManager::RefreshPaths();
+
+            /**
+            * @internal
+            * @brief Cleanup of unused plugins.
             */
             void PluginGarbageCollector();
 
             /**
-            * @brief Internal Helper to load link libraries in their own directory
+            * @internal
+            * @brief Helper to load link libraries in their own directory
             * @param sPluginPath dll path coming from CryPak
             */
             HMODULE LoadLibraryWithinOwnDirectory( const char* sPluginPath ) const;
 
             /**
-            * @brief Internal Helper to load link libraries from a path
+            * @internal
+            * @brief Helper to load link libraries from a path
             * @param sPath Path in which to search for plugins
             *  in depth = 0 its a directory with plugins or subdirectories that contain plugins
             *  in depth = 1 its a plugin subdirectory with plugin specific non lazy load dependencies
@@ -126,7 +172,7 @@ namespace PluginManager
 
             bool Check( const char* sAPIVersion ) const;
 
-            bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager );
+            bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory );
 
             const char* GetVersion() const
             {
@@ -145,7 +191,7 @@ namespace PluginManager
 
             const char* ListAuthors() const
             {
-                return "Hendrik \"hendrikp\" Polczynski,\nRaphael \"MrHankey89\" Leiteritz";
+                return "Hendrik Polczynski,\nRaphael \"MrHankey89\" Leiteritz,\nFilip \"i59\" Lundgren";
             };
 
             const char* ListCVars() const;

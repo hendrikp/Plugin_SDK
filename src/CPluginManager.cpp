@@ -3,9 +3,6 @@
 #include <StdAfx.h>
 #include <CPluginManager.h>
 
-#define SAFESTR(x) (((const char*)x)?((const char*)x):"")
-#define BOOLSTR(x) (x?"true":"false")
-
 namespace PluginManager
 {
     void Command_ListAll( IConsoleCmdArgs* pArgs )
@@ -83,6 +80,12 @@ namespace PluginManager
     CPluginManager::CPluginManager()
     {
         gPluginManager = this;
+
+        m_sPluginsDirectory = "";
+        m_sBinaryDirectory = "";
+        m_sRootDirectory = "";
+        m_sGameDirectory = "";
+        m_sUserDirectory = "";
     }
 
     CPluginManager::~CPluginManager()
@@ -97,10 +100,6 @@ namespace PluginManager
 
         if ( bRet )
         {
-            // Depending on your plugin you might not want to unregister anything
-            // if the System is quitting.
-            // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
-
             // Unregister CVars
             if ( gEnv && gEnv->pConsole )
             {
@@ -111,12 +110,6 @@ namespace PluginManager
                 gEnv->pConsole->RemoveCommand( "pm_unloadall" );
                 gEnv->pConsole->RemoveCommand( "pm_reload" );
                 gEnv->pConsole->RemoveCommand( "pm_reloadall" );
-            }
-
-            // Unregister game objects
-            if ( gEnv && gEnv->pGameFramework )
-            {
-                // ...
             }
 
             // Unregister listeners
@@ -132,19 +125,174 @@ namespace PluginManager
             gPluginManager->UnloadPlugin( GetName() );
             m_bCanUnload = true;
 
-            // special case only in manager...
+            // Special case only in manager...
             PluginGarbageCollector();
         }
 
         return bRet;
     };
 
-    bool CPluginManager::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager )
+    /**
+    * @internal
+    * @brief Small Helper for verifying paths
+    */
+    bool isAbsolute( const string sPath )
+    {
+        if ( sPath.length() < 1 )
+        {
+            return false;
+        }
+
+        if ( sPath[0] == *PATH_SEPERATOR )
+        {
+            return true;
+        }
+
+        if ( sPath[0] == '/' )
+        {
+            return true;
+        }
+
+        if ( sPath.length() < 2 )
+        {
+            return false;
+        }
+
+        if ( sPath[1] == ':' )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+    * @internal
+    * @brief Small Helper for verifying if path is not an empty string
+    */
+    bool isEmpty( const char* sPath )
+    {
+        if ( !sPath || !sPath[0] )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+    * @internal
+    * @brief Small Helper for verifying if path is dot special path
+    */
+    bool isDot( const string sPath )
+    {
+        if ( sPath == "." || sPath == ".." )
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+    * @internal
+    * @brief Small Helper for verifying terminating slash
+    */
+    string pathWithSeperator( const string sPath )
+    {
+        string sRet = sPath; // fallback
+
+        if ( sPath.length() < 1 )
+        {
+            return sRet;
+        }
+
+        if ( sPath.Right( 1 ).at( 0 ) != PATH_SEPERATOR[0] )
+        {
+            sRet += PATH_SEPERATOR;
+        }
+
+        return sRet;
+    }
+
+    /**
+    * @internal
+    * @brief Small Helper for verifying terminating slash
+    */
+    string pathBaseName( const string sPath )
+    {
+        string sRet = sPath; // fallback
+
+        size_t nEndPos = sPath.find_last_of( PATH_SEPERATOR );
+
+        if ( nEndPos != string::npos && nEndPos > 0 )
+        {
+            sRet = sPath.Left( nEndPos );
+        }
+
+        return sRet;
+    }
+
+    void CPluginManager::RefreshPaths()
+    {
+        // Save the current directory so we can reset it after loading plugins
+        DWORD nPathLen = GetCurrentDirectory( 0, NULL );
+        string sCurrentDirectory;
+        {
+            char* sTempPath = new char[nPathLen + 1];
+            GetCurrentDirectory( nPathLen + 1, sTempPath );
+            sCurrentDirectory = sTempPath;
+            delete [] sTempPath;
+        }
+
+        // The root should be the current directory
+        m_sRootDirectory = sCurrentDirectory;
+
+        // The binary directory depends on dll type
+        m_sBinaryDirectory = sCurrentDirectory;
+        m_sBinaryDirectory += PATH_SEPERATOR "Bin";
+
+#if defined(WIN64)
+        m_sBinaryDirectory += "64";
+#elif defined(WIN32)
+        m_sBinaryDirectory += "32";
+#else
+        // Add platforms
+#endif
+        // The plugins folders lies within binary directory
+        m_sPluginsDirectory = m_sBinaryDirectory + PATH_SEPERATOR + PLUGIN_FOLDER;
+
+        assert( gEnv && gEnv->pCryPak );
+
+        // create plugin directory if it doesn't exist
+        if ( !gEnv->pCryPak->IsFileExist( m_sPluginsDirectory ) )
+        {
+            gEnv->pCryPak->MakeDir( m_sPluginsDirectory );
+        }
+
+        // User directory depends on various settings so query current setting from crypak
+        m_sUserDirectory = gEnv->pCryPak->GetAlias( "%USER%", false );
+
+        if ( !isAbsolute( m_sUserDirectory ) )
+        {
+            m_sUserDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sUserDirectory;
+        }
+
+        // The game directory also can be influenced so query current setting from crypak
+        m_sGameDirectory = gEnv->pCryPak->GetGameFolder();
+
+        if ( !isAbsolute( m_sGameDirectory ) )
+        {
+            m_sGameDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sGameDirectory;
+        }
+    };
+
+    bool CPluginManager::Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )
     {
         // Save Startup parameters
         gStartupInitParams = startupParams;
 
-        bool bRet = CPluginBase::Init( env, startupParams, gPluginManager->GetBase() );
+        bool bRet = CPluginBase::Init( env, startupParams, gPluginManager->GetBase(), sPluginDirectory );
 
         if ( bRet )
         {
@@ -160,19 +308,19 @@ namespace PluginManager
                 gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
             }
 
-            // Register Game Objects
-            // ...
-
             // Register Listeners
             if ( gEnv->pGameFramework )
             {
                 gEnv->pGameFramework->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
             }
 
+            // Initialize path informations
+            RefreshPaths();
+
             // Register the plugin manager itself (plugin manager only, plugins don't need to do this)
             LogAlways( "Plugin Manager initialized!" );
 
-            m_Plugins[ GetName() ] = std::pair<HINSTANCE, IPluginBase*>( GetModuleHandle( PLUGIN_FILENAME ), GetBase() );
+            m_Plugins[ GetName() ] = SPluginInfo( GetBase(), GetModuleHandle( PLUGIN_FILENAME ), PLUGIN_FILENAME, m_sPluginsDirectory );
         }
 
         return bRet;
@@ -222,10 +370,10 @@ namespace PluginManager
                 for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
                 {
                     // Don't unload the plugin manager and unload in reverse order
-                    if ( pluginIter->second.second != GetBase() && pluginIter->second.second->GetInitializationMode() == nMode )
+                    if ( pluginIter->second.m_pBase && pluginIter->second.m_pBase != GetBase() && pluginIter->second.m_pBase->GetInitializationMode() == nMode )
                     {
                         bEndReached = false;
-                        UnloadPlugin( pluginIter->second.second->GetName() );
+                        UnloadPlugin( pluginIter->second.m_pBase->GetName() );
                         break; // Iterators are invalidated get new iterator for next cleanup...
                     }
                 }
@@ -248,12 +396,12 @@ namespace PluginManager
 
         if ( pluginIter != m_Plugins.end() )
         {
-            if ( !pluginIter->second.second->IsUnloading() )
+            if ( pluginIter->second.m_pBase && !pluginIter->second.m_pBase->IsUnloading() )
             {
                 LogAlways( "Trying to unload: Name(%s)", sPluginName );
 
                 // Let the plugin first clean itself up
-                pluginIter->second.second->Release();
+                pluginIter->second.m_pBase->Release();
                 PluginGarbageCollector();
             }
 
@@ -294,10 +442,10 @@ namespace PluginManager
 
             for ( tPluginNameMap::iterator pluginIter = m_UnloadingPlugins.begin(); pluginIter != m_UnloadingPlugins.end(); ++pluginIter )
             {
-                if ( pluginIter->second.second->DllCanUnloadNow() )
+                if ( pluginIter->second.m_pBase && pluginIter->second.m_pBase->DllCanUnloadNow() )
                 {
-                    LogAlways( "Garbage Collector Unloading: Name(%s)", SAFESTR( pluginIter->second.second->GetName() ) );
-                    CryFreeLibrary( pluginIter->second.first );
+                    LogAlways( "Garbage Collector Unloading: Name(%s)", SAFESTR( pluginIter->second.m_pBase->GetName() ) );
+                    CryFreeLibrary( pluginIter->second.m_hModule );
                     pluginIter = m_UnloadingPlugins.erase( pluginIter );
                     bUnloadedSomething = true;
 
@@ -323,24 +471,8 @@ namespace PluginManager
     {
         ICryPak* pCryPak = gEnv->pCryPak;
 
-        // The CryPak CWD seems to be Game
-        string sPluginsPath;
-#if defined(WIN64)
-        sPluginsPath = ".." PATH_SEPERATOR "Bin64" PATH_SEPERATOR;
-#elif defined(WIN32)
-        sPluginsPath = ".." PATH_SEPERATOR "Bin32" PATH_SEPERATOR;
-#endif
-
-        sPluginsPath += PLUGIN_FOLDER;
-
-        // create plugin directory if it doesnt exist
-        if ( !pCryPak->IsFileExist( sPluginsPath.c_str() ) )
-        {
-            pCryPak->MakeDir( sPluginsPath.c_str() );
-        }
-
         // Load Plugins from the main directory and then also recursively load subdirectories (max depth 1)
-        LoadPluginsFromDirectory( sPluginsPath.c_str() );
+        LoadPluginsFromDirectory( m_sPluginsDirectory );
 
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
     }
@@ -356,12 +488,7 @@ namespace PluginManager
         ICryPak* pCryPak = gEnv->pCryPak;
 
         // Append Path Seperator if not present
-        string sSearchDirectory = sPath;
-
-        if ( sSearchDirectory.Right( 1 ).at( 0 ) != PATH_SEPERATOR[0] )
-        {
-            sSearchDirectory += PATH_SEPERATOR;
-        }
+        string sSearchDirectory = pathWithSeperator( sPath );
 
         // Append wildcard search
         string sSearchFilter = sSearchDirectory;
@@ -376,14 +503,15 @@ namespace PluginManager
         intptr_t hFileFind = intptr_t( INVALID_HANDLE_VALUE );
         int hNextFile = int( INVALID_HANDLE_VALUE );
 
-        // dll hasn't to be in a pak in fact shouldn't be since its not supported by CryLoadLibrary
+        // CryPak is used because its cross platform not because libraries can actually be in a pak.
+        // In fact they shouldn't be since its not supported by CryLoadLibrary
         // so set AllowFilesystem = true
         for ( hNextFile = hFileFind = pCryPak->FindFirst( sSearchFilter, &fileData, 0, true );
                 hNextFile != int( INVALID_HANDLE_VALUE );
                 hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
         {
             // Don't work with . and ..
-            if ( !fileData.name[0] || ( '.' == fileData.name[0] && !fileData.name[1] ) || ( '.' == fileData.name[0] && '.' == fileData.name[1] && !fileData.name[2] ) )
+            if ( isEmpty( fileData.name ) || isDot( fileData.name ) )
             {
                 continue;
             }
@@ -411,45 +539,15 @@ namespace PluginManager
 
         HINSTANCE hModule = NULL;
 
-        // Save the current directory so we can reset it after loading plugins
-        DWORD nPathLen = GetCurrentDirectory( 0, NULL );
-        string sCurrentDirectory;
-        {
-            char* sTempPath = new char[nPathLen + 1];
-            GetCurrentDirectory( nPathLen + 1, sTempPath );
-            sCurrentDirectory = sTempPath;
-            delete [] sTempPath;
-        }
-
-        // CryPak is used because its cross platform not because libraries can actually be in a pak.
-        // We have to format the path a bit to work with the same data as crypak.
-        string sAbsPluginDirectory = sCurrentDirectory;  // fallback cwd
-        string sAbsPluginPath = sPluginPath; // fallback relative
-        {
-            string sCryPakPluginPath = sPluginPath;
-
-            size_t nStartPos = sCryPakPluginPath.find_first_of( PATH_SEPERATOR );
-            size_t nEndPos = sCryPakPluginPath.find_last_of( PATH_SEPERATOR );
-
-            if ( nStartPos != string::npos && nEndPos != string::npos && nStartPos != nEndPos )
-            {
-                sAbsPluginDirectory += sCryPakPluginPath.Mid( nStartPos, nEndPos - nStartPos );
-                sAbsPluginPath = sAbsPluginDirectory + sCryPakPluginPath.Mid( nEndPos );
-            }
-
-            else
-            {
-                LogError( "LoadLibraryWithinOwnDirectory invalid directory(%s)", sCryPakPluginPath.c_str() );
-            }
-        }
+        string sAbsPluginDirectory = pathBaseName( sPluginPath );
 
         // Log before modifying working directory, else log will be written into plugin directory
-        LogAlways( "Loading: File(%s) CWD(%s)", sAbsPluginPath.c_str(), sAbsPluginDirectory.c_str() );
+        LogAlways( "Loading: File(%s) CWD(%s)", sPluginPath, sAbsPluginDirectory.c_str() );
 
         // Better not change the current directory (SetCurrentDirectory)
         // (threadsafety: it's used internally for cachefile/logs which would be created sporadically in plugin directory)
         // better use SetDllDirectory so we can still handle plugin dependencies properly.
-        nPathLen = GetDllDirectory( 0, NULL );
+        int nPathLen = GetDllDirectory( 0, NULL );
         string sDllDirectory;
         {
             char* sTempPath = new char[nPathLen + 1];
@@ -505,7 +603,7 @@ namespace PluginManager
                             {
                                 LogAlways( "Loaded: Name(%s) Version(%s) Category(%s)", sPluginName.c_str(), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ) );
 
-                                m_Plugins[sPluginName] = std::pair<HINSTANCE, IPluginBase*>( hModule, iface );
+                                m_Plugins[sPluginName] = SPluginInfo( iface, hModule, "", "" );
 
                                 if ( bInitialize )
                                 {
@@ -566,36 +664,44 @@ namespace PluginManager
 
         if ( pluginIter != m_Plugins.end() )
         {
-            IPluginBase* iface = pluginIter->second.second;
+            IPluginBase* iface = pluginIter->second.m_pBase;
 
-            if ( !iface->IsInitialized() ) // Initialize plugins in order
+            if ( iface )
             {
-                if ( !iface->Init( *gEnv, gStartupInitParams, GetBase() ) )
+                if ( !iface->IsInitialized() ) // Initialize plugins in order
                 {
-                    LogError( "Init failed: Name(%s)", SAFESTR( iface->GetName() ) );
-                }
-            }
-
-            if ( iface->IsInitialized() && !iface->IsFullyInitialized() )
-            {
-                if ( iface->CheckDependencies() )
-                {
-                    if ( !iface->InitDependencies() )
+                    if ( !iface->Init( *gEnv, gStartupInitParams, GetBase(), pluginIter->second.m_sDirectory ) )
                     {
-                        LogError( "InitDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
+                        LogError( "Init failed: Name(%s)", SAFESTR( iface->GetName() ) );
+                    }
+                }
+
+                if ( iface->IsInitialized() && !iface->IsFullyInitialized() )
+                {
+                    if ( iface->CheckDependencies() )
+                    {
+                        if ( !iface->InitDependencies() )
+                        {
+                            LogError( "InitDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
+                        }
+
                     }
 
+                    else
+                    {
+                        LogError( "CheckDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
+                    }
                 }
 
-                else
+                if ( iface->IsFullyInitialized() )
                 {
-                    LogError( "CheckDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
+                    return true;
                 }
             }
 
-            if ( iface->IsFullyInitialized() )
+            else
             {
-                return true;
+                LogError( "BaseInterface not present: Name(%s)", SAFESTR( sPluginName ) );
             }
         }
 
@@ -609,11 +715,11 @@ namespace PluginManager
             // First initialize all in this dependency level
             for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
             {
-                IPluginBase* iface = pluginIter->second.second;
+                IPluginBase* iface = pluginIter->second.m_pBase;
 
-                if ( iface->GetInitializationMode() == nMode && !iface->IsInitialized() ) // Initialize plugins in order
+                if ( iface && iface->GetInitializationMode() == nMode && !iface->IsInitialized() ) // Initialize plugins in order
                 {
-                    if ( !iface->Init( *gEnv, gStartupInitParams, GetBase() ) )
+                    if ( !iface->Init( *gEnv, gStartupInitParams, GetBase(), pluginIter->second.m_sDirectory  ) )
                     {
                         LogError( "Init failed: Name(%s)", SAFESTR( iface->GetName() ) );
                     }
@@ -623,9 +729,9 @@ namespace PluginManager
             // Now initialize the dependencies
             for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
             {
-                IPluginBase* iface = pluginIter->second.second;
+                IPluginBase* iface = pluginIter->second.m_pBase;
 
-                if ( iface->GetInitializationMode() == nMode && iface->IsInitialized() && !iface->IsFullyInitialized() ) // Initialize plugins in order
+                if ( iface && iface->GetInitializationMode() == nMode && iface->IsInitialized() && !iface->IsFullyInitialized() ) // Initialize plugins in order
                 {
                     if ( iface->CheckDependencies() )
                     {
@@ -651,7 +757,7 @@ namespace PluginManager
 
         if ( pluginIter != m_Plugins.end() )
         {
-            return pluginIter->second.second;
+            return pluginIter->second.m_pBase;
         }
 
         return NULL;
@@ -670,6 +776,7 @@ namespace PluginManager
             LogAlways( "   GameObjects: {%s}", SAFESTR( iface->ListGameObjects() ) );
             LogAlways( "   Interface: Concrete(%s) Extended(%s)", SAFESTR( iface->GetCurrentConcreteInterfaceVersion() ), SAFESTR( iface->GetCurrentExtendedInterfaceVersion() ) );
             LogAlways( "   Flags: Unloading(%s) Initialized(%s) FullyInitialized(%s)", BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ) );
+            LogAlways( "   Dump(%s)", SAFESTR( iface->Dump() ) );
         }
     }
 
@@ -677,7 +784,7 @@ namespace PluginManager
     {
         for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
         {
-            DumpPlugin( pluginIter->second.second->GetName() );
+            DumpPlugin( pluginIter->second.m_pBase->GetName() );
         }
     }
 
@@ -685,8 +792,17 @@ namespace PluginManager
     {
         for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
         {
-            IPluginBase* iface = pluginIter->second.second;
-            LogAlways( "%s: V(%s) C(%s) S(%s) U(%s) I(%s) FI(%s)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ), BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ) );
+            IPluginBase* iface = pluginIter->second.m_pBase;
+
+            if ( iface )
+            {
+                LogAlways( "%s: V(%s) C(%s) S(%s) U(%s) I(%s) FI(%s) F(%s) D(%s) M(0x%x)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ), BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ), SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), pluginIter->second.m_hModule );
+            }
+
+            else
+            {
+                LogError( "Plugin found without base interface F(%s) D(%s) M(0x%x)", SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), pluginIter->second.m_hModule );
+            }
         }
 
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
