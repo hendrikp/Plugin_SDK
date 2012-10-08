@@ -52,6 +52,10 @@ namespace PluginManager
 
     typedef std::map<string, SPluginInfo> tPluginNameMap; //!< plugin name registry type
 
+#if defined(WIN_INTERCEPTORS)
+    typedef std::vector<IPluginWinProcInterceptor*> tInterceptorVec; //!< interceptor registry type
+#endif
+
     /**
     * @brief List All Plugins
     * Console CVar Command
@@ -114,6 +118,10 @@ namespace PluginManager
         private:
             tPluginNameMap m_Plugins; //!< All Plugins
             tPluginNameMap m_UnloadingPlugins; //!< Plugins marked for cleanup
+
+#if defined(WIN_INTERCEPTORS)
+            tInterceptorVec m_vecInterceptors; //!< Interceptor registry
+#endif
 
             string m_sPluginsDirectory; //!< Directory containing all plugins (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins")
             string m_sBinaryDirectory; //!< Directory containing all binaries (e.g. "C:\cryengine3_3.4.0\Bin32")
@@ -261,6 +269,14 @@ namespace PluginManager
             {
                 return m_sUserDirectory;
             };
+
+            // Directory information functions
+#if defined(WIN_INTERCEPTORS)
+            bool PreWinProcInterceptor( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) const;
+            LRESULT PostWinProcInterceptor( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT lResult ) const;
+            void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
+            void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
+#endif
     };
 }
 

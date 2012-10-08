@@ -4,9 +4,25 @@
 
 PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer inside game dll
 
+/**
+* @brief Provide a macro to realize WinProc injector with minimal modifications
+*/
+#define PLUGIN_SDK_WINPROC_INJECTOR(...) \
+    LRESULT CALLBACK WndProc_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam); \
+    __VA_ARGS__ { \
+        if(gPluginManager) { \
+            if(gPluginManager->PreWinProcInterceptor(&hWnd, &msg, &wParam, &lParam)) { \
+                return gPluginManager->PostWinProcInterceptor(hWnd, msg, wParam, lParam, 0); \
+            } else { \
+                return gPluginManager->PostWinProcInterceptor(hWnd, msg, wParam, lParam, WndProc_(hWnd, msg, wParam, lParam)); \
+            } \
+        } \
+        return WndProc_(hWnd, msg, wParam, lParam); \
+    } \
+    LRESULT CALLBACK WndProc_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+
 namespace PluginManager
 {
-
     /**
     * @brief Initialize the Plugin Manager
     * This code must be called once in the game dll GameStartup

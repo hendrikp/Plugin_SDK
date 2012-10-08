@@ -701,7 +701,7 @@ namespace PluginManager
         }
     }
 
-    void  CPluginManager::ListAllPlugins()
+    void CPluginManager::ListAllPlugins()
     {
         for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
         {
@@ -720,4 +720,64 @@ namespace PluginManager
 
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
     }
+
+#if defined(WIN_INTERCEPTORS)
+    bool CPluginManager::PreWinProcInterceptor( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) const
+    {
+        bool bRet = false;
+
+        for ( auto iter = m_vecInterceptors.begin(); iter != m_vecInterceptors.end(); iter++ )
+        {
+            bRet |= ( *iter )->PreWinProc( hWnd, msg, wParam, lParam );
+        }
+
+        return bRet;
+    }
+
+    LRESULT CPluginManager::PostWinProcInterceptor( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT lResult ) const
+    {
+        LRESULT lRet = lResult;
+
+        for ( auto iter = m_vecInterceptors.begin(); iter != m_vecInterceptors.end(); iter++ )
+        {
+            lRet = ( *iter )->PostWinProc( hWnd, msg, wParam, lParam, lRet );
+        }
+
+        return lRet;
+    }
+
+    void CPluginManager::RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor )
+    {
+        if ( !pInterceptor )
+        {
+            return;
+        }
+
+        for ( auto iter = m_vecInterceptors.begin(); iter != m_vecInterceptors.end(); iter++ )
+        {
+            if ( ( *iter ) == pInterceptor )
+            {
+                return;
+            }
+        }
+
+        m_vecInterceptors.push_back( pInterceptor );
+    }
+
+    void CPluginManager::UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor )
+    {
+        for ( auto iter = m_vecInterceptors.begin(); iter != m_vecInterceptors.end(); iter++ )
+        {
+            if ( ( *iter ) == pInterceptor )
+            {
+                iter = m_vecInterceptors.erase( iter );
+
+                if ( iter == m_vecInterceptors.end() )
+                {
+                    break;
+                }
+            }
+        }
+    }
+#endif
 }

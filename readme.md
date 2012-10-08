@@ -1,11 +1,18 @@
 Plugin SDK for CryEngine SDK
 =====================================
-This is still a work in progress, a plugin sample and plugins themselves will follow.
-
-Tested on CryEngine 3 FreeSDK Version 3.4 (32/64 Bit)
-
 Purpose is to create a tailored way for automatically loading plugins.
 For redistribution please see license.txt.
+
+Available Plugins
+-----------------
+- [CryMono](http://crymono.inkdev.net/) - Brings the power of .NET into the world of CryEngine
+- [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
+- [Plugin_Crash](https://github.com/hendrikp/Plugin_Crash) - Crashes the process and serves as sample plugin
+- **WIP** [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
+- **WIP** Plugin_Videoplayer - Videoplayer for 2D screen and 3D objects using WebM format
+- **WIP** Plugin_D3D - Exposes Direct3D functionality
+- **WIP** Plugin_OSC - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications
+- **WIP** Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
 
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
@@ -13,8 +20,6 @@ https://github.com/hendrikp/Plugin_SDK
 Installation / Integration
 ==========================
 Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
-
-Its now possible to have plugins in their own plugin subdirectory (e.g. "C:\ce3.4.0\Bin32\Plugins\Plugin_Sample\Plugin_Sample.dll") to handle plugins with many additional link library dependencies.
 
 If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see C++ Integration.
 
@@ -38,12 +43,10 @@ An installer is planned, until then:
 
 Creating a new plugin
 =====================
-Please choose a unique name for your plugin, each plugin must have its own name.
+https://github.com/hendrikp/Plugin_SDK/wiki/Creating-a-new-Plugin
 
-For now please use as base 
-https://github.com/hendrikp/Plugin_Crash (Search & Replace "Crash" with your plugin name)
-
-In the future there will be a Visual Studio plugin wizard.
+You can also look into this sample:
+https://github.com/hendrikp/Plugin_Crash
 
 CVars
 =====
@@ -106,13 +109,23 @@ Source Files
     REGISTER_COMMAND("g_loadMod", RequestLoadMod,VF_NULL,""); // <--
 ```
 
-* The initialization of the plugin manager can only happen once because its a singleton.
-  Also don't forget to supply the SDK Version as parameter so the plugins can check compatiblity.
 * Add at the end of the function (before ```return pOut;```) the following:
 
 ```C++
     PluginManager::InitPluginsLast();
     return pOut; // <--
+```
+
+* Replace the line **(its important you don't add semicolons or braces)**
+
+```C++
+    LRESULT CALLBACK CGameStartup::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+```
+
+* with the following:
+
+```C++
+    PLUGIN_SDK_WINPROC_INJECTOR(LRESULT CALLBACK CGameStartup::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam))
 ```
 
 Compiling
