@@ -4,6 +4,7 @@
 
 #include <IPluginBase.h>
 #include <IPluginManager.h>
+#include <CryVersion.h>
 
 #if defined(PLUGINMANAGER_EXPORTS)
 #include <CPluginManager.h>
@@ -13,7 +14,7 @@ namespace PluginManager
 {
     /**
     * @brief Plugin Minimal Base Class
-    * Only the essentials for plugins that don't use autoregister flownodes or logging
+    * Only the essentials for plugins that don't use auto register flownodes or logging
     */
     class CPluginBaseMinimal :
         public IPluginBase
@@ -109,7 +110,7 @@ namespace PluginManager
 
             virtual bool Check( const char* sAPIVersion ) const
             {
-                return true;
+                return sAPIVersion && SFileVersion( sAPIVersion ) == SFileVersion( PLUGIN_COMPILED_CDK_VERSION );
             };
 
             virtual bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory )

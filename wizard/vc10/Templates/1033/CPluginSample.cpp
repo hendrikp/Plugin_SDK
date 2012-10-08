@@ -79,22 +79,6 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         return "..."; // TODO: Enter CVARs/Commands here if you have some
     }
 
-    bool CPlugin[!output PROJECT_NAME_SAFE]::Check( const char* sAPIVersion ) const
-    {
-        if ( !sAPIVersion )
-        {
-            return false;
-        }
-
-        // TODO: You could add a more complex version check here (e.g. if you support multiple versions)
-        if ( SFileVersion( sAPIVersion ) == SFileVersion( "[!output PLUGIN_COMPATIBLITY]" ) )
-        {
-            return true;
-        }
-
-        return false;
-    }
-
     const char* CPlugin[!output PROJECT_NAME_SAFE]::GetStatus() const
     {
         return "OK";

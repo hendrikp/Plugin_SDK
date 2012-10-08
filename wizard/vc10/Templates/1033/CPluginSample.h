@@ -34,8 +34,6 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
                 return int( PluginManager::IM_Default );
             };
 
-            bool Check( const char* sAPIVersion ) const;
-
             bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory );
 
             const char* GetVersion() const

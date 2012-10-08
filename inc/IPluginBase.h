@@ -1,8 +1,8 @@
 /* Plugin SDK - for licensing and copyright see license.txt */
 
-#define PLUGIN_TEXT "Plugin"
-
-#define PLUGIN_FOLDER "Plugins"
+#define PLUGIN_COMPILED_CDK_VERSION "3.4.0" //!< for reuse of compiled Cryengine SDK version (its not defined in CDK directly so we have to do it ourself)
+#define PLUGIN_TEXT "Plugin" //!< for logging and misc
+#define PLUGIN_FOLDER "Plugins" //!< directory
 
 #pragma once
 
@@ -220,6 +220,8 @@ namespace PluginManager
     */
     typedef IPluginBase* ( *fGetPluginInterface )( const char* );
 };
+
+#define PLUGIN_ENTRYPOINT "GetPluginInterface"
 
 /**
 * @brief DLL C-APIs
