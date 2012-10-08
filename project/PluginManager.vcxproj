@@ -230,6 +230,7 @@ stylecode.bat</Command>
     <ClInclude Include="..\inc\IPluginManager.h" />
     <ClInclude Include="..\inc\IPluginManager_impl.h" />
     <ClInclude Include="..\inc\Nodes\G2FlowBaseNode.h" />
+    <ClInclude Include="..\inc\PMUtils.hpp" />
     <ClInclude Include="..\src\CPluginManager.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\src\StdAfx.h" />

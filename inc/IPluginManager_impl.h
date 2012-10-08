@@ -6,6 +6,7 @@ PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager
 
 namespace PluginManager
 {
+
     /**
     * @brief Initialize the Plugin Manager
     * This code must be called once in the game dll GameStartup
@@ -15,14 +16,14 @@ namespace PluginManager
     */
     bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
     {
-        string sPluginManagerPath = PLUGIN_FOLDER "\\" PLUGIN_TEXT "_"  "Manager" CrySharedLibrayExtension;
+        string sPluginManagerPath = PLUGIN_FOLDER "\\" PLUGIN_TEXT "_" PLUGIN_MANAGER CrySharedLibrayExtension;
         HINSTANCE hModule = CryLoadLibrary( sPluginManagerPath );
 
         // Plugin link library found?
         if ( hModule )
         {
             // Check if its a plugin
-            void* fptr = CryGetProcAddress( hModule, "GetPluginInterface" );
+            void* fptr = CryGetProcAddress( hModule, PLUGIN_ENTRYPOINT );
 
             if ( fptr )
             {
@@ -41,7 +42,7 @@ namespace PluginManager
                         {
                             if ( !iface->Init( *gEnv, startupParams, NULL, NULL ) )
                             {
-                                CryLogAlways( "[" PLUGIN_TEXT "_Manager] Init failed" );
+                                CryLogAlways( "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Init failed" );
                             }
                         }
 
@@ -51,14 +52,14 @@ namespace PluginManager
                             {
                                 if ( !iface->InitDependencies() )
                                 {
-                                    CryLogAlways( "[" PLUGIN_TEXT "_Manager] InitDependencies failed" );
+                                    CryLogAlways( "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] InitDependencies failed" );
                                 }
 
                             }
 
                             else
                             {
-                                CryLogAlways( "[" PLUGIN_TEXT "_Manager] CheckDependencies failed" );
+                                CryLogAlways( "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] CheckDependencies failed" );
                             }
                         }
 
@@ -72,37 +73,37 @@ namespace PluginManager
 
                             else
                             {
-                                CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Concrete Interface not available in the requested version" );
+                                CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Concrete Interface not available in the requested version" );
                             }
                         }
 
                         else
                         {
-                            CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Couldn't be fully initialized" );
+                            CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Couldn't be fully initialized" );
                         }
                     }
 
                     else
                     {
-                        CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Not compatible with this CryEngine SDK version(%s)", buildVersion );
+                        CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Not compatible with this CryEngine SDK version(%s)", buildVersion );
                     }
                 }
 
                 else
                 {
-                    CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Base interface version(%s) couldn't be retrieved", sBaseInterfaceVersion ? sBaseInterfaceVersion : "" );
+                    CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Base interface version(%s) couldn't be retrieved", sBaseInterfaceVersion ? sBaseInterfaceVersion : "" );
                 }
             }
 
             else
             {
-                CryLogAlways(  "[" PLUGIN_TEXT "_Manager] Plugin entry point GetPluginInterface not found" );
+                CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Plugin entry point " PLUGIN_ENTRYPOINT " not found" );
             }
         }
 
         else
         {
-            CryLogAlways(  "[" PLUGIN_TEXT "_Manager] CryLoadLibrary Module(%s) couldn't be loaded, check path or dependencies", sPluginManagerPath.c_str() );
+            CryLogAlways(  "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] CryLoadLibrary Module(%s) couldn't be loaded, check path or dependencies", sPluginManagerPath.c_str() );
         }
 
         return false; // Failure

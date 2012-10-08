@@ -4,6 +4,8 @@
 
 #pragma once
 
+#define PLUGIN_MANAGER "Manager"
+
 /**
 * @brief Plugin Manager Namespace
 */

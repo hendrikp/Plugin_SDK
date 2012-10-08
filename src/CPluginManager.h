@@ -10,7 +10,7 @@
 #include <CPluginBase.hpp>
 #include <CryLibrary.h>
 
-#define PLUGIN_NAME "Manager"
+#define PLUGIN_NAME PLUGIN_MANAGER
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
 #define PLUGIN_FILENAME TEXT(PLUGIN_TEXT "_" PLUGIN_NAME CrySharedLibrayExtension) //!< Filename of the Plugin
 

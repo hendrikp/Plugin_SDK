@@ -39,6 +39,9 @@
     <ClInclude Include="..\inc\CPluginBaseMinimal.hpp">
       <Filter>Headers</Filter>
     </ClInclude>
+    <ClInclude Include="..\inc\PMUtils.hpp">
+      <Filter>Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Changelog.txt" />
