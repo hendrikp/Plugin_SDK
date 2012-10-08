@@ -340,18 +340,22 @@ namespace PluginManager
 
     void CPluginManager::PluginGarbageCollector()
     {
+        // Something to do?
         if ( m_UnloadingPlugins.size() )
         {
             bool bUnloadedSomething = false;
 
+            // Check all plugins marked for unloading if they can now unload
             for ( tPluginNameMap::iterator pluginIter = m_UnloadingPlugins.begin(); pluginIter != m_UnloadingPlugins.end(); ++pluginIter )
             {
                 if ( pluginIter->second.m_pBase && pluginIter->second.m_pBase->DllCanUnloadNow() )
                 {
                     LogAlways( "Garbage Collector Unloading: Name(%s)", SAFESTR( pluginIter->second.m_pBase->GetName() ) );
                     CryFreeLibrary( pluginIter->second.m_hModule );
-                    pluginIter = m_UnloadingPlugins.erase( pluginIter );
                     bUnloadedSomething = true;
+
+                    // Cleanup the plugin from the unloading plugin container
+                    pluginIter = m_UnloadingPlugins.erase( pluginIter );
 
                     if ( pluginIter == m_UnloadingPlugins.end() )
                     {
@@ -363,11 +367,13 @@ namespace PluginManager
             // A shame unregistering flownodes types still will produce errors later on in sandbox (when clicked on)
             // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
             /*
+            // Takes a lot of time and unregisters all nodes in part from places where they can't be registered again.
             if ( bUnloadedSomething && gEnv && gEnv->pFlowSystem )
             {
                 // Also this will unload all custom flownodes
                 gEnv->pFlowSystem->ReloadAllNodeTypes();
-            }*/
+            }
+            */
         }
     }
 
@@ -585,7 +591,6 @@ namespace PluginManager
                         {
                             LogError( "InitDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
                         }
-
                     }
 
                     else
@@ -640,7 +645,6 @@ namespace PluginManager
                         {
                             LogError( "InitDependencies failed: Name(%s)", SAFESTR( iface->GetName() ) );
                         }
-
                     }
 
                     else
@@ -654,6 +658,11 @@ namespace PluginManager
 
     IPluginBase* CPluginManager::GetPluginByName( const char* sPluginName )
     {
+        if ( !sPluginName )
+        {
+            return NULL;
+        }
+
         tPluginNameMap::iterator pluginIter = m_Plugins.find( sPluginName );
 
         if ( pluginIter != m_Plugins.end() )
@@ -666,6 +675,11 @@ namespace PluginManager
 
     const char* CPluginManager::GetPluginDirectory( const char* sPluginName ) const
     {
+        if ( !sPluginName )
+        {
+            return NULL;
+        }
+
         tPluginNameMap::const_iterator pluginIter = m_Plugins.find( sPluginName );
 
         if ( pluginIter != m_Plugins.end() )

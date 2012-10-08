@@ -96,7 +96,7 @@ namespace PluginManager
     * @brief Reload a specific plugin
     * Console CVar Command
     * Usage: pm_reload PLUGINPATH
-    * e.g. pm_reload Plugins/Plugin_Test.dll
+    * e.g. "pm_reload Flite/Plugin_Flite.dll"
     */
     void Command_Reload( IConsoleCmdArgs* pArgs );
 
