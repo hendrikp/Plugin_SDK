@@ -736,7 +736,7 @@ namespace PluginManager
     }
 
 #if defined(WIN_INTERCEPTORS)
-    bool CPluginManager::PreWinProcInterceptor( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) const
+    bool CPluginManager::PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const
     {
         bool bRet = false;
 

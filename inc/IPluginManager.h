@@ -35,7 +35,7 @@ namespace PluginManager
         * Allows you to manipulate the parameters and skip the default implementation (the post listeners will still be called)
         * @return If true doesn't process the original WinProc
         */
-        virtual bool PreWinProc( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) = 0;
+        virtual bool PreWinProc( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) = 0;
 
         /**
         * @brief Intercept Message after the original WinProc got it.
@@ -156,7 +156,7 @@ namespace PluginManager
         * Can manipulate the parameters and skip the default implementation.
         * @return If true doen't process the original WinProc
         */
-        virtual bool PreWinProcInterceptor( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) const = 0;
+        virtual bool PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const = 0;
 
         /**
         * @brief Redirect processed Message to interceptors

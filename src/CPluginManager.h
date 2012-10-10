@@ -272,7 +272,7 @@ namespace PluginManager
 
             // Directory information functions
 #if defined(WIN_INTERCEPTORS)
-            bool PreWinProcInterceptor( HWND* hWnd, UINT* msg, WPARAM* wParam, LPARAM* lParam ) const;
+            bool PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const;
             LRESULT PostWinProcInterceptor( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT lResult ) const;
             void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
             void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
