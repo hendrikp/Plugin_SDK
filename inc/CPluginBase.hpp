@@ -129,6 +129,11 @@ namespace PluginManager
 
             virtual void CPluginBase::LogV( ILog::ELogType nType, const char* sFormat, va_list ArgList ) const
             {
+                if ( !sFormat )
+                {
+                    return;
+                }
+
                 string strFormat = "[";
                 strFormat += GetName();
                 strFormat += "_";
