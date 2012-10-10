@@ -7,11 +7,11 @@ Available Plugins
 -----------------
 - [CryMono](http://crymono.inkdev.net/) - Brings the power of .NET into the world of CryEngine
 - [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
+- [Plugin_OSC](https://github.com/hendrikp/Plugin_OSC) - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications / sound hardware
 - [Plugin_Crash](https://github.com/hendrikp/Plugin_Crash) - Crashes the process and serves as sample plugin
 - **WIP** [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
 - **WIP** Plugin_Videoplayer - Videoplayer for 2D screen and 3D objects using WebM format
 - **WIP** Plugin_D3D - Exposes Direct3D functionality
-- **WIP** Plugin_OSC - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications
 - **WIP** Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
 
 Feature requests/latest version on github.
