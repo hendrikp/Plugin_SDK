@@ -81,3 +81,16 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
     extern CPlugin[!output PROJECT_NAME_SAFE]* gPlugin;
 }
+
+/**
+* @brief This function is required to use the Autoregister Flownode without modification.
+* Include the file "CPlugin[!output PROJECT_NAME_SAFE].h" in front of flownode.
+*/
+inline void GameWarning( const char* sFormat, ... ) PRINTF_PARAMS( 1, 2 );
+inline void GameWarning( const char* sFormat, ... )
+{
+    va_list ArgList;
+    va_start( ArgList, sFormat );
+    [!output PROJECT_NAME_SAFE]Plugin::gPlugin->LogV( ILog::eWarningAlways, sFormat, ArgList );
+    va_end( ArgList );
+};
