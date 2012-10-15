@@ -1,18 +1,20 @@
 Plugin SDK for CryEngine SDK
 =====================================
-Purpose is to create a tailored way for automatically loading plugins.
-For redistribution please see license.txt.
+Purpose is to automatically load plugins without touching the gamedll each time.
 
 Available Plugins
 -----------------
 - [CryMono](http://crymono.inkdev.net/) - Brings the power of .NET into the world of CryEngine
-- [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
+- [Plugin_Videoplayer](https://github.com/hendrikp/Plugin_Videoplayer) - Videoplayer for 2D screen and 3D objects using WebM format
 - [Plugin_OSC](https://github.com/hendrikp/Plugin_OSC) - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications / sound hardware
+- [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
+- [Plugin_D3D](https://github.com/hendrikp/Plugin_D3D) - Exposes Direct3D 9 and 11 functionality, also access to the renderthread
 - [Plugin_Crash](https://github.com/hendrikp/Plugin_Crash) - Crashes the process and serves as sample plugin
-- **WIP** [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
-- **WIP** Plugin_Videoplayer - Videoplayer for 2D screen and 3D objects using WebM format
-- **WIP** Plugin_D3D - Exposes Direct3D functionality
-- **WIP** Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
+
+Work in Progress Plugins
+------------------------
+- [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
+- Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
 
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
