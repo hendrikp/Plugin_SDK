@@ -52,6 +52,9 @@ namespace PluginManager
 
     typedef std::map<string, SPluginInfo> tPluginNameMap; //!< plugin name registry type
 
+    typedef std::pair<string, string> tStaticInterfaceKey; //!< static interface registry key type
+    typedef std::map<tStaticInterfaceKey, void*> tStaticInterfaceMap; //!< static interface registry type
+
 #if defined(WIN_INTERCEPTORS)
     typedef std::vector<IPluginWinProcInterceptor*> tInterceptorVec; //!< interceptor registry type
 #endif
@@ -118,6 +121,8 @@ namespace PluginManager
         private:
             tPluginNameMap m_Plugins; //!< All Plugins
             tPluginNameMap m_UnloadingPlugins; //!< Plugins marked for cleanup
+
+            tStaticInterfaceMap m_StaticInterfaces; //!< All static interfaces
 
 #if defined(WIN_INTERCEPTORS)
             tInterceptorVec m_vecInterceptors; //!< Interceptor registry
@@ -269,6 +274,10 @@ namespace PluginManager
             {
                 return m_sUserDirectory;
             };
+
+            void* GetStaticInterface( const char* sName, const char* sVersion = NULL ) const;
+
+            void RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion = NULL );
 
             // Directory information functions
 #if defined(WIN_INTERCEPTORS)

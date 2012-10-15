@@ -735,6 +735,40 @@ namespace PluginManager
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
     }
 
+    void* CPluginManager::GetStaticInterface( const char* sName, const char* sVersion ) const
+    {
+        if ( !sName )
+        {
+            return NULL;
+        }
+
+        auto iterFind = m_StaticInterfaces.find( tStaticInterfaceKey( sName, SAFESTR( sVersion ) ) );
+
+        if ( iterFind != m_StaticInterfaces.end() )
+        {
+            return ( *iterFind ).second;
+        }
+
+        else
+        {
+            LogWarning( "GetStaticInterface Name(%s) Version(%s) not available", sName, SAFESTR( sVersion ) );
+        }
+
+        return NULL;
+    }
+
+    void CPluginManager::RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion )
+    {
+        if ( !sName || !pInterface )
+        {
+            return;
+        }
+
+        m_StaticInterfaces[ tStaticInterfaceKey( sName, SAFESTR( sVersion ) ) ] = pInterface;
+
+        LogAlways( "RegisterStaticInterface Name(%s) Version(%s) succeeded", sName, SAFESTR( sVersion ) );
+    }
+
 #if defined(WIN_INTERCEPTORS)
     bool CPluginManager::PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const
     {

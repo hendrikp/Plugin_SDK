@@ -150,6 +150,28 @@ namespace PluginManager
         */
         virtual const char* GetDirectoryUser() const = 0;
 
+        /**
+        * @brief Retrieve a static interface
+        * @warning This should never be a requirement for a plugin to work it can be an additional improvement, so use it sparingly if you want your plugin to be reusable.
+        * @param sName name of the interface to retrieve
+        * @param sVersion of the interface to retrieve
+        *  @arg NULL current version/doesn't matter
+        * @return the interface pointer, or NULL if not found. Use static_cast to get your interface.
+        */
+        virtual void* GetStaticInterface( const char* sName, const char* sVersion = NULL ) const = 0;
+
+        /**
+        * @brief Register a static interface
+        * A static interface is an interface that exist in a gamedll through the whole lifetime of the plugin manager.
+        * It can be used to optionally provide/retrieve additional information/functionality to/from a gamedll.
+        * @warning This should never be a requirement for a plugin to work it can be an additional improvement, so use it sparingly if you want your plugin to be reusable.
+        * @param pInterface interface pointer (must exist through the whole plugin manager lifetime)
+        * @param sName name of the interface to retrieve
+        * @param sVersion of the interface to retrieve
+        *  @arg NULL current version/doesn't matter
+        */
+        virtual void RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion = NULL ) = 0;
+
 #if defined(WIN_INTERCEPTORS)
         /**
         * @brief Redirect unprocessed Message to interceptors
