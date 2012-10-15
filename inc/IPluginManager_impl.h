@@ -149,6 +149,12 @@ namespace PluginManager
         if ( gPluginManager )
         {
             gPluginManager->InitializePluginRange( IM_Last, IM_Last_3 );
+
+            if ( gEnv && gEnv->pConsole )
+            {
+                gEnv->pConsole->ExecuteString( "pm_listsi" );
+                gEnv->pConsole->ExecuteString( "pm_list" );
+            }
         }
     }
 }

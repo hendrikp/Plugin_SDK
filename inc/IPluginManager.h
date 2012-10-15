@@ -54,7 +54,7 @@ namespace PluginManager
         /**
         * @brief Get PluginManager base interface
         */
-        virtual IPluginBase* GetBase() = 0;
+        virtual IPluginBase* GetBase() const = 0;
 
         /**
         * @brief UnloadAllPlugins
@@ -97,28 +97,13 @@ namespace PluginManager
         * @brief Get base interface of a specific plugin if it is loaded
         * @return BaseInterface of the plugin requested or NULL if not found.
         */
-        virtual IPluginBase* GetPluginByName(  const char* sPluginName ) = 0;
+        virtual IPluginBase* GetPluginByName(  const char* sPluginName ) const = 0;
 
         /**
         * @brief Retrieve directory of a plugin (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins\Flite")
         * @return directory path without slash
         */
         virtual const char* GetPluginDirectory( const char* sPluginName ) const = 0;
-
-        /**
-        * @brief Dump infos on specific plugin to console
-        */
-        virtual void DumpPlugin( const char* sPluginName ) = 0;
-
-        /**
-        * @brief Dump all plugins to console
-        */
-        virtual void DumpAllPlugins() = 0;
-
-        /**
-        * @brief List all plugins to console
-        */
-        virtual void ListAllPlugins() = 0;
 
         /**
         * @brief Retrieve directory containing all plugins (e.g. "C:\cryengine3_3.4.0\Bin32\Plugins")

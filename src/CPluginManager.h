@@ -189,7 +189,7 @@ namespace PluginManager
 
             const char* GetVersion() const
             {
-                return "1.0";
+                return "1.0.0.0";
             };
 
             const char* GetName() const
@@ -222,9 +222,9 @@ namespace PluginManager
             };
 
             // IPluginManager
-            IPluginBase* GetBase()
+            IPluginBase* GetBase() const
             {
-                return static_cast<IPluginBase*>( this );
+                return static_cast<IPluginBase*>( const_cast<CPluginManager*>( this ) );
             };
 
             void UnloadAllPlugins();
@@ -239,15 +239,9 @@ namespace PluginManager
 
             void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
 
-            IPluginBase* GetPluginByName( const char* sPluginName );
+            IPluginBase* GetPluginByName( const char* sPluginName ) const;
 
             const char* GetPluginDirectory( const char* sPluginName ) const;
-
-            void DumpPlugin( const char* sPluginName );
-
-            void DumpAllPlugins();
-
-            void ListAllPlugins();
 
             // Directory information functions
             const char* GetDirectoryPlugins() const
@@ -286,6 +280,30 @@ namespace PluginManager
             void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
             void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
 #endif
+
+            /**
+            * @internal
+            * @brief Dump infos on specific plugin to console
+            */
+            void DumpPlugin( const char* sPluginName ) const;
+
+            /**
+            * @internal
+            * @brief Dump all plugins to console
+            */
+            void DumpAllPlugins() const;
+
+            /**
+            * @internal
+            * @brief List all plugins to console
+            */
+            void ListAllPlugins() const;
+
+            /**
+            * @internal
+            * @brief List all registered static interfaces to console
+            */
+            void ListStaticInterfaces() const;
     };
 }
 

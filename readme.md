@@ -54,6 +54,8 @@ CVars
 =====
 * ```pm_list```
   List one info row for all plugins
+* ```pm_listsi```
+  List all registered static interfaces
 * ```pm_dump```
   Dump info on a specific plugins
 * ```pm_dumpall```
@@ -136,6 +138,21 @@ Either add the project file to your CryGame solution and the plugin manager as d
 
 Or use the supplied seperate solution to compile the plugin manager.
 
+Contributing
+============
+* Fork it
+* Create a branch (`git checkout -b my_PluginSDK`)
+* Put your name into authors.txt
+* Commit your changes (`git commit -am "Added ...."`)
+* Push to the branch (`git push origin my_PluginSDK`)
+* Open a Pull Request
+
+Contribution Guideline
+----------------------
+* Change as little as possible to have the effect you want
+* Discuss major/version changes beforehand
+* Update the doxygen documentation
+
 Code Style
 ----------
 In general look how its done in the CryEngine FreeSDK. Exceptions prove the rule.
@@ -162,20 +179,3 @@ In general look how its done in the CryEngine FreeSDK. Exceptions prove the rule
 * Everything should be in a namespace
 * Use tools/stylecode.bat before committing changes
 * The rest will be fixed when your pull gets merged
-
-Contribution Guideline
-----------------------
-* Change as little as possible to have the effect you want
-* Discuss major/version changes beforehand
-* Update the doxygen documentation
-
-Contributing
-------------
-* Fork it
-* Create a branch (`git checkout -b my_PluginSDK`)
-* Put your name into authors.txt
-* Commit your changes (`git commit -am "Added ...."`)
-* Push to the branch (`git push origin my_PluginSDK`)
-* Open a Pull Request
-
-

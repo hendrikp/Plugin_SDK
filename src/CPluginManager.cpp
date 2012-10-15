@@ -16,6 +16,16 @@ namespace PluginManager
         gPluginManager->ListAllPlugins();
     };
 
+    void Command_ListStaticInterfaces( IConsoleCmdArgs* pArgs )
+    {
+        if ( !gPluginManager )
+        {
+            return;
+        }
+
+        gPluginManager->ListStaticInterfaces();
+    };
+
     void Command_Dump( IConsoleCmdArgs* pArgs )
     {
         if ( !gPluginManager && pArgs && pArgs->GetArgCount() > 1 )
@@ -112,6 +122,7 @@ namespace PluginManager
             if ( gEnv && gEnv->pConsole )
             {
                 gEnv->pConsole->RemoveCommand( "pm_list" );
+                gEnv->pConsole->RemoveCommand( "pm_listsi" );
                 gEnv->pConsole->RemoveCommand( "pm_dump" );
                 gEnv->pConsole->RemoveCommand( "pm_dumpall" );
                 gEnv->pConsole->RemoveCommand( "pm_unload" );
@@ -209,6 +220,7 @@ namespace PluginManager
             if ( gEnv && gEnv->pConsole )
             {
                 gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
+                gEnv->pConsole->AddCommand( "pm_listsi", Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
                 gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
                 gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
                 gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
@@ -237,7 +249,7 @@ namespace PluginManager
 
     const char* CPluginManager::ListCVars() const
     {
-        return "pm_list,\n" "pm_dump,\n" "pm_dumpall,\n" "pm_unload,\n" "pm_unloadall,\n" "pm_reload,\n" "pm_reloadall,\n";
+        return "pm_list,\n" "pm_listsi,\n" "pm_dump,\n" "pm_dumpall,\n" "pm_unload,\n" "pm_unloadall,\n" "pm_reload,\n" "pm_reloadall,\n";
     }
 
     bool CPluginManager::Check( const char* sAPIVersion ) const
@@ -523,12 +535,9 @@ namespace PluginManager
                                 return true;
                             }
 
-                            else
-                            {
-                                // Plugin was already loaded so reload it
-                                UnloadPlugin( sPluginName );
-                                return ReloadPlugin( sPluginPath );
-                            }
+                            // Plugin was already loaded so reload it
+                            UnloadPlugin( sPluginName );
+                            return ReloadPlugin( sPluginPath );
                         }
 
                         else
@@ -656,14 +665,14 @@ namespace PluginManager
         }
     }
 
-    IPluginBase* CPluginManager::GetPluginByName( const char* sPluginName )
+    IPluginBase* CPluginManager::GetPluginByName( const char* sPluginName ) const
     {
         if ( !sPluginName )
         {
             return NULL;
         }
 
-        tPluginNameMap::iterator pluginIter = m_Plugins.find( sPluginName );
+        auto pluginIter = m_Plugins.find( sPluginName );
 
         if ( pluginIter != m_Plugins.end() )
         {
@@ -690,11 +699,13 @@ namespace PluginManager
         return NULL;
     };
 
-    void CPluginManager::DumpPlugin( const char* sPluginName )
+    void CPluginManager::DumpPlugin( const char* sPluginName ) const
     {
-        IPluginBase* iface = GetPluginByName(  sPluginName );
+        IPluginBase* iface = GetPluginByName( sPluginName );
 
-        if ( iface )
+        auto pluginIter = m_Plugins.find( sPluginName );
+
+        if ( iface && pluginIter != m_Plugins.end() )
         {
             LogAlways( "\nPlugin: Name(%s) Version(%s) Category(%s) Status(%s)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ) );
             LogAlways( "   Authors: %s", SAFESTR( iface->ListAuthors() ) );
@@ -703,36 +714,47 @@ namespace PluginManager
             LogAlways( "   GameObjects: {%s}", SAFESTR( iface->ListGameObjects() ) );
             LogAlways( "   Interface: Concrete(%s) Extended(%s)", SAFESTR( iface->GetCurrentConcreteInterfaceVersion() ), SAFESTR( iface->GetCurrentExtendedInterfaceVersion() ) );
             LogAlways( "   Flags: Unloading(%s) Initialized(%s) FullyInitialized(%s)", BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ) );
+            LogAlways( "   Module: Madr(%p) BIadr(%p) File(%s) Directory(%s)", ( void* )pluginIter->second.m_hModule, ( void* )iface, SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ) );
             LogAlways( "   Dump(%s)", SAFESTR( iface->Dump() ) );
         }
     }
 
-    void CPluginManager::DumpAllPlugins()
+    void CPluginManager::DumpAllPlugins() const
     {
-        for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
+        for ( auto pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
         {
             DumpPlugin( pluginIter->second.m_pBase->GetName() );
         }
     }
 
-    void CPluginManager::ListAllPlugins()
+    void CPluginManager::ListAllPlugins() const
     {
-        for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
+        for ( auto pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
         {
             IPluginBase* iface = pluginIter->second.m_pBase;
 
             if ( iface )
             {
-                LogAlways( "%s: V(%s) C(%s) S(%s) U(%s) I(%s) FI(%s) F(%s) D(%s) M(0x%x)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ), BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ), SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), pluginIter->second.m_hModule );
+                LogAlways( "%s: V(%s) C(%s) S(%s) U(%s) I(%s) FI(%s) F(%s) D(%s) M(%p) B(%p)", SAFESTR( iface->GetName() ), SAFESTR( iface->GetVersion() ), SAFESTR( iface->GetCategory() ), SAFESTR( iface->GetStatus() ), BOOLSTR( iface->IsUnloading() ) , BOOLSTR( iface->IsInitialized() ), BOOLSTR( iface->IsFullyInitialized() ), SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), ( void* )pluginIter->second.m_hModule, ( void* )iface );
             }
 
             else
             {
-                LogError( "Plugin found without base interface F(%s) D(%s) M(0x%x)", SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), pluginIter->second.m_hModule );
+                LogError( "Plugin found without base interface F(%s) D(%s) M(%p)", SAFESTR( pluginIter->second.m_sFile.c_str() ), SAFESTR( pluginIter->second.m_sDirectory.c_str() ), ( void* )pluginIter->second.m_hModule );
             }
         }
 
         LogAlways( "Currently %d plugins are loaded!", m_Plugins.size() );
+    }
+
+    void CPluginManager::ListStaticInterfaces() const
+    {
+        for ( auto interfaceIter = m_StaticInterfaces.begin(); interfaceIter != m_StaticInterfaces.end(); ++interfaceIter )
+        {
+            LogAlways( "%s: V(%s) P(%p)", SAFESTR( interfaceIter->first.first.c_str() ), SAFESTR( interfaceIter->first.second.c_str() ), ( void* )interfaceIter->second );
+        }
+
+        LogAlways( "Currently %d static interfaces are registered!", m_StaticInterfaces.size() );
     }
 
     void* CPluginManager::GetStaticInterface( const char* sName, const char* sVersion ) const
@@ -749,11 +771,7 @@ namespace PluginManager
             return ( *iterFind ).second;
         }
 
-        else
-        {
-            LogWarning( "GetStaticInterface Name(%s) Version(%s) not available", sName, SAFESTR( sVersion ) );
-        }
-
+        LogWarning( "GetStaticInterface Name(%s) Version(%s) not available", sName, SAFESTR( sVersion ) );
         return NULL;
     }
 
