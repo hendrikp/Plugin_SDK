@@ -67,6 +67,13 @@ namespace PluginManager
     void Command_ListAll( IConsoleCmdArgs* pArgs );
 
     /**
+    * @brief List registered static interfaces
+    * Console CVar Command
+    * Usage: pm_listsi
+    */
+    void Command_ListStaticInterfaces( IConsoleCmdArgs* pArgs );
+
+    /**
     * @brief Dump infos about a specific plugin
     * Console CVar Command
     * Usage: dump PLUGINNAME
