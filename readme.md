@@ -1,6 +1,6 @@
-Plugin SDK for CryEngine SDK
-=====================================
-Purpose is to automatically load plugins without touching the gamedll each time.
+Plugin SDK for CryEngine
+========================
+Purpose is to automatically load plugins without touching the GameDll each time.
 
 Available Plugins
 -----------------
@@ -24,7 +24,12 @@ Installation / Integration
 ==========================
 Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
 
-If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see C++ Integration.
+* If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see C++ Integration.
+* If don't use the Standard FreeSDK version but e.g. got a licensed, educational, newer or older version then you might also need to recompile all plugins and the plugin manager.
+  * Adjust the SDK version in ```#define PLUGIN_COMPILED_CDK_VERSION "3.4.0"``` in the file "Plugin_SDK/inc/IPluginBase.h"
+  * Plugins might implement their own ```Check``` Method in this case you might have to adjust the versions used there to match your SDK version.
+  * If the SDK API/ABI didn't change and the version stayed the same then the plugin might be compatible
+    (depends on the buildnr containing breaking changes or different configuration) 
 
 Installing the Visual Studio 2010 Plugin Wizard
 -----------------------------------------------
