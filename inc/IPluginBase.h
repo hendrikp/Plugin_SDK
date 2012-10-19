@@ -170,7 +170,7 @@ namespace PluginManager
         * @arg NULL for most current.
         * @return NULL or concrete interface in the requested version is avaible.
         */
-        virtual void* GetConcreteInterface( const char* sInterfaceVersion ) = 0;
+        virtual void* GetConcreteInterface( const char* sInterfaceVersion = NULL ) = 0;
 
         /**
         * @brief Return the current extended interface version
@@ -184,7 +184,7 @@ namespace PluginManager
         * @arg NULL for most current.
         * @return NULL or concrete interface in the requested version is avaible.
         */
-        virtual void* GetExtendedInterface( const char* sInterfaceVersion ) = 0;
+        virtual void* GetExtendedInterface( const char* sInterfaceVersion = NULL ) = 0;
     };
 
     /**
@@ -234,5 +234,5 @@ extern "C"
     * @arg NULL for most current.
     * @return NULL or concrete interface in the requested version is avaible.
     */
-    DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion );
+    DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion = NULL );
 }
