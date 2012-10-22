@@ -123,7 +123,8 @@ namespace PluginManager
     class CPluginManager :
         public CPluginBase,
         public IPluginManager,
-        public IGameFrameworkListener
+        public IGameFrameworkListener,
+        public ISystemEventListener
     {
         private:
             tPluginNameMap m_Plugins; //!< All Plugins
@@ -178,6 +179,8 @@ namespace PluginManager
             void OnLevelEnd( const char* nextLevel ) {};
             void OnActionEvent( const SActionEvent& event ) {};
 
+            // ISystemEventListener
+            void OnSystemEvent( ESystemEvent event, UINT_PTR wparam, UINT_PTR lparam );
         public:
             CPluginManager();
             ~CPluginManager();

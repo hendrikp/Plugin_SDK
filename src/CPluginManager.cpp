@@ -108,46 +108,61 @@ namespace PluginManager
 
     CPluginManager::~CPluginManager()
     {
+        Release( true );
+
         gPluginManager = NULL;
     }
 
     bool CPluginManager::Release( bool bForce )
     {
-        // Should be called while Game is still active otherwise there might be leaks/problems
-        bool bRet = CPluginBase::Release( bForce );
+        bool bRet = true;
 
-        if ( bRet )
+        if ( !m_bCanUnload )
         {
-            // Unregister CVars
-            if ( gEnv && gEnv->pConsole )
+            // Should be called while Game is still active otherwise there might be leaks/problems
+            bRet = CPluginBase::Release( bForce );
+
+            if ( bRet )
             {
-                gEnv->pConsole->RemoveCommand( "pm_list" );
-                gEnv->pConsole->RemoveCommand( "pm_listsi" );
-                gEnv->pConsole->RemoveCommand( "pm_dump" );
-                gEnv->pConsole->RemoveCommand( "pm_dumpall" );
-                gEnv->pConsole->RemoveCommand( "pm_unload" );
-                gEnv->pConsole->RemoveCommand( "pm_unloadall" );
-                gEnv->pConsole->RemoveCommand( "pm_reload" );
-                gEnv->pConsole->RemoveCommand( "pm_reloadall" );
+                if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                {
+                    // Unregister CVars
+                    if ( gEnv && gEnv->pConsole )
+                    {
+                        gEnv->pConsole->RemoveCommand( "pm_list" );
+                        gEnv->pConsole->RemoveCommand( "pm_listsi" );
+                        gEnv->pConsole->RemoveCommand( "pm_dump" );
+                        gEnv->pConsole->RemoveCommand( "pm_dumpall" );
+                        gEnv->pConsole->RemoveCommand( "pm_unload" );
+                        gEnv->pConsole->RemoveCommand( "pm_unloadall" );
+                        gEnv->pConsole->RemoveCommand( "pm_reload" );
+                        gEnv->pConsole->RemoveCommand( "pm_reloadall" );
+                    }
+
+                    // Unregister listeners
+                    if ( gEnv && gEnv->pGameFramework && gEnv->pGame )
+                    {
+                        gEnv->pGameFramework->UnregisterListener( this );
+                    }
+
+                    if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
+                    {
+                        gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
+                    }
+                }
+
+                // Cleanup all plugins (special case only in manager...)
+                UnloadAllPlugins();
+
+                // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
+                gPluginManager->UnloadPlugin( GetName() );
+
+                // Allow Plugin Manager garbage collector to unload this plugin
+                AllowDllUnload();
+
+                // Special case only in manager...
+                PluginGarbageCollector();
             }
-
-            // Unregister listeners
-            if ( gEnv && gEnv->pGameFramework )
-            {
-                gEnv->pGameFramework->UnregisterListener( this );
-            }
-
-            // Cleanup all plugins (special case only in manager...)
-            UnloadAllPlugins();
-
-            // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-            gPluginManager->UnloadPlugin( GetName() );
-
-            // Allow Plugin Manager garbage collector to unload this plugin
-            AllowDllUnload();
-
-            // Special case only in manager...
-            PluginGarbageCollector();
         }
 
         return bRet;
@@ -216,23 +231,31 @@ namespace PluginManager
 
         if ( bRet )
         {
-            // Register CVars
-            if ( gEnv && gEnv->pConsole )
+            if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
             {
-                gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
-                gEnv->pConsole->AddCommand( "pm_listsi", Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
-                gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
-                gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
-                gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
-                gEnv->pConsole->AddCommand( "pm_unloadall", Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
-                gEnv->pConsole->AddCommand( "pm_reload", Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
-                gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
-            }
+                // Register CVars
+                if ( gEnv && gEnv->pConsole )
+                {
+                    gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
+                    gEnv->pConsole->AddCommand( "pm_listsi", Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
+                    gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
+                    gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
+                    gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
+                    gEnv->pConsole->AddCommand( "pm_unloadall", Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
+                    gEnv->pConsole->AddCommand( "pm_reload", Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
+                    gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
+                }
 
-            // Register Listeners
-            if ( gEnv->pGameFramework )
-            {
-                gEnv->pGameFramework->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
+                // Register Listeners
+                if ( gEnv && gEnv->pGameFramework )
+                {
+                    gEnv->pGameFramework->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
+                }
+
+                if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
+                {
+                    gEnv->pSystem->GetISystemEventDispatcher()->RegisterListener( this );
+                }
             }
 
             // Initialize path informations
@@ -337,13 +360,33 @@ namespace PluginManager
         }
     }
 
+    // ISystemEventListener
+    void CPluginManager::OnSystemEvent( ESystemEvent event, UINT_PTR wparam, UINT_PTR lparam )
+    {
+        static bool bQuitOnce = false;
+        bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
+
+        // Detect quit before plugin dlls get unloaded in undefined order
+        if ( event == ESYSTEM_EVENT_SHUTDOWN || event == ESYSTEM_EVENT_LEVEL_POST_UNLOAD && bQuit )
+        {
+            if(!bQuitOnce)
+            {
+                bQuitOnce = true;
+                LogAlways( "System Shutdown detected, unloading all plugins!" );
+                UnloadAllPlugins();
+                OnPostUpdate( 0 ); // call our gc
+            }
+        }
+    }
+
     // IGameFrameworkListener
     void CPluginManager::OnPostUpdate( float fDeltaTime )
     {
         static int nCounter = 1;
+        bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
 
         // Don't collect garbage every frame
-        if ( ++nCounter % 50 == 0 )
+        if ( bQuit || ++nCounter % 50 == 0 )
         {
             nCounter = 1;
             PluginGarbageCollector();
