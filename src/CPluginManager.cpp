@@ -369,7 +369,7 @@ namespace PluginManager
         // Detect quit before plugin dlls get unloaded in undefined order
         if ( event == ESYSTEM_EVENT_SHUTDOWN || event == ESYSTEM_EVENT_LEVEL_POST_UNLOAD && bQuit )
         {
-            if(!bQuitOnce)
+            if ( !bQuitOnce )
             {
                 bQuitOnce = true;
                 LogAlways( "System Shutdown detected, unloading all plugins!" );
