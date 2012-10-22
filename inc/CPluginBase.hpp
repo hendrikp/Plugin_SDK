@@ -27,34 +27,41 @@ namespace PluginManager
         public:
             CPluginBase()
             {
-                CPluginBaseMinimal::CPluginBaseMinimal();
+                CPluginBaseMinimal();
             };
 
             virtual ~CPluginBase()
-            { };
+            {
+                Release( true );
+            };
 
             // IPluginBase
             virtual bool Release( bool bForce = false )
             {
                 bool bFlownodesPresent = m_bIsFullyInitialized;
-                bool bRet = CPluginBaseMinimal::Release( bForce );
+                bool bRet = true;
 
-                if ( bRet )
+                if ( !m_bCanUnload )
                 {
-                    if ( bFlownodesPresent )
-                    {
-                        // Unregister flownodes
-                        if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
-                        {
-                            // Flowsystem is required
-                            IFlowSystem* pFlow = gEnv->pFlowSystem;
+                    bRet = CPluginBaseMinimal::Release( bForce );
 
-                            // Unregister all flownodes of this plugin
-                            for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                    if ( bRet )
+                    {
+                        if ( bFlownodesPresent )
+                        {
+                            // Unregister flownodes
+                            if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
                             {
-                                // A shame unregistering flownodes types still will produce errors later on in sandbox (then when clicked on)
-                                // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
-                                pFlow->UnregisterType( pFactory->m_sClassName );
+                                // Flowsystem is required
+                                IFlowSystem* pFlow = gEnv->pFlowSystem;
+
+                                // Unregister all flownodes of this plugin
+                                for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                                {
+                                    // A shame unregistering flownodes types still will produce errors later on in sandbox (then when clicked on)
+                                    // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
+                                    pFlow->UnregisterType( pFactory->m_sClassName );
+                                }
                             }
                         }
                     }
@@ -70,10 +77,13 @@ namespace PluginManager
 
                 if ( pFlow )
                 {
-                    // Register all flownodes of this plugin in the crygame loading this plugin
-                    for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                    if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
                     {
-                        pFlow->RegisterType( pFactory->m_sClassName, pFactory );
+                        // Register all flownodes of this plugin in the crygame loading this plugin
+                        for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                        {
+                            pFlow->RegisterType( pFactory->m_sClassName, pFactory );
+                        }
                     }
                 }
 

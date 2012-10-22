@@ -14,37 +14,45 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
     CPlugin[!output PROJECT_NAME_SAFE]::~CPlugin[!output PROJECT_NAME_SAFE]()
     {
+        Release( true );
+
         gPlugin = NULL;
     }
 
     bool CPlugin[!output PROJECT_NAME_SAFE]::Release( bool bForce )
     {
-        // Should be called while Game is still active otherwise there might be leaks/problems
-        bool bRet = CPluginBase::Release( bForce );
+        bool bRet = true;
 
-        if ( bRet )
+        if ( !m_bCanUnload )
         {
-            // Depending on your plugin you might not want to unregister anything
-            // if the System is quitting.
-            // if(gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting()) {
+            // Should be called while Game is still active otherwise there might be leaks/problems
+            bRet = CPluginBase::Release( bForce );
 
-            // Unregister CVars
-            if ( gEnv && gEnv->pConsole )
+            if ( bRet )
             {
-                // ...
+                // Depending on your plugin you might not want to unregister anything
+                // if the System is quitting.
+                if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                {
+                    // Unregister CVars
+                    if ( gEnv && gEnv->pConsole )
+                    {
+                        // ...
+                    }
+
+                    // Unregister game objects
+                    if ( gEnv && gEnv->pGameFramework && gEnv->pGame )
+                    {
+                        // ...
+                    }
+                }
+
+                // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
+                gPluginManager->UnloadPlugin( GetName() );
+
+                // Allow Plugin Manager garbage collector to unload this plugin
+                AllowDllUnload();
             }
-
-            // Unregister game objects
-            if ( gEnv && gEnv->pGameFramework )
-            {
-                // ...
-            }
-
-            // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
-            gPluginManager->UnloadPlugin( GetName() );
-
-            // Allow Plugin Manager garbage collector to unload this plugin
-            AllowDllUnload();
         }
 
         return bRet;
@@ -55,18 +63,21 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
 
-        // Register CVars/Commands
-        if ( gEnv && gEnv->pConsole )
+        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
         {
-            // TODO: Register CVARs/Commands here if you have some
-            // ...
-        }
+            // Register CVars/Commands
+            if ( gEnv && gEnv->pConsole )
+            {
+                // TODO: Register CVARs/Commands here if you have some
+                // ...
+            }
 
-        // Register Game Objects
-        if ( gEnv && gEnv->pGameFramework )
-        {
-            // TODO: Register Game Objects here if you have some
-            // ...
+            // Register Game Objects
+            if ( gEnv && gEnv->pGameFramework )
+            {
+                // TODO: Register Game Objects here if you have some
+                // ...
+            }
         }
 
         // Note: Autoregister Flownodes will be automatically registered

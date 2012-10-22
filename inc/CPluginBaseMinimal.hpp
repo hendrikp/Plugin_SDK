@@ -53,23 +53,28 @@ namespace PluginManager
 
             virtual bool Release( bool bForce = false )
             {
-                if ( --m_nReferences <= 0 || bForce )
+                if ( !m_bCanUnload )
                 {
-                    m_bIsUnloading = true;
-                    m_nReferences = 0;
-
-                    if ( m_bIsInitialized )
+                    if ( --m_nReferences <= 0 || bForce )
                     {
+                        m_bIsUnloading = true;
+                        m_nReferences = 0;
+
+                        if ( m_bIsInitialized )
+                        {
 #if !defined(PLUGINMANAGER_EXPORTS)
-                        gPluginManager->GetBase()->Release();
+                            gPluginManager->GetBase()->Release();
 #endif
+                        }
+
+                        m_bIsInitialized = false;
+                        m_bIsFullyInitialized = false;
                     }
 
-                    m_bIsInitialized = false;
-                    m_bIsFullyInitialized = false;
+                    return m_bIsUnloading && m_nReferences == 0;
                 }
 
-                return m_bIsUnloading && m_nReferences == 0;
+                return true;
             };
 
             virtual bool DllCanUnloadNow()
