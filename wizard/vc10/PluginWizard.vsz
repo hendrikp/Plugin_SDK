@@ -4,4 +4,3 @@ Wizard=VsWizard.VsWizardEngine.10.0
 Param="WIZARD_NAME = PluginWizard"
 Param="ABSOLUTE_PATH = C:\cryengine3_3.4.0\Code\Plugin_SDK\wizard\vc10"
 Param="FALLBACK_LCID = 1033"
-
