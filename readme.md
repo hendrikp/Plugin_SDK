@@ -43,6 +43,8 @@ An installer is planned, until then:
 * Open the file "PluginWizard.vsz" with a text editor
   * Fix the path so it points to your Plugin SDK Wizard installation directory 
     ```Param="ABSOLUTE_PATH = C:\cryengine3_3.4.0\Code\Plugin_SDK\wizard\vc10"```
+  * It is extremly important that you save this file with Windows Line Endings
+    if you are not sure use Notepad.exe to check if the line endings are correct. (otherwise the wizard won't work)
 
 * The Wizard should now work, please note the following things (otherwise the wizard won't work)
   * the project name shouldn't contain "Plugin" as this will be added automatically

@@ -223,6 +223,7 @@ stylecode.bat</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\.gitattributes" />
     <None Include="..\.gitignore" />
     <None Include="..\authors.txt" />
     <None Include="..\changelog.txt" />

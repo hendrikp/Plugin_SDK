@@ -57,6 +57,9 @@
     <None Include="..\tools\stylecode.bat">
       <Filter>Tools</Filter>
     </None>
+    <None Include="..\.gitattributes">
+      <Filter>Tools</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

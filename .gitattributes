@@ -1,6 +1,16 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+# CRLF line endings for Wizard
+*.vsz text eol=crlf
+*.VSZ text eol=crlf
+*.vsdir text eol=crlf
+*.VSDIR text eol=crlf
+*.ini text eol=crlf
+*.INI text eol=crlf
+*.inf text eol=crlf
+*.INF text eol=crlf
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
