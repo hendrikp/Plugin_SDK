@@ -16,6 +16,7 @@ Work in Progress Plugins
 - [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
 - Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
 - Plugin_Signaler - Transmit information/events between different flowgraphs
+- [AwesomiumForCryEngine3](https://github.com/darman96/AwesomiumForCryEngine3) - Create HTML5 UIs or simply surf the web ingame
 
 Feature requests/latest version on github.
 https://github.com/hendrikp/Plugin_SDK
