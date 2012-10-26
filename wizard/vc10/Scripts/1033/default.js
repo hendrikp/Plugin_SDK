@@ -7,6 +7,9 @@ function OnFinish(selProj, selObj)
         // Create Project Name
         var strProjectName = wizard.FindSymbol('PROJECT_NAME');
         strProjectName = strProjectName.replace("Plugin_", ""); // done this way so directory existence checks still works
+        strProjectName = strProjectName.replace("Plugin", ""); // further possibilities
+        strProjectName = strProjectName.replace("plugin", ""); // further possibilities
+        strProjectName = strProjectName.replace(" ", ""); // remove spaces
 
         // Safe Project Name
         strProjectName = CreateCPPName(CreateSafeName(strProjectName)).replace(/[^\w\s]/gi, '');
@@ -40,7 +43,7 @@ function OnFinish(selProj, selObj)
 
         selProj = CreateCustomProject(strProjectName, strProjectPath);
 
-        // delete temp rendered project
+        // Delete temp rendered project
         var fso = new ActiveXObject('Scripting.FileSystemObject');
         DelFile(fso, strProjectPath + "\\default.vcxproj"); 
 
@@ -50,7 +53,6 @@ function OnFinish(selProj, selObj)
         var InfFile = CreateCustomInfFile();
 
         AddFilesToCustomProj(selProj, strProjectName, strProjectPath, InfFile);
-        //AddFilesToProject(selProj, strProjectName, null, InfFile);
 
         PchSettings(selProj);
 
