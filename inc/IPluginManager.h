@@ -188,9 +188,9 @@ namespace PluginManager
     };
 
     template<typename tCIFace>
-    tCIFace safeGetPluginConcreteInterface(const char* sPlugin, const char* sVersion = NULL )
+    tCIFace safeGetPluginConcreteInterface( const char* sPlugin, const char* sVersion = NULL )
     {
-        return static_cast<tCIFace>(gPluginManager && gPluginManager->GetPluginByName(sPlugin) ? gPluginManager->GetPluginByName(sPlugin)->GetConcreteInterface(sVersion) : NULL);
+        return static_cast<tCIFace>( gPluginManager && gPluginManager->GetPluginByName( sPlugin ) ? gPluginManager->GetPluginByName( sPlugin )->GetConcreteInterface( sVersion ) : NULL );
     };
 };
 
