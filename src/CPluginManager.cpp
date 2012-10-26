@@ -395,8 +395,19 @@ namespace PluginManager
 
     void CPluginManager::PluginGarbageCollector()
     {
+        bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
+
         // Something to do?
-        if ( m_UnloadingPlugins.size() )
+        if ( bQuit )
+        {
+            // Don't unload dlls on quit while a map is still loaded (because flownode types are still in use even if unregistered or unused)
+            // instead let the plugins handle their cleanup but keep the plugin dll loaded on quit until they get automatically unloaded.
+            m_UnloadingPlugins.clear(); // but clean up this now, else problems with auto destructor map/CryString (maybe already unloaded at this point)
+
+            // this worked very well for all of my plugins in all cases (quit in main menu, quit in level and quit using the menu or X)
+        }
+
+        else if (  m_UnloadingPlugins.size() )
         {
             bool bUnloadedSomething = false;
 
