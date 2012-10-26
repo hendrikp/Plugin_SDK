@@ -482,7 +482,12 @@ namespace PluginManager
         // CryPak is used because its cross platform not because libraries can actually be in a pak.
         // In fact they shouldn't be since its not supported by CryLoadLibrary
         // so set AllowFilesystem = true
-        for ( hNextFile = hFileFind = pCryPak->FindFirst( sSearchFilter, &fileData, 0, true );
+
+        // keep
+        //const int nDontMessWithPath = ICryPak::FLAGS_PATH_REAL | ICryPak::FLAGS_NO_LOWCASE | ICryPak::FLAGS_NEVER_IN_PAK | ICryPak::FLAGS_COPY_DEST_ALWAYS;
+
+        // findfirst uses utf-8 (who would have guessed :P)
+        for ( hNextFile = hFileFind = pCryPak->FindFirst( ACP2UTF8( sSearchFilter ), &fileData, 0, true );
                 hNextFile != int( INVALID_HANDLE_VALUE );
                 hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
         {
