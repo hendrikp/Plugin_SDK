@@ -3,5 +3,3 @@ MSBuild "../project/Plugin[!output PROJECT_NAME_SAFE].vcxproj" /t:Rebuild /p:Con
 
 call "%VS100COMNTOOLS%..\..\VC\vcvarsall.bat" x64
 MSBuild "../project/Plugin[!output PROJECT_NAME_SAFE].vcxproj" /t:Rebuild /p:Configuration=Release
-
-pause
