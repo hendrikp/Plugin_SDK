@@ -503,7 +503,15 @@ namespace PluginManager
             }
         }
 
-        pCryPak->FindClose( hFileFind );
+        if ( hFileFind != int( INVALID_HANDLE_VALUE ) )
+        {
+            pCryPak->FindClose( hFileFind );
+        }
+
+        else
+        {
+            LogError( "Plugin path not found, maybe non ASCII characters in path?" );
+        }
     }
 
     HMODULE CPluginManager::LoadLibraryWithinOwnDirectory( const char* sPluginPath ) const
