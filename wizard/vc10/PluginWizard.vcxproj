@@ -103,6 +103,10 @@
     <None Include="Templates\1033\license.txt" />
     <None Include="Templates\1033\readme.md" />
     <None Include="Templates\1033\Templates.inf" />
+    <None Include="Templates\1033\tools\build.bat" />
+    <None Include="Templates\1033\tools\codestyle.astylerc" />
+    <None Include="Templates\1033\tools\stylecode.bat" />
+    <None Include="Templates\1033\tools\_stylehelper.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Templates\1033\CPluginSample.h" />

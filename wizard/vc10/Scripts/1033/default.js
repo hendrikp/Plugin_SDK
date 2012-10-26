@@ -171,6 +171,9 @@ function AddFilters(proj)
         group.UniqueIdentifier = "{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}";
 
         group = proj.Object.AddFilter("Flownodes");
+
+        group = proj.Object.AddFilter("Tools");
+        group.Filter = "exe;bat;astylerc";
     }
     catch(e)
     {
@@ -271,13 +274,13 @@ function GetTargetName(strName, strProjectName)
         var strProjectNameSafe = wizard.FindSymbol('PROJECT_NAME_SAFE');
 
         if (strName == "readme.md")
-            strTarget = "..\\readme.md";
+            strTarget = "..\\" + strName;
 
         if (strName == "license.txt")
-            strTarget = "..\\license.txt";
+            strTarget = "..\\" + strName;
 
         if (strName == "authors.txt")
-            strTarget = "..\\authors.txt";
+            strTarget = "..\\" + strName;
 
         if (strName == "CPluginSample.h")
             strTarget = "..\\src\\CPlugin" + strProjectNameSafe + ".h";
@@ -288,14 +291,29 @@ function GetTargetName(strName, strProjectName)
         if (strName == "CPluginSampleModule.cpp")
             strTarget = "..\\src\\CPlugin" + strProjectNameSafe + "Module.cpp";
 
-        if (strName == "StdAfx.cpp")
-            strTarget = "..\\src\\StdAfx.cpp";
-
-        if (strName == "StdAfx.h")
-            strTarget = "..\\src\\StdAfx.h";
-
         if (strName == "IPluginSample.h")
             strTarget = "..\\inc\\IPlugin" + strProjectNameSafe + ".h";
+
+        if (strName == "StdAfx.cpp")
+            strTarget = "..\\src\\" + strName;
+
+        if (strName == "StdAfx.h")
+            strTarget = "..\\src\\" + strName;
+
+        if (strName == "tools\\_astyle.exe")
+            strTarget = "..\\" + strName;
+
+        if (strName == "tools\\_stylehelper.bat")
+            strTarget = "..\\" + strName;
+
+        if (strName == "tools\\build.bat")
+            strTarget = "..\\" + strName;
+
+        if (strName == "tools\\codestyle.astylerc")
+            strTarget = "..\\" + strName;
+
+        if (strName == "tools\\stylecode.bat")
+            strTarget = "..\\" + strName;
 
         return strTarget;
     }
@@ -329,16 +347,19 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
 
                 var bCopyOnly = false;  //"true" will only copy the file from strTemplate to strTarget without rendering/adding to the project
                 var strExt = strName.substr(strName.lastIndexOf("."));
-                if(strExt==".bmp" || strExt==".ico" || strExt==".gif" || strExt==".rtf" || strExt==".css")
+                if (strExt == ".astylerc" || strExt == ".exe" || strExt == ".bmp" || strExt == ".ico" || strExt == ".gif" || strExt == ".rtf" || strExt == ".css")
                     bCopyOnly = true;
 
                 wizard.RenderTemplate(strTemplate, strFile, bCopyOnly);
 
+                var projFilters = proj.Object.Filters;
                 // Filter / add
                 if (strFile.indexOf('resource.h') !== -1) 
                 {      
-                    var projFilters = proj.Object.Filters;
                     var filterRc = projFilters.Item("Resource Files");
+                    filterRc.AddFile(strFile);
+                } else if (strFile.indexOf('.exe') !== -1 || strFile.indexOf('.bat') !== -1 || strFile.indexOf('.astyle') !== -1) {
+                    var filterRc = projFilters.Item("Tools");
                     filterRc.AddFile(strFile);
                 } else {
                     proj.Object.AddFile(strFile);
