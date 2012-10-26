@@ -33,6 +33,9 @@
     <Filter Include="Template Files\Headers">
       <UniqueIdentifier>{a30988a7-1cf3-4e74-ba23-898d9ca4addc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Template Files\Tools">
+      <UniqueIdentifier>{f3581f87-6ba3-493b-b0f4-2a542b952aa7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Templates\1033\Templates.inf">
@@ -53,14 +56,9 @@
     <None Include="HTML\1033\default.htm">
       <Filter>HTML Files</Filter>
     </None>
-    <None Include="Images\PluginWizard.gif" />
-    <None Include="Images\PluginWizard_Background.gif" />
     <None Include="1033\NewStyles.css">
       <Filter>Miscellaneous Files</Filter>
     </None>
-    <None Include="1033\Images\DottedHori.gif" />
-    <None Include="1033\Images\DottedVert.gif" />
-    <None Include="1033\Images\spacer.gif" />
     <None Include="Templates\1033\license.txt">
       <Filter>Template Files</Filter>
     </None>
@@ -75,6 +73,33 @@
     </None>
     <None Include="Templates\1033\default.vcxproj">
       <Filter>Template Files\Project</Filter>
+    </None>
+    <None Include="Templates\1033\tools\_stylehelper.bat">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="Templates\1033\tools\build.bat">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="Templates\1033\tools\codestyle.astylerc">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="Templates\1033\tools\stylecode.bat">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="1033\Images\DottedHori.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="1033\Images\DottedVert.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="Images\PluginWizard.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="Images\PluginWizard_Background.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="1033\Images\spacer.gif">
+      <Filter>Image Files</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

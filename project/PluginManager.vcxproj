@@ -229,6 +229,7 @@ stylecode.bat</Command>
     <None Include="..\changelog.txt" />
     <None Include="..\license.txt" />
     <None Include="..\readme.md" />
+    <None Include="..\tools\build.bat" />
     <None Include="..\tools\codestyle.astylerc" />
     <None Include="..\tools\stylecode.bat" />
   </ItemGroup>

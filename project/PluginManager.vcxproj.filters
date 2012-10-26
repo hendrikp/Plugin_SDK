@@ -60,6 +60,9 @@
     <None Include="..\.gitattributes">
       <Filter>Tools</Filter>
     </None>
+    <None Include="..\tools\build.bat">
+      <Filter>Tools</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
