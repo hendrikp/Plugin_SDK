@@ -13,7 +13,6 @@
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\$(PlatformShortName);$(DXSDK_DIR)Lib\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ShowProgress>NotSet</ShowProgress>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <LinkStatus>true</LinkStatus>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
