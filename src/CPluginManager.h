@@ -10,6 +10,8 @@
 #include <CPluginBase.hpp>
 #include <CryLibrary.h>
 
+#include <PMUtils.hpp>
+
 #define PLUGIN_NAME PLUGIN_MANAGER
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
 #define PLUGIN_FILENAME TEXT(PLUGIN_TEXT "_" PLUGIN_NAME CrySharedLibrayExtension) //!< Filename of the Plugin
@@ -290,6 +292,21 @@ namespace PluginManager
             void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
             void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor );
 #endif
+
+        private:
+            CallDelayQueue m_qDelayedCalls; //!< delayed function calls
+        public:
+            /**
+            * @brief GetDelayQueue
+            * @return delay queue of videoplayer system
+            */
+            CallDelayQueue& GetDelayQueue()
+            {
+                return m_qDelayedCalls;
+            };
+
+            void DelayFunction( tDelayedCall pFunc, void* pData, float fDelay = 1.0f, int eType = CallDelay::eDT_Default );
+            void DelayCommand( const char* sCommand, float fDelay = 1.0f, int eType = CallDelay::eDT_Default );
 
             /**
             * @internal

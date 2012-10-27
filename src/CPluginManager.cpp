@@ -95,6 +95,16 @@ namespace PluginManager
         gPluginManager->InitializePluginRange();
     };
 
+    void CPluginManager::DelayFunction( tDelayedCall pFunc, void* pData, float fDelay, int eType )
+    {
+        GetDelayQueue().DelayFunction( pFunc, pData, fDelay, CallDelay::eDelayType( eType ) );
+    };
+
+    void CPluginManager::DelayCommand( const char* sCommand, float fDelay, int eType )
+    {
+        DelayConsoleCommand( GetDelayQueue(), sCommand, fDelay, CallDelay::eDelayType( eType ) );
+    };
+
     CPluginManager::CPluginManager()
     {
         gPluginManager = this;
@@ -384,6 +394,12 @@ namespace PluginManager
     {
         static int nCounter = 1;
         bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
+
+        // Advance delayed calls
+        if ( !bQuit )
+        {
+            m_qDelayedCalls.AdvanceAll( fDeltaTime );
+        }
 
         // Don't collect garbage every frame
         if ( bQuit || ++nCounter % 50 == 0 )

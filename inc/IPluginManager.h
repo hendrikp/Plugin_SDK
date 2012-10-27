@@ -47,6 +47,12 @@ namespace PluginManager
 #endif
 
     /**
+    * @internal
+    * @brief delayed function type
+    */
+    typedef void ( *tDelayedCall )( void* );
+
+    /**
     * @brief plugin manager interface
     */
     struct IPluginManager
@@ -185,6 +191,26 @@ namespace PluginManager
         virtual void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor ) = 0;
 #endif
 
+        /**
+        * @brief Delay the call of the function
+        * can be used if you don't need full control over delayed execution (the plugin manager will handle it)
+        * @see PluginManager::CallDelayQueue::DelayFunction
+        * @param pFunc function pointer of delayed function
+        * @param pData Data for delayed function
+        * @param fDelay delay amount
+        * @param eType delay type
+        */
+        virtual void DelayFunction( tDelayedCall pFunc, void* pData, float fDelay = 1.0f, int eType = 1 ) = 0;
+
+        /**
+        * @brief Uses the Plugin Manager Execution delayer
+        * can be used if you don't need full control over delayed execution (the plugin manager will handle it)
+        * @see PluginManager::DelayConsoleCommand
+        * @param sCommand the console command
+        * @param fDelay delay amount
+        * @param eType delay type
+        */
+        virtual void DelayCommand( const char* sCommand, float fDelay = 1.0f, int eType = 1 ) = 0;
     };
 
     template<typename tCIFace>
