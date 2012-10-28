@@ -124,7 +124,7 @@ namespace PluginManager
         int nLenCmd = strlen( COMMAND_DELAY " " );
 
         // Is text present?
-        if ( nLen <= nLenCmd || pArgs->GetArgCount() <= 4 )
+        if ( nLen <= nLenCmd || pArgs->GetArgCount() < 5 )
         {
             return;
         }
