@@ -4,6 +4,17 @@
 #include <CPluginManager.h>
 #include <PMUtils.hpp>
 
+#define COMMAND_LIST        "pm_list"
+#define COMMAND_LISTSI      "pm_listsi"
+#define COMMAND_DUMP        "pm_dump"
+#define COMMAND_DUMPALL     "pm_dumpall"
+#define COMMAND_UNLOAD      "pm_unload"
+#define COMMAND_UNLOADALL   "pm_unloadall"
+#define COMMAND_RELOAD      "pm_reload"
+#define COMMAND_RELOADALL   "pm_reloadall"
+#define COMMAND_DELAY       "pm_delay"
+#define COMMAND_DELAYCANCEL "pm_delaycancel"
+
 namespace PluginManager
 {
     void Command_ListAll( IConsoleCmdArgs* pArgs )
@@ -95,14 +106,71 @@ namespace PluginManager
         gPluginManager->InitializePluginRange();
     };
 
-    void CPluginManager::DelayFunction( tDelayedCall pFunc, void* pData, float fDelay, int eType )
+    void Command_Delay( IConsoleCmdArgs* pArgs )
     {
-        GetDelayQueue().DelayFunction( pFunc, pData, fDelay, CallDelay::eDelayType( eType ) );
+        if ( !gPluginManager )
+        {
+            return;
+        }
+
+
+        // Syntax: <filter> <type (1:frames, 2:seconds)> <amount> <commands...>
+        //         0        1                             2       3...
+
+        // Get Commands to delay
+#undef GetCommandLine
+        string sCommandLine( pArgs->GetCommandLine() );
+        int nLen = sCommandLine.length();
+        int nLenCmd = strlen( COMMAND_DELAY " " );
+
+        // Is text present?
+        if ( nLen <= nLenCmd || pArgs->GetArgCount() <= 4 )
+        {
+            return;
+        }
+
+        // remove command
+        string sText = sCommandLine.Mid( nLenCmd );
+
+        // read over the parameters
+        size_t nOffset = sText.find_first_of( ' ' )   + 1;
+        nOffset = sText.find_first_of( ' ', nOffset ) + 1;
+        nOffset = sText.find_first_of( ' ', nOffset ) + 1;
+
+        // remove paramters
+        sText = sText.Mid( nOffset ).Trim();
+
+        // delay the command
+        if ( sText.length() > 0 )
+        {
+            gPluginManager->DelayCommand( sText, pArgs->GetArg( 1 ), ParseString<float>( pArgs->GetArg( 3 ) ), CallDelay::eDelayType( ParseString<int>( pArgs->GetArg( 2 ) ) ) );
+        }
     };
 
-    void CPluginManager::DelayCommand( const char* sCommand, float fDelay, int eType )
+    void Command_DelayCancel( IConsoleCmdArgs* pArgs )
     {
-        DelayConsoleCommand( GetDelayQueue(), sCommand, fDelay, CallDelay::eDelayType( eType ) );
+        if ( !gPluginManager || pArgs->GetArgCount() < 1 )
+        {
+            // don't allow console command to cancel all filters
+            return;
+        }
+
+        gPluginManager->DelayCancel( pArgs->GetArg( 1 ) );
+    }
+
+    void CPluginManager::DelayFunction( const char* sFilter, tDelayedCall pFunc, tDelayedCall pFuncCleanup, void* pData, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
+    {
+        GetDelayQueue().DelayFunction( sFilter, pFunc, pFuncCleanup, pData, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+    };
+
+    void CPluginManager::DelayCommand( const char* sCommand, const char* sFilter, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
+    {
+        DelayConsoleCommand( GetDelayQueue(), sCommand, sFilter, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+    };
+
+    void CPluginManager::DelayCancel( const char* sFilter )
+    {
+        GetDelayQueue().Cancel( sFilter );
     };
 
     CPluginManager::CPluginManager()
@@ -139,14 +207,16 @@ namespace PluginManager
                     // Unregister CVars
                     if ( gEnv && gEnv->pConsole )
                     {
-                        gEnv->pConsole->RemoveCommand( "pm_list" );
-                        gEnv->pConsole->RemoveCommand( "pm_listsi" );
-                        gEnv->pConsole->RemoveCommand( "pm_dump" );
-                        gEnv->pConsole->RemoveCommand( "pm_dumpall" );
-                        gEnv->pConsole->RemoveCommand( "pm_unload" );
-                        gEnv->pConsole->RemoveCommand( "pm_unloadall" );
-                        gEnv->pConsole->RemoveCommand( "pm_reload" );
-                        gEnv->pConsole->RemoveCommand( "pm_reloadall" );
+                        gEnv->pConsole->RemoveCommand( COMMAND_LIST );
+                        gEnv->pConsole->RemoveCommand( COMMAND_LISTSI );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DUMP );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DUMPALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOAD );
+                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOADALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_RELOAD );
+                        gEnv->pConsole->RemoveCommand( COMMAND_RELOADALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DELAY );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DELAYCANCEL );
                     }
 
                     // Unregister listeners
@@ -246,14 +316,16 @@ namespace PluginManager
                 // Register CVars
                 if ( gEnv && gEnv->pConsole )
                 {
-                    gEnv->pConsole->AddCommand( "pm_list", Command_ListAll, VF_NULL, "List one info row for all plugins" );
-                    gEnv->pConsole->AddCommand( "pm_listsi", Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
-                    gEnv->pConsole->AddCommand( "pm_dump", Command_Dump, VF_NULL, "Dump info on a specific plugins" );
-                    gEnv->pConsole->AddCommand( "pm_dumpall", Command_DumpAll, VF_NULL, "Dump info on all plugins" );
-                    gEnv->pConsole->AddCommand( "pm_unload", Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
-                    gEnv->pConsole->AddCommand( "pm_unloadall", Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
-                    gEnv->pConsole->AddCommand( "pm_reload", Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
-                    gEnv->pConsole->AddCommand( "pm_reloadall", Command_ReloadAll, VF_NULL, "Reload all plugins" );
+                    gEnv->pConsole->AddCommand( COMMAND_LIST, Command_ListAll, VF_NULL, "List one info row for all plugins" );
+                    gEnv->pConsole->AddCommand( COMMAND_LISTSI, Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
+                    gEnv->pConsole->AddCommand( COMMAND_DUMP, Command_Dump, VF_NULL, "Dump info on a specific plugins" );
+                    gEnv->pConsole->AddCommand( COMMAND_DUMPALL, Command_DumpAll, VF_NULL, "Dump info on all plugins" );
+                    gEnv->pConsole->AddCommand( COMMAND_UNLOAD, Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
+                    gEnv->pConsole->AddCommand( COMMAND_UNLOADALL, Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
+                    gEnv->pConsole->AddCommand( COMMAND_RELOAD, Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
+                    gEnv->pConsole->AddCommand( COMMAND_RELOADALL, Command_ReloadAll, VF_NULL, "Reload all plugins" );
+                    gEnv->pConsole->AddCommand( COMMAND_DELAY, Command_Delay, VF_NULL, "Delays a commands | " COMMAND_DELAY " <filter> <type (1:frames, 2:seconds)> <amount> <commands...>" );
+                    gEnv->pConsole->AddCommand( COMMAND_DELAYCANCEL, Command_DelayCancel, VF_NULL, "Delays a commands | " COMMAND_DELAYCANCEL " <filter>" );
                 }
 
                 // Register Listeners
@@ -282,7 +354,7 @@ namespace PluginManager
 
     const char* CPluginManager::ListCVars() const
     {
-        return "pm_list,\n" "pm_listsi,\n" "pm_dump,\n" "pm_dumpall,\n" "pm_unload,\n" "pm_unloadall,\n" "pm_reload,\n" "pm_reloadall,\n";
+        return COMMAND_LIST",\n" COMMAND_LISTSI",\n" COMMAND_DUMP",\n" COMMAND_DUMPALL",\n" COMMAND_UNLOAD",\n" COMMAND_UNLOADALL",\n" COMMAND_RELOAD",\n" COMMAND_RELOADALL",\n" COMMAND_DELAY",\n" COMMAND_DELAYCANCEL",\n";
     }
 
     bool CPluginManager::Check( const char* sAPIVersion ) const
@@ -416,7 +488,7 @@ namespace PluginManager
         // Something to do?
         if ( bQuit )
         {
-            // Don't unload dlls on quit while a map is still loaded (because flownode types are still in use even if unregistered or unused)
+            // Don't unload dlls on quit while a map is still loaded (because flow node types are still in use even if unregistered or unused)
             // instead let the plugins handle their cleanup but keep the plugin dll loaded on quit until they get automatically unloaded.
             m_UnloadingPlugins.clear(); // but clean up this now, else problems with auto destructor map/CryString (maybe already unloaded at this point)
 

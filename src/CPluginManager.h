@@ -16,11 +16,7 @@
 #define PLUGIN_CONSOLE_PREFIX "[" PLUGIN_NAME " " PLUGIN_TEXT "] " //!< Prefix for Logentries by this plugin
 #define PLUGIN_FILENAME TEXT(PLUGIN_TEXT "_" PLUGIN_NAME CrySharedLibrayExtension) //!< Filename of the Plugin
 
-#define PATH_SEPERATOR "\\"
 #define PLUGIN_PATH PLUGIN_FOLDER PATH_SEPERATOR PLUGIN_FILENAME //!< Full Path of the plugin
-
-#define SAFESTR(x) (((const char*)x)?((const char*)x):"") //!< Helper to avoid NULL str problems
-#define BOOLSTR(x) (x?"true":"false") //!< Helper to concert boolean values
 
 namespace PluginManager
 {
@@ -305,8 +301,11 @@ namespace PluginManager
                 return m_qDelayedCalls;
             };
 
-            void DelayFunction( tDelayedCall pFunc, void* pData, float fDelay = 1.0f, int eType = CallDelay::eDT_Default );
-            void DelayCommand( const char* sCommand, float fDelay = 1.0f, int eType = CallDelay::eDT_Default );
+            void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, int eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
+
+            void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
+
+            void DelayCancel( const char* sFilter = NULL );
 
             /**
             * @internal
