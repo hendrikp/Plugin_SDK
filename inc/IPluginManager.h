@@ -49,8 +49,19 @@ namespace PluginManager
     /**
     * @internal
     * @brief delayed function type
+    * @param pData data for the delayed call
+    * This is the delayed call
     */
     typedef void ( *tDelayedCall )( void* );
+
+    /**
+    * @internal
+    * @brief delay call trigger type
+    * Delay Trigger type functions can be used to monitor dynamic conditions
+    * @param pDataTrigger data for the delay trigger
+    * On true this executes the delayed call
+    */
+    typedef bool ( *tDelayedCallTrigger )( void* );
 
     /**
     * @brief plugin manager interface
@@ -194,13 +205,17 @@ namespace PluginManager
         /**
         * @brief Delay the call of the function
         * can be used if you don't need full control over delayed execution (the plugin manager will handle it)
-        * @see PluginManager::CallDelayQueue::DelayFunction
+        * @param sFilter custom filter for remove control
         * @param pFunc function pointer of delayed function
+        * @param pFuncCleanup function pointer that cleans up the data when the delayed call is canceled or finished
         * @param pData Data for delayed function
         * @param fDelay delay amount
         * @param eType delay type
+        * @param pFuncTrigger function pointer delay trigger function
+        * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
+        * @param pDataTrigger Data for delay trigger function
         */
-        virtual void DelayFunction( tDelayedCall pFunc, void* pData, float fDelay = 1.0f, int eType = 1 ) = 0;
+        virtual void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
 
         /**
         * @brief Uses the Plugin Manager Execution delayer
@@ -209,10 +224,26 @@ namespace PluginManager
         * @param sCommand the console command
         * @param fDelay delay amount
         * @param eType delay type
+        * @param pFuncTrigger function pointer delay trigger function
+        * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
+        * @param pDataTrigger Data for delay trigger function
         */
-        virtual void DelayCommand( const char* sCommand, float fDelay = 1.0f, int eType = 1 ) = 0;
+        virtual void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
+
+        /**
+        * @brief Cancels registered delayed calls
+        * @param sFilter only delete these delayed calls (if NULL then everything is deleted)
+        */
+        virtual void DelayCancel( const char* sFilter = NULL ) = 0;
     };
 
+    /**
+    * @brief Fast and safe way to get the concrete interface of a plugin
+    * @tparam tCIFace concrete interface pointer datatype
+    * @param sPlugin plugin name
+    * @param sVersion concrete interface version
+    * @return Pointer to concrete interface or NULL
+    */
     template<typename tCIFace>
     tCIFace safeGetPluginConcreteInterface( const char* sPlugin, const char* sVersion = NULL )
     {
