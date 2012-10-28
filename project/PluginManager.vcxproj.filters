@@ -63,10 +63,10 @@
     <None Include="..\tools\build.bat">
       <Filter>Tools</Filter>
     </None>
-    <None Include="..\tools\buildall.bat">
+    <None Include="..\tools\build_game.bat">
       <Filter>Tools</Filter>
     </None>
-    <None Include="..\tools\build_game.bat">
+    <None Include="..\tools\build_all.bat">
       <Filter>Tools</Filter>
     </None>
   </ItemGroup>
