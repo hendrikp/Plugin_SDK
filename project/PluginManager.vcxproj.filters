@@ -63,6 +63,12 @@
     <None Include="..\tools\build.bat">
       <Filter>Tools</Filter>
     </None>
+    <None Include="..\tools\buildall.bat">
+      <Filter>Tools</Filter>
+    </None>
+    <None Include="..\tools\build_game.bat">
+      <Filter>Tools</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

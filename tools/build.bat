@@ -1,3 +1,5 @@
+@echo off
+
 :: Set project relevant settings
 set VCPROJECT="..\project\PluginManager.vcxproj"
 set VCTOOLS="%VS100COMNTOOLS%..\..\VC\vcvarsall.bat"

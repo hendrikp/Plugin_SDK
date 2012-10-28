@@ -230,6 +230,8 @@ stylecode.bat</Command>
     <None Include="..\license.txt" />
     <None Include="..\readme.md" />
     <None Include="..\tools\build.bat" />
+    <None Include="..\tools\buildall.bat" />
+    <None Include="..\tools\build_game.bat" />
     <None Include="..\tools\codestyle.astylerc" />
     <None Include="..\tools\stylecode.bat" />
   </ItemGroup>
