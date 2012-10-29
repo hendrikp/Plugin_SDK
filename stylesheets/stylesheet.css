@@ -166,10 +166,10 @@ a.button span {
 }
 
 #view-wiki span {
-  background: transparent url(../images/help-icon.png) 12px 50% no-repeat;
+  background: transparent url(../images/help-icon.png) 14px 50% no-repeat;
 }
 #download-installer span {
-  background: transparent url(../images/installer-icon.png) 12px 50% no-repeat;
+  background: transparent url(../images/installer-icon.png) 16px 50% no-repeat;
 }
 
 code, pre {
