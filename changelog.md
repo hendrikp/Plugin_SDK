@@ -1,3 +1,3 @@
-Plugin Manager 1.0 (~15.10.2012)
-----------------------
-Initial Public Release for FreeSDK 3.4
+Plugin SDK 1.0 (29.10.2012)
+---------------------------
+Initial Stable Release for CryEngine 3.4.0 (32/64 bit)
