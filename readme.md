@@ -4,22 +4,22 @@ Purpose is to automatically load plugins without touching the GameDll each time.
 
 Available Plugins
 -----------------
-- [CryMono](http://crymono.inkdev.net/) - Brings the power of .NET into the world of CryEngine
-- [Plugin_Videoplayer](https://github.com/hendrikp/Plugin_Videoplayer) - Videoplayer for 2D screen and 3D objects using WebM format
-- [Plugin_OSC](https://github.com/hendrikp/Plugin_OSC) - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications / sound hardware
-- [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
-- [Plugin_D3D](https://github.com/hendrikp/Plugin_D3D) - Exposes Direct3D 9 and 11 functionality, also access to the renderthread
-- [Plugin_Crash](https://github.com/hendrikp/Plugin_Crash) - Crashes the process and serves as sample plugin
+* [CryMono](http://crymono.inkdev.net/) - Brings the power of .NET into the world of CryEngine
+* [Plugin_Videoplayer](https://github.com/hendrikp/Plugin_Videoplayer) - Videoplayer for 2D screen and 3D objects using WebM format
+* [Plugin_OSC](https://github.com/hendrikp/Plugin_OSC) - [Open Sound Control](http://opensoundcontrol.org/) protocol support for integrating external applications / sound hardware
+* [Plugin_Flite](https://github.com/hendrikp/Plugin_Flite) - Provides Text to Speech
+* [Plugin_D3D](https://github.com/hendrikp/Plugin_D3D) - Exposes Direct3D 9 and 11 functionality, also access to the renderthread
+* [Plugin_Crash](https://github.com/hendrikp/Plugin_Crash) - Crashes the process and serves as sample plugin
 
 Work in Progress Plugins
 ------------------------
-- [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
-- Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
-- Plugin_Signaler - Transmit information/events between different flowgraphs
-- [AwesomiumForCryEngine3](https://github.com/darman96/AwesomiumForCryEngine3) - Create HTML5 UIs or simply surf the web ingame
+* [Oohh](https://github.com/CapsAdmin/oohh) - Advanced Lua scripting, featuring various builtin libraries (like Garry's Mod)
+* Plugin_Camera - Advanced configurable camera system (Third Person, Stategy/Top, Side-Scroller, Static, whatever)
+* Plugin_Signaler - Transmit information/events between different flowgraphs
+* [AwesomiumForCryEngine3](https://github.com/darman96/AwesomiumForCryEngine3) - Create HTML5 UIs or simply surf the web ingame
 
-Feature requests/latest version on github.
-https://github.com/hendrikp/Plugin_SDK
+Feature requests/bug reports on github:
+ [Wishes / Issues](https://github.com/hendrikp/Plugin_D3D/issues)
 
 Installation / Integration
 ==========================
@@ -54,13 +54,17 @@ An installer is planned, until then:
 
 Creating a new plugin
 =====================
-https://github.com/hendrikp/Plugin_SDK/wiki/Creating-a-new-Plugin
+* Look into the [Wiki: Creating a New Plugin](https://github.com/hendrikp/Plugin_SDK/wiki/Creating-a-new-Plugin)
+* You can also look into this sample https://github.com/hendrikp/Plugin_Crash
 
-You can also look into this sample:
-https://github.com/hendrikp/Plugin_Crash
+For plugin dependencies
 
-CVars
-=====
+* Look into the [Wiki: Plugin Dependencies](https://github.com/hendrikp/Plugin_SDK/wiki/Plugin-Dependencies)
+* [Plugin_D3D](https://github.com/hendrikp/Plugin_D3D) (See C++ Integration)
+* [Plugin_Videoplayer](https://github.com/hendrikp/Plugin_Videoplayer) (Optionally uses Plugin_D3D)
+
+CVars / Commands
+================
 * ```pm_list```
   List one info row for all plugins
 * ```pm_listsi```
@@ -84,7 +88,9 @@ Follow these steps to integrate the Plugin SDK into your GameDLL.
 
 Repository Setup
 ----------------
-* Clone the repository to your local machine to your Code directory e.g. C:\cryengine3_3.4.0\Code
+* Clone the repository to your local machine to your Code directory e.g. ```C:\cryengine3_3.4.0\Code```.
+* Use a github UI version like [Github for Windows](http://windows.github.com/)
+* or if you already have git installed
 
 ```
     git clone https://github.com/hendrikp/Plugin_SDK.git
@@ -103,8 +109,8 @@ Compiler Settings
 
 * Apply those properties and close the dialog
 
-Source Files
-------------
+Modify CryEngine GameDLL Source Files
+-------------------------------------
 * Inside the CryGame Project (Solution Explorer)
   Open the following File: Startup Files / GameStartup.cpp
 * Add behind the existing includes the following:
@@ -141,11 +147,12 @@ Source Files
     PLUGIN_SDK_WINPROC_INJECTOR(LRESULT CALLBACK CGameStartup::WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam))
 ```
 
-Compiling
----------
-Either add the project file to your CryGame solution and the plugin manager as dependency for each plugin.
-
-Or use the supplied seperate solution to compile the plugin manager.
+Building / Compiling
+--------------------
+* Use the supplied seperate solution to compile the plugin manager.
+* Or use the supplied batch ```tools\build.bat``` to build this project only.
+* Or use the supplied batch ```Plugin_SDK\build_all.bat``` to build all plugins in the Code directory and the GameDll.
+* Or add the project file to your CryGame solution and the plugin manager as dependency for each plugin.
 
 Contributing
 ============
