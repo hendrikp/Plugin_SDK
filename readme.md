@@ -1,6 +1,6 @@
 Plugin SDK for CryEngine
 ========================
-Purpose is to automatically load Plugins without modifying the GameDll. Developers can use the Wizard to save time when setting up Plugin projects.
+Purpose of the Plugin SDK is to automatically load Plugins without modifying the GameDll. Developers can use the Wizard to save time when setting up Plugin projects.
 
 Available Plugins
 -----------------
