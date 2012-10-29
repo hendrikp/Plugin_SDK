@@ -236,7 +236,22 @@ namespace PluginManager
         */
         virtual void DelayCancel( const char* sFilter = NULL ) = 0;
     };
+}
 
+// Forces you to declare global PluginManager when including IPluginManager
+#if !defined(PLUGINMANAGER_EXPORTS)
+extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager pointer for game link libraries.
+#else
+namespace PluginManager
+{
+    class CPluginManager;
+    static CPluginManager* gPluginManager; //!< Global plugin manager pointer for game link libraries.
+}
+#endif
+
+// Helper functions
+namespace PluginManager
+{
     /**
     * @brief Fast and safe way to get the concrete interface of a plugin
     * @tparam tCIFace concrete interface pointer datatype
@@ -245,13 +260,49 @@ namespace PluginManager
     * @return Pointer to concrete interface or NULL
     */
     template<typename tCIFace>
-    tCIFace safeGetPluginConcreteInterface( const char* sPlugin, const char* sVersion = NULL )
+    static tCIFace safeGetPluginConcreteInterface( const char* sPlugin, const char* sVersion = NULL )
     {
         return static_cast<tCIFace>( gPluginManager && gPluginManager->GetPluginByName( sPlugin ) ? gPluginManager->GetPluginByName( sPlugin )->GetConcreteInterface( sVersion ) : NULL );
     };
-};
 
-// Forces you to declare global PluginManager when including IPluginManager
-#if !defined(PLUGINMANAGER_EXPORTS)
-extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager pointer for game link libraries.
-#endif
+    /**
+    * @brief Fast and safe way to get the concrete interface of a plugin and keep it loaded (by adding a reference)
+    * The plugin needs to be released again as this function adds a reference to the plugin
+    * @tparam tCIFace concrete interface pointer datatype
+    * @param sPlugin plugin name
+    * @param sVersion concrete interface version
+    * @return Pointer to concrete interface or NULL
+    */
+    template<typename tCIFace>
+    static tCIFace safeUsePluginConcreteInterface( const char* sPlugin, const char* sVersion = NULL )
+    {
+        IPluginBase* pBase = gPluginManager ? gPluginManager->GetPluginByName( sPlugin ) : NULL;
+        tCIFace pPlugin = static_cast<tCIFace>( pBase ? pBase->GetConcreteInterface( sVersion ) : NULL );
+
+        if ( pPlugin )
+        {
+            pBase->AddRef();
+        }
+
+        return pPlugin;
+    };
+
+    /**
+    * @brief Fast and safe way to release a plugin
+    * @tparam tCIFace concrete interface pointer datatype
+    * @param sPlugin plugin name
+    * @param refpCIFace Reference to pointer of concrete interface or NULL
+    */
+    template<typename tCIFace>
+    static void safeReleasePlugin( const char* sPlugin, tCIFace& refpCIFace )
+    {
+        IPluginBase* pBase = gPluginManager ? gPluginManager->GetPluginByName( sPlugin ) : NULL;
+
+        if ( pBase )
+        {
+            pBase->Release();
+        }
+
+        refpCIFace = NULL;
+    };
+};
