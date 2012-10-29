@@ -1,17 +1,17 @@
 Plugin SDK for CryEngine
 ========================
-Purpose is to automatically load plugins without touching the GameDll each time. Developers can use the wizard to save time when setting up plugin projects.
+Purpose is to automatically load Plugins without modifying the GameDll. Developers can use the Wizard to save time when setting up Plugin projects.
 
 Available Plugins
 -----------------
 * See [Wiki: Plugin SDK](https://github.com/hendrikp/Plugin_SDK/wiki)
 
-Feature requests/bug reports on github:
+Feature Requests/Bug Reports on GitHub:
  [Wishes / Issues](https://github.com/hendrikp/Plugin_SDK/issues)
 
 Installation / Integration
 ==========================
-Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
+Extract the files to your CryEngine SDK Folder so that the Code and BinXX/Plugins directories match up.
 
 Developers
 ----------
