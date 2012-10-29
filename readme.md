@@ -13,12 +13,10 @@ Installation / Integration
 ==========================
 Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
 
+Developers
+----------
 * If you have a custom GameDll that doesn't contain the PluginManager yet then you will need to recompile it see [Wiki: GameDLL Integration](https://github.com/hendrikp/Plugin_SDK/wiki/GameDLL-Integration).
-* If you don't use the Standard FreeSDK version but e.g. got a licensed, educational, custom, newer or older version then you might also need to recompile all plugins and the plugin manager.
-  * Adjust the SDK version in ```#define PLUGIN_COMPILED_CDK_VERSION "3.4.0"``` in the file "Plugin_SDK\inc\IPluginBase.h"
-  * Plugins might implement their own ```Check``` Method in this case you might have to adjust the versions used there to match your SDK version.
-  * If the SDK API/ABI didn't change and the version stayed the same then the plugin might be compatible
-    (depends on the buildnr containing breaking changes or different configuration) 
+* For Compatiblity with other CryEngine versions see [Wiki: Version Compatibility](https://github.com/hendrikp/Plugin_SDK/wiki/Version-compatibility)
 
 CVars / Commands
 ================
