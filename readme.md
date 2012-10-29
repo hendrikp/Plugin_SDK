@@ -19,7 +19,7 @@ Work in Progress Plugins
 * [AwesomiumForCryEngine3](https://github.com/darman96/AwesomiumForCryEngine3) - Create HTML5 UIs or simply surf the web ingame
 
 Feature requests/bug reports on github:
- [Wishes / Issues](https://github.com/hendrikp/Plugin_D3D/issues)
+ [Wishes / Issues](https://github.com/hendrikp/Plugin_SDK/issues)
 
 Installation / Integration
 ==========================
