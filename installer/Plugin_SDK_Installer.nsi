@@ -25,10 +25,10 @@ RequestExecutionLevel user
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 
 ;Welcome page
-!define MUI_TEXT_WELCOME_INFO_TITLE     "Welcome to the Plugin_SDK installer!"
-!define MUI_TEXT_WELCOME_INFO_TEXT      "This is a test info text which will appear below your welcome page title! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
-!define MUI_WELCOMEFINISHPAGE_BITMAP    "welcome_finish.bmp"
-!insertmacro MUI_PAGE_WELCOME
+;!define MUI_TEXT_WELCOME_INFO_TITLE     "Welcome to the Plugin_SDK installer!"
+;!define MUI_TEXT_WELCOME_INFO_TEXT      "This is a test info text which will appear below your welcome page title! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+;!define MUI_WELCOMEFINISHPAGE_BITMAP    "welcome_finish.bmp"
+;!insertmacro MUI_PAGE_WELCOME
 
 ; License page
 !insertmacro MUI_PAGE_LICENSE					"..\license.txt"
@@ -38,6 +38,7 @@ RequestExecutionLevel user
 
 ; Directory page
 !define MUI_DIRECTORYPAGE_VARIABLE				$INSTDIR
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE           "IsValidCEInstallation"
 !insertmacro MUI_PAGE_DIRECTORY
 
 ; Install files page
@@ -91,9 +92,30 @@ SectionGroup  "Developer Tools" SEC_DEV
         
         SetOutPath $INSTDIR\Code\Plugin_SDK\project
         File "${FILES_ROOT}\project\Plugin_Settings.props"
+        
+        SetOutPath $INSTDIR\Code\Plugin_SDK\inc
+        File /r "${FILES_ROOT}\inc\"
+        
+        SetOutPath $INSTDIR\Code\Plugin_SDK
+        File "${FILES_ROOT}\authors.txt"
+        File "${FILES_ROOT}\license.txt"
+        File "${FILES_ROOT}\readme.md"
+        File "${FILES_ROOT}\changelog.md"
     SectionEnd
     
 SectionGroupEnd
+
+; Custom functions
+Function "IsValidCEInstallation"
+    IfFileExists "$INSTDIR\Bin32\Launcher.exe" cont
+            MessageBox MB_OKCANCEL|MB_ICONQUESTION|MB_TOPMOST|MB_SETFOREGROUND \
+                "Could not find a valid CryEngine installtion at $INSTDIR $\n$\n\
+                Are you sure you want to continue ?" \
+                IDOK cont1
+                Abort
+            cont1:
+        cont:
+FunctionEnd
 
 ; Section descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
@@ -105,8 +127,8 @@ SectionGroupEnd
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ; Finish files page
-!define MUI_FINISHPAGE_NOAUTOCLOSE
-!insertmacro MUI_PAGE_FINISH
+;!define MUI_FINISHPAGE_NOAUTOCLOSE
+;!insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_LANGUAGE   "English"
 
