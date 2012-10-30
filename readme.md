@@ -11,7 +11,7 @@ Feature Requests/Bug Reports on GitHub:
 
 Installation / Integration
 ==========================
-Extract the files to your CryEngine SDK Folder so that the Code and BinXX/Plugins directories match up.
+Use the installer or extract the files to your CryEngine SDK Folder so that the Code and BinXX/Plugins directories match up.
 
 Developers
 ----------
