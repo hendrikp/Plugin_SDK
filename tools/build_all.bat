@@ -22,6 +22,20 @@ for /D %%a in (%FILES%) do (
 
     endlocal
   )
+
+  if exist %%a\tools\build_installer.bat (
+    setlocal
+
+    cd %%a\tools\
+    call %%a\tools\build_installer.bat
+
+    if ERRORLEVEL 1 (
+      endlocal
+      goto COMPILE_ERROR
+    )
+
+    endlocal
+  )
 )
 
 :: Build the Game.DLL
