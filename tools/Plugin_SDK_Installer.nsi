@@ -1,5 +1,9 @@
 !include "MUI2.nsh"
+!include "Sections.nsh"
 
+; requires http://nsis.sourceforge.net/Crypto_plug-in
+
+##################################
 XPStyle on
 
 Name "Plugin SDK for CryEngine"
@@ -24,6 +28,8 @@ RequestExecutionLevel user
 !define MUI_HEADERIMAGE_BITMAP "..\images\logos\PluginSDK_Logo_Installer.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 
+###################################
+
 ;Welcome page
 ;!define MUI_TEXT_WELCOME_INFO_TITLE     "Welcome to the Plugin SDK installer!"
 ;!define MUI_TEXT_WELCOME_INFO_TEXT      "This is a test info text which will appear below your welcome page title! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
@@ -44,6 +50,8 @@ RequestExecutionLevel user
 ; Install files page
 !insertmacro MUI_PAGE_INSTFILES
 
+###################################
+
 ; Sections
 SectionGroup "Redistributable" SEC_BIN
 
@@ -61,7 +69,7 @@ SectionGroup "Redistributable" SEC_BIN
         CreateDirectory $INSTDIR\Bin64\Plugins
     SectionEnd
 
-    Section "Pre-compiled GameDLL" SEC_CRYGAME
+    Section "Pre-built GameDLL" SEC_CRYGAME
     
         SetOutPath $INSTDIR\Bin32
         File "${FILES_ROOT}\..\..\Bin32\CryGame.dll"
@@ -105,24 +113,13 @@ SectionGroup  "Developer Tools" SEC_DEV
     
 SectionGroupEnd
 
-; Custom functions
-Function "IsValidCEInstallation"
-    IfFileExists "$INSTDIR\Bin32\Launcher.exe" cont
-            MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
-                "The path is not a CryEngine installation:$\n\
-		$INSTDIR $\n$\n\
-                The Plugin SDK, Plugins and the Wizard will NOT work,$\ncontinue anyways?" \
-                IDOK cont1
-                Abort
-            cont1:
-        cont:
-FunctionEnd
+####################################
 
 ; Section descriptions
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_BIN} "Install the required User components."
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGINMANAGER} "The Plugin Manger automatically loads all Plugins and must be integrated in the GameDLL."
-        !insertmacro MUI_DESCRIPTION_TEXT ${SEC_CRYGAME} "Pre-compiled GameDLL with pre-integrated Plugin SDK.$\nWARNING! This will overwrite the existing GameDLL."
+        !insertmacro MUI_DESCRIPTION_TEXT ${SEC_CRYGAME} "Pre-built GameDLL with pre-integrated Plugin SDK.$\nWARNING! This will overwrite the existing GameDLL."
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_DEV} "Install optional Developer components."
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ} "The Wizard for Visual Studio 2010 allows fast and easy creation of new Plugin projects."
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
@@ -132,6 +129,43 @@ FunctionEnd
 ;!insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_LANGUAGE   "English"
+
+####################################
+
+; Custom functions
+Function "IsValidCEInstallation"
+	IfFileExists "$INSTDIR\Bin32\CrySystem.dll" cont
+		MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
+			"The path is not a CryEngine installation:$\n\
+			$INSTDIR $\n$\n\
+			The Plugin SDK, Plugins and the Wizard will NOT work,$\ncontinue anyways?" \
+			IDOK cont1
+			
+		Abort
+        cont:
+	
+	; If prebuilt gamedll is selected
+	!insertmacro SectionFlagIsSet ${SEC_CRYGAME} ${SF_SELECTED} isSel notSel
+	isSel:
+		; Now check if is the version a prebuilt CryGame will work with
+		Crypto::HashFile "MD5" "$INSTDIR\Bin32\CrySystem.dll"
+		Pop $0
+		StrCmp $0 "640E910A60654A0CF91CC827640F7314" hashok
+			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
+				"This version of CryEngine is not compatible with the pre-built GameDLL$\n\
+				The pre-built GameDLL will be deselected you need to build it yourself."\
+				IDOK hashfailok
+				
+			Abort
+				
+			hashfailok:
+			!insertmacro UnselectSection ${SEC_CRYGAME}
+		hashok:
+	notSel:
+	cont1:
+FunctionEnd
+
+###################################
 
 ; Helper function to replace text in a file
 Function AdvReplaceInFile
