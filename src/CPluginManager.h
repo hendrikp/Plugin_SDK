@@ -18,6 +18,9 @@
 
 #define PLUGIN_PATH PLUGIN_FOLDER PATH_SEPERATOR PLUGIN_FILENAME //!< Full Path of the plugin
 
+#define PM_LUA_TESTLOGIC "pluginLuaLogic"
+#define PM_LUA_RUN "pluginLuaRun"
+
 namespace PluginManager
 {
     /**
@@ -306,6 +309,12 @@ namespace PluginManager
             void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
 
             void DelayCancel( const char* sFilter = NULL );
+
+            bool TestLuaLogic( const char* sLogic );
+
+            bool RunLua( const char* sCode );
+
+            void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
 
             /**
             * @internal

@@ -165,12 +165,43 @@ namespace PluginManager
 
     void CPluginManager::DelayCommand( const char* sCommand, const char* sFilter, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
     {
-        DelayConsoleCommand( GetDelayQueue(), sCommand, sFilter, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+        DelayConsoleCommand( GetDelayQueue(), SAFESTR( sCommand ), sFilter, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
     };
 
     void CPluginManager::DelayCancel( const char* sFilter )
     {
         GetDelayQueue().Cancel( sFilter );
+    };
+
+    /**
+    * @internal
+    * @brief Delayed Lua Code
+    * @param sCode to execute
+    */
+    static void _DelayedLuaCode( void* sCode )
+    {
+        if ( sCode && gPluginManager )
+        {
+            gPluginManager->RunLua( ( const char* )sCode );
+        }
+    }
+
+    void CPluginManager::DelayLua( const char* sCode, const char* sFilter, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
+    {
+        string sLua = SAFESTR( sCode );
+
+        if ( sLua.length() > 0 )
+        {
+            // Prepare data
+            size_t nLen = sLua.length() + 1;
+            char* sCmd = new char[nLen];
+            strncpy( sCmd, sLua.c_str(), nLen );
+            sCmd[nLen - 1] = 0;
+
+            const char* sFilterC = ( sFilter && sFilter[0] ) ? sFilter : "luacode";
+
+            GetDelayQueue().DelayFunction( sFilter, &_DelayedLuaCode, &_CleanupDelayedConsoleCommand, sCmd, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+        }
     };
 
     CPluginManager::CPluginManager()
@@ -338,6 +369,36 @@ namespace PluginManager
                 {
                     gEnv->pSystem->GetISystemEventDispatcher()->RegisterListener( this );
                 }
+            }
+
+            else
+            {
+                LogError( "ISystem == NULL" );
+            }
+
+            // Register Lua functionality
+            if (  gEnv && gEnv->pScriptSystem )
+            {
+                const char* sLuaHandlers = \
+                                           "-- Interprets Lua Logic\n"\
+                                           "function " PM_LUA_TESTLOGIC "(logic)\n"\
+                                           "    return assert(loadstring(logic, \"pm-logic\"))()\n"\
+                                           "end\n"\
+
+                                           "-- Runs Lua Code\n"\
+                                           "function " PM_LUA_RUN "(command)\n"\
+                                           "    assert(loadstring(command, \"pm-run\"))()\n"\
+                                           "end\n";
+
+                if ( !gEnv->pScriptSystem->ExecuteBuffer( sLuaHandlers, strlen( sLuaHandlers ), "pmLuaHandlers" ) )
+                {
+                    LogError( "ExecuteBuffer failed, couldn't register Lua handlers" );
+                }
+            }
+
+            else
+            {
+                LogError( "IScriptSystem == NULL" );
             }
 
             // Initialize path informations
@@ -940,6 +1001,94 @@ namespace PluginManager
         m_StaticInterfaces[ tStaticInterfaceKey( sName, SAFESTR( sVersion ) ) ] = pInterface;
 
         LogAlways( "RegisterStaticInterface Name(%s) Version(%s) succeeded", sName, SAFESTR( sVersion ) );
+    }
+
+    string WrapLuaCode( const string& sCode, bool bCondition )
+    {
+        string sRet = "do\n";
+
+        if ( bCondition )
+        {
+            sRet += "return (";
+            sRet += sCode;
+            sRet += ")";
+        }
+
+        else
+        {
+            sRet += sCode;
+            sRet += "\nreturn true";
+        }
+
+        sRet += "\nend";
+
+        return sRet;
+    }
+
+    bool CPluginManager::TestLuaLogic( const char* sLogic )
+    {
+        bool bReturn = false;
+
+        string sExpression = SAFESTR( sLogic );
+        sExpression = sExpression.Trim();
+
+        if ( sExpression.length() > 0 )
+        {
+            if ( gEnv->pScriptSystem->BeginCall( PM_LUA_TESTLOGIC ) )
+            {
+                gEnv->pScriptSystem->PushFuncParam<const char*>( WrapLuaCode( sExpression, true ) );
+
+                if ( !gEnv->pScriptSystem->EndCall<bool>( bReturn ) )
+                {
+                    LogError( "Lua Logic EndCall failed, maybe Logic or Type error: %s", sExpression.c_str() );
+                }
+            }
+
+            else
+            {
+                LogError( "Lua Logic BeginCall failed" );
+            }
+        }
+
+        else
+        {
+            LogError( "Lua Logic empty" );
+        }
+
+        return bReturn;
+    }
+
+    bool CPluginManager::RunLua( const char* sCode )
+    {
+        bool bReturn = false;
+
+        string sExpression = SAFESTR( sCode );
+        sExpression = sExpression.Trim();
+
+        if ( sExpression.length() > 0 )
+        {
+            if ( gEnv->pScriptSystem->BeginCall( PM_LUA_RUN ) )
+            {
+                gEnv->pScriptSystem->PushFuncParam<const char*>( WrapLuaCode( sExpression, false ) );
+
+                if ( !gEnv->pScriptSystem->EndCall() )
+                {
+                    LogError( "Lua Run EndCall failed, maybe Logic or Type error: %s", sExpression.c_str() );
+                }
+            }
+
+            else
+            {
+                LogError( "Lua Run BeginCall failed" );
+            }
+        }
+
+        else
+        {
+            LogError( "Lua Run empty" );
+        }
+
+        return bReturn;
     }
 
 #if defined(WIN_INTERCEPTORS)

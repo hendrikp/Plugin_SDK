@@ -235,6 +235,34 @@ namespace PluginManager
         * @param sFilter only delete these delayed calls (if NULL then everything is deleted)
         */
         virtual void DelayCancel( const char* sFilter = NULL ) = 0;
+
+        /**
+        * @brief Test Lua logic
+        * @param sLogic Lua Logic to test e.g. "System.GetCVar("g_skipintro") == 0"
+        * @return Lua result or false when error
+        */
+        virtual bool TestLuaLogic( const char* sLogic ) = 0;
+
+        /**
+        * @brief Run Lua code
+        * @param sCode Lua code to execute
+        * @return false when error
+        */
+        virtual  bool RunLua( const char* sCode ) = 0;
+
+        /**
+        * @brief Uses the Plugin Manager Execution delayer
+        * can be used if you don't need full control over delayed execution (the plugin manager will handle it)
+        * @see PluginManager::DelayConsoleCommand
+        * @param sCommand the console command
+        * @param fDelay delay amount
+        * @param eType delay type
+        * @param pFuncTrigger function pointer delay trigger function
+        * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
+        * @param pDataTrigger Data for delay trigger function
+        */
+        virtual void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
+
     };
 }
 
