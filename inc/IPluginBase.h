@@ -1,8 +1,21 @@
 /* Plugin SDK - for licensing and copyright see license.txt */
 
+
 #define PLUGIN_COMPILED_CDK_VERSION "3.4.3" //!< for reuse of compiled Cryengine SDK version (its not defined in CDK directly so we have to do it ourself)
 #define PLUGIN_TEXT "Plugin" //!< for logging and misc
 #define PLUGIN_FOLDER "Plugins" //!< directory
+
+/* SDK Version detection ------------------------------------------- */
+#include <IRenderer.h>
+
+#ifdef R_DX11_RENDERER
+#define SDK_VERSION_340 1 //!< Detected Version 3.4.0
+#endif
+
+#ifdef FRT_CLEAR_RESET_VIEWPORT
+#define SDK_VERSION_343 1 //!< Detected Version 3.4.3
+#endif
+/* ----------------------------------------------------------------- */
 
 #pragma once
 
