@@ -247,20 +247,6 @@ namespace PluginManager
     */
     class CallDelay
     {
-        public:
-            /**
-            * @internal
-            * @brief delay type enum
-            */
-            enum eDelayType
-            {
-                eDT_None = 0, //!< initialization
-                eDT_Frames = 1, //!< frame based delay
-                eDT_Seconds = 2, //!< time based delay
-                eDT_Trigger = 3, //!< trigger based delay
-                eDT_Default = eDT_Frames
-            };
-
         protected:
             tDelayedCall m_pFunc; //!< function pointer delayed function
             tDelayedCall m_pFuncCleanup; //!< cleanup function
@@ -399,7 +385,7 @@ namespace PluginManager
             * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
             * @param pDataTrigger Data for delay trigger function
             */
-            void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, CallDelay::eDelayType eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL )
+            void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, eDelayType eType = eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL )
             {
                 m_queue[ SAFESTR( sFilter ) ].push_back( std::shared_ptr<CallDelay>( new CallDelay( pFunc, pFuncCleanup, pData, fDelay, eType, pFuncTrigger, pFuncTriggerCleanup, pDataTrigger ) ) );
             }
@@ -509,7 +495,7 @@ namespace PluginManager
     * @param fDelay delay amount
     * @param eType delay type
     */
-    static void DelayConsoleCommand( CallDelayQueue& qDelayer, string sCommand, const char* sFilter = NULL, float fDelay = 1, CallDelay::eDelayType eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL )
+    static void DelayConsoleCommand( CallDelayQueue& qDelayer, string sCommand, const char* sFilter = NULL, float fDelay = 1, eDelayType eType = eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL )
     {
         if ( sCommand.length() > 0 )
         {

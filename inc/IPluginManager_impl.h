@@ -1,8 +1,13 @@
 /* CE3 Plugin Manager - for licensing and copyright see license.txt */
 
 #include <IPluginManager.h>
+#include <CryLibrary.h>
 
+#ifdef __GAMESTARTUP_H__
 PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer inside game dll
+#else
+extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager pointer inside game dll
+#endif
 
 /**
 * @brief Provide a macro to realize WinProc injector with minimal modifications
@@ -30,7 +35,7 @@ namespace PluginManager
     * @param startupParams CryEngine Startup Params
     * @param sBaseInterfaceVersion Plugin SDK Base Interface Version
     */
-    bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
+    static bool InitPluginManager( SSystemInitParams& startupParams, const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
     {
         string sPluginManagerPath = PLUGIN_FOLDER "\\" PLUGIN_TEXT "_" PLUGIN_MANAGER CrySharedLibrayExtension;
         HINSTANCE hModule = CryLoadLibrary( sPluginManagerPath );
@@ -131,12 +136,16 @@ namespace PluginManager
     * @attention the global environment is not full initialized.
     * @see InitPluginsLast
     */
-    void InitPluginsBeforeFramework()
+    static void InitPluginsBeforeFramework()
     {
         if ( gPluginManager )
         {
             gPluginManager->ReloadAllPlugins();
             gPluginManager->InitializePluginRange( IM_BeforeFramework, IM_BeforeFramework_3 );
+            gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_None );
+            gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_CVar );
+            gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_CVarCommand );
+            gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_GameObjectExtension );
         }
     }
 
@@ -144,17 +153,32 @@ namespace PluginManager
     * @brief Initialize plugins after the game is initialized.
     * Most sensible for all plugins.
     */
-    void InitPluginsLast()
+    static void InitPluginsLast()
     {
         if ( gPluginManager )
         {
             gPluginManager->InitializePluginRange( IM_Last, IM_Last_3 );
+            gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_None );
+            gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_CVar );
+            gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_CVarCommand );
+            gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_GameObjectExtension );
 
             if ( gEnv && gEnv->pConsole )
             {
                 gEnv->pConsole->ExecuteString( "pm_listsi" );
                 gEnv->pConsole->ExecuteString( "pm_list" );
             }
+        }
+    }
+
+    /**
+    * @brief Flownodes need to be registered when Game Flownodes are registered to allow Sandbox Flownode Reset
+    */
+    static void RegisterPluginFlownodes()
+    {
+        if ( gPluginManager )
+        {
+            gPluginManager->RegisterTypesPluginRange( IM_Min, IM_Max, FT_Flownode );
         }
     }
 }

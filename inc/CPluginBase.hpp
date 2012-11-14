@@ -15,6 +15,8 @@
 
 #include <CPluginBaseMinimal.hpp>
 
+#include <PMUtils.hpp>
+
 namespace PluginManager
 {
     /**
@@ -38,8 +40,8 @@ namespace PluginManager
             // IPluginBase
             virtual bool Release( bool bForce = false )
             {
-                bool bFlownodesPresent = m_bIsFullyInitialized;
                 bool bRet = true;
+                bool bWasInitialized = m_bIsFullyInitialized; // Will be reset by base class so backup
 
                 if ( !m_bCanUnload )
                 {
@@ -47,22 +49,10 @@ namespace PluginManager
 
                     if ( bRet )
                     {
-                        if ( bFlownodesPresent )
+                        if ( bWasInitialized )
                         {
-                            // Unregister flownodes
-                            if ( gEnv && gEnv->pFlowSystem && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
-                            {
-                                // Flowsystem is required
-                                IFlowSystem* pFlow = gEnv->pFlowSystem;
-
-                                // Unregister all flownodes of this plugin
-                                for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
-                                {
-                                    // A shame unregistering flownodes types still will produce errors later on in sandbox (then when clicked on)
-                                    // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
-                                    pFlow->UnregisterType( pFactory->m_sClassName );
-                                }
-                            }
+                            // Unregister all types
+                            RegisterTypes( FT_All, true );
                         }
                     }
                 }
@@ -72,28 +62,69 @@ namespace PluginManager
 
             virtual bool InitDependencies()
             {
-                // Flowsystem is required
-                IFlowSystem* pFlow = gEnv->pFlowSystem;
+                return CPluginBaseMinimal::InitDependencies( );
+            }
 
-                if ( pFlow )
+            virtual bool RegisterTypes( int nFactoryType, bool bUnregister )
+            {
+                bool bRet = CPluginBaseMinimal::RegisterTypes( nFactoryType, bUnregister );
+
+                if ( bRet )
                 {
-                    if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                    eFactoryType enFactoryType = eFactoryType( nFactoryType );
+
+                    if ( enFactoryType == FT_All || enFactoryType == FT_Flownode )
                     {
-                        // Register all flownodes of this plugin in the crygame loading this plugin
-                        for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                        IFlowSystem* pFlow = NULL;
+
+                        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() && gEnv->pGameFramework && ( pFlow = gEnv->pGameFramework->GetIFlowSystem() ) )
                         {
-                            pFlow->RegisterType( pFactory->m_sClassName, pFactory );
+                            if ( !bUnregister )
+                            {
+                                // Register all flownodes of this plugin in the crygame loading this plugin
+                                for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                                {
+                                    TFlowNodeTypeId nTypeId = pFlow->RegisterType( pFactory->m_sClassName, pFactory );
+
+                                    if ( nTypeId != InvalidFlowNodeTypeId )
+                                    {
+                                        LogAlways( "Flownode Class(%s) Ptr(%p) TypeId(%d) registered.", SAFESTR( pFactory->m_sClassName ), pFactory, ( int )nTypeId );
+                                    }
+
+                                    else
+                                    {
+                                        LogError( "Flownode Class(%s) Ptr(%p) couldn't register.", SAFESTR( pFactory->m_sClassName ), pFactory );
+                                        //bRet = false;
+                                    }
+                                }
+                            }
+
+                            else
+                            {
+                                // Unregister all flownodes of this plugin
+                                for ( CG2AutoRegFlowNodeBase* pFactory = CG2AutoRegFlowNodeBase::m_pFirst; pFactory; pFactory = pFactory->m_pNext )
+                                {
+                                    // A shame unregistering flownodes types still will produce errors later on in sandbox (then when clicked on)
+                                    // it would be much better if UnregisterTypes would automatically unload and set related flownodes to missing status.
+                                    bool bUnregistered = pFlow->UnregisterType( pFactory->m_sClassName );
+
+                                    LogAlways( "Flownode Class(%s) Ptr(%p) Ret(%s) unregistered.", SAFESTR( pFactory->m_sClassName ), pFactory );
+                                }
+                            }
                         }
+
+                        else if ( CG2AutoRegFlowNodeBase::m_pFirst )
+                        {
+                            LogWarning( "Flownodes couldn't be un/registered" );
+                            //bRet = false;
+                        }
+
+                        // else there where no flownodes to register
                     }
                 }
 
-                else if ( CG2AutoRegFlowNodeBase::m_pFirst )
-                {
-                    LogWarning( "Flownodes couldn't be registered" );
-                }
-
-                return CPluginBaseMinimal::InitDependencies( );
-            }
+                return bRet;
+            };
 
             virtual const char* ListNodes() const
             {

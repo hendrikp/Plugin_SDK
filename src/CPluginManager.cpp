@@ -143,7 +143,7 @@ namespace PluginManager
         // delay the command
         if ( sText.length() > 0 )
         {
-            gPluginManager->DelayCommand( sText, pArgs->GetArg( 1 ), ParseString<float>( pArgs->GetArg( 3 ) ), CallDelay::eDelayType( ParseString<int>( pArgs->GetArg( 2 ) ) ) );
+            gPluginManager->DelayCommand( sText, pArgs->GetArg( 1 ), ParseString<float>( pArgs->GetArg( 3 ) ), eDelayType( ParseString<int>( pArgs->GetArg( 2 ) ) ) );
         }
     };
 
@@ -160,12 +160,12 @@ namespace PluginManager
 
     void CPluginManager::DelayFunction( const char* sFilter, tDelayedCall pFunc, tDelayedCall pFuncCleanup, void* pData, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
     {
-        GetDelayQueue().DelayFunction( sFilter, pFunc, pFuncCleanup, pData, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+        GetDelayQueue().DelayFunction( sFilter, pFunc, pFuncCleanup, pData, fDelay, eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
     };
 
     void CPluginManager::DelayCommand( const char* sCommand, const char* sFilter, float fDelay, int eType, tDelayedCallTrigger pFuncTrigger, tDelayedCall pFuncTriggerCleanup, void* pDataTrigger )
     {
-        DelayConsoleCommand( GetDelayQueue(), SAFESTR( sCommand ), sFilter, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+        DelayConsoleCommand( GetDelayQueue(), SAFESTR( sCommand ), sFilter, fDelay, eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
     };
 
     void CPluginManager::DelayCancel( const char* sFilter )
@@ -200,7 +200,7 @@ namespace PluginManager
 
             const char* sFilterC = ( sFilter && sFilter[0] ) ? sFilter : "luacode";
 
-            GetDelayQueue().DelayFunction( sFilter, &_DelayedLuaCode, &_CleanupDelayedConsoleCommand, sCmd, fDelay, CallDelay::eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+            GetDelayQueue().DelayFunction( sFilter, &_DelayedLuaCode, &_CleanupDelayedConsoleCommand, sCmd, fDelay, eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
         }
     };
 
@@ -225,6 +225,7 @@ namespace PluginManager
     bool CPluginManager::Release( bool bForce )
     {
         bool bRet = true;
+        bool bWasInitialized = m_bIsFullyInitialized; // Will be reset by base class so backup
 
         if ( !m_bCanUnload )
         {
@@ -235,21 +236,6 @@ namespace PluginManager
             {
                 if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
                 {
-                    // Unregister CVars
-                    if ( gEnv && gEnv->pConsole )
-                    {
-                        gEnv->pConsole->RemoveCommand( COMMAND_LIST );
-                        gEnv->pConsole->RemoveCommand( COMMAND_LISTSI );
-                        gEnv->pConsole->RemoveCommand( COMMAND_DUMP );
-                        gEnv->pConsole->RemoveCommand( COMMAND_DUMPALL );
-                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOAD );
-                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOADALL );
-                        gEnv->pConsole->RemoveCommand( COMMAND_RELOAD );
-                        gEnv->pConsole->RemoveCommand( COMMAND_RELOADALL );
-                        gEnv->pConsole->RemoveCommand( COMMAND_DELAY );
-                        gEnv->pConsole->RemoveCommand( COMMAND_DELAYCANCEL );
-                    }
-
                     // Unregister listeners
                     if ( gEnv && gEnv->pGameFramework && gEnv->pGame )
                     {
@@ -344,21 +330,6 @@ namespace PluginManager
         {
             if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
             {
-                // Register CVars
-                if ( gEnv && gEnv->pConsole )
-                {
-                    gEnv->pConsole->AddCommand( COMMAND_LIST, Command_ListAll, VF_NULL, "List one info row for all plugins" );
-                    gEnv->pConsole->AddCommand( COMMAND_LISTSI, Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
-                    gEnv->pConsole->AddCommand( COMMAND_DUMP, Command_Dump, VF_NULL, "Dump info on a specific plugins" );
-                    gEnv->pConsole->AddCommand( COMMAND_DUMPALL, Command_DumpAll, VF_NULL, "Dump info on all plugins" );
-                    gEnv->pConsole->AddCommand( COMMAND_UNLOAD, Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
-                    gEnv->pConsole->AddCommand( COMMAND_UNLOADALL, Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
-                    gEnv->pConsole->AddCommand( COMMAND_RELOAD, Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
-                    gEnv->pConsole->AddCommand( COMMAND_RELOADALL, Command_ReloadAll, VF_NULL, "Reload all plugins" );
-                    gEnv->pConsole->AddCommand( COMMAND_DELAY, Command_Delay, VF_NULL, "Delays a commands | " COMMAND_DELAY " <filter> <type (1:frames, 2:seconds)> <amount> <commands...>" );
-                    gEnv->pConsole->AddCommand( COMMAND_DELAYCANCEL, Command_DelayCancel, VF_NULL, "Delays a commands | " COMMAND_DELAYCANCEL " <filter>" );
-                }
-
                 // Register Listeners
                 if ( gEnv && gEnv->pGameFramework )
                 {
@@ -376,31 +347,6 @@ namespace PluginManager
                 LogError( "ISystem == NULL" );
             }
 
-            // Register Lua functionality
-            if (  gEnv && gEnv->pScriptSystem )
-            {
-                const char* sLuaHandlers = \
-                                           "-- Interprets Lua Logic\n"\
-                                           "function " PM_LUA_TESTLOGIC "(logic)\n"\
-                                           "    return assert(loadstring(logic, \"pm-logic\"))()\n"\
-                                           "end\n"\
-
-                                           "-- Runs Lua Code\n"\
-                                           "function " PM_LUA_RUN "(command)\n"\
-                                           "    assert(loadstring(command, \"pm-run\"))()\n"\
-                                           "end\n";
-
-                if ( !gEnv->pScriptSystem->ExecuteBuffer( sLuaHandlers, strlen( sLuaHandlers ), "pmLuaHandlers" ) )
-                {
-                    LogError( "ExecuteBuffer failed, couldn't register Lua handlers" );
-                }
-            }
-
-            else
-            {
-                LogError( "IScriptSystem == NULL" );
-            }
-
             // Initialize path informations
             RefreshPaths();
 
@@ -408,6 +354,85 @@ namespace PluginManager
             LogAlways( "Plugin Manager initialized!" );
 
             m_Plugins[ GetName() ] = SPluginInfo( GetBase(), GetModuleHandle( PLUGIN_FILENAME ), PLUGIN_FILENAME, m_sPluginsDirectory );
+        }
+
+        return bRet;
+    }
+
+    bool CPluginManager::RegisterTypes( int nFactoryType, bool bUnregister )
+    {
+        // Note: Autoregister Flownodes will be automatically registered by the Base class
+        bool bRet = CPluginBase::RegisterTypes( nFactoryType, bUnregister );
+
+        eFactoryType enFactoryType = eFactoryType( nFactoryType );
+
+        if ( bRet )
+        {
+            if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+            {
+                // CVars Commands
+                if ( gEnv->pConsole && ( enFactoryType == FT_All || enFactoryType == FT_CVarCommand ) )
+                {
+                    if ( !bUnregister )
+                    {
+                        gEnv->pConsole->AddCommand( COMMAND_LIST, Command_ListAll, VF_NULL, "List one info row for all plugins" );
+                        gEnv->pConsole->AddCommand( COMMAND_LISTSI, Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
+                        gEnv->pConsole->AddCommand( COMMAND_DUMP, Command_Dump, VF_NULL, "Dump info on a specific plugins" );
+                        gEnv->pConsole->AddCommand( COMMAND_DUMPALL, Command_DumpAll, VF_NULL, "Dump info on all plugins" );
+                        gEnv->pConsole->AddCommand( COMMAND_UNLOAD, Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
+                        gEnv->pConsole->AddCommand( COMMAND_UNLOADALL, Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
+                        gEnv->pConsole->AddCommand( COMMAND_RELOAD, Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
+                        gEnv->pConsole->AddCommand( COMMAND_RELOADALL, Command_ReloadAll, VF_NULL, "Reload all plugins" );
+                        gEnv->pConsole->AddCommand( COMMAND_DELAY, Command_Delay, VF_NULL, "Delays a commands | " COMMAND_DELAY " <filter> <type (1:frames, 2:seconds)> <amount> <commands...>" );
+                        gEnv->pConsole->AddCommand( COMMAND_DELAYCANCEL, Command_DelayCancel, VF_NULL, "Delays a commands | " COMMAND_DELAYCANCEL " <filter>" );
+                    }
+
+                    else
+                    {
+                        gEnv->pConsole->RemoveCommand( COMMAND_LIST );
+                        gEnv->pConsole->RemoveCommand( COMMAND_LISTSI );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DUMP );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DUMPALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOAD );
+                        gEnv->pConsole->RemoveCommand( COMMAND_UNLOADALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_RELOAD );
+                        gEnv->pConsole->RemoveCommand( COMMAND_RELOADALL );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DELAY );
+                        gEnv->pConsole->RemoveCommand( COMMAND_DELAYCANCEL );
+                    }
+                }
+
+                // Lua functionality
+                if ( gEnv->pGameFramework && ( enFactoryType == FT_All || enFactoryType == FT_None ) )
+                {
+                    if ( !bUnregister )
+                    {
+                        if ( gEnv->pScriptSystem )
+                        {
+                            const char* sLuaHandlers = \
+                                                       "-- Interprets Lua Logic\n"\
+                                                       "function " PM_LUA_TESTLOGIC "(logic)\n"\
+                                                       "    return assert(loadstring(logic, \"pm-logic\"))()\n"\
+                                                       "end\n"\
+
+                                                       "-- Runs Lua Code\n"\
+                                                       "function " PM_LUA_RUN "(command)\n"\
+                                                       "    assert(loadstring(command, \"pm-run\"))()\n"\
+                                                       "end\n";
+
+                            if ( !gEnv->pScriptSystem->ExecuteBuffer( sLuaHandlers, strlen( sLuaHandlers ), "pmLuaHandlers" ) )
+                            {
+                                LogError( "ExecuteBuffer failed, couldn't register Lua handlers" );
+                            }
+                        }
+
+                        else
+                        {
+                            LogError( "IScriptSystem == NULL" );
+                        }
+                    }
+                }
+            }
         }
 
         return bRet;
@@ -844,7 +869,7 @@ namespace PluginManager
         for ( int nMode = nBeginAtMode; nMode <= nEndAtMode; ++nMode )
         {
             // First initialize all in this dependency level
-            for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
+            for ( auto pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
             {
                 IPluginBase* iface = pluginIter->second.m_pBase;
 
@@ -858,7 +883,7 @@ namespace PluginManager
             }
 
             // Now initialize the dependencies
-            for ( tPluginNameMap::iterator pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
+            for ( auto pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
             {
                 IPluginBase* iface = pluginIter->second.m_pBase;
 
@@ -879,6 +904,27 @@ namespace PluginManager
                 }
             }
         }
+    }
+
+    bool CPluginManager::RegisterTypesPluginRange( int nBeginAtMode, int nEndAtMode, int nFactoryType , bool bUnregister )
+    {
+        bool bRet = true;
+
+        for ( int nMode = nBeginAtMode; nMode <= nEndAtMode; ++nMode )
+        {
+            for ( auto pluginIter = m_Plugins.begin(); pluginIter != m_Plugins.end(); ++pluginIter )
+            {
+                IPluginBase* iface = pluginIter->second.m_pBase;
+
+                if ( iface && iface->GetInitializationMode() == nMode && iface->IsInitialized() && iface->IsFullyInitialized() )
+                {
+                    // Only Register Types in fully initialized plugins
+                    bRet &= iface->RegisterTypes( nFactoryType, bUnregister );
+                }
+            }
+        }
+
+        return bRet;
     }
 
     IPluginBase* CPluginManager::GetPluginByName( const char* sPluginName ) const

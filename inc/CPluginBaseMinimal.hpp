@@ -142,6 +142,11 @@ namespace PluginManager
                 return m_bIsInitialized;
             };
 
+            virtual bool RegisterTypes( int nFactoryType, bool bUnregister )
+            {
+                return gEnv;
+            };
+
             virtual bool CheckDependencies() const
             {
 #if !defined(PLUGINMANAGER_EXPORTS)

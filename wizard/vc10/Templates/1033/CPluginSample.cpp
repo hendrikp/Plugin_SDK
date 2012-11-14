@@ -22,29 +22,19 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
     bool CPlugin[!output PROJECT_NAME_SAFE]::Release( bool bForce )
     {
         bool bRet = true;
+        bool bWasInitialized = m_bIsFullyInitialized; // Will be reset by base class so backup
 
         if ( !m_bCanUnload )
         {
+            // Note: Type Unregistration will be automatically done by the Base class (Through RegisterTypes)
             // Should be called while Game is still active otherwise there might be leaks/problems
             bRet = CPluginBase::Release( bForce );
 
             if ( bRet )
             {
-                // Depending on your plugin you might not want to unregister anything
-                // if the System is quitting.
-                if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                if ( bWasInitialized )
                 {
-                    // Unregister CVars
-                    if ( gEnv && gEnv->pConsole )
-                    {
-                        // ...
-                    }
-
-                    // Unregister game objects
-                    if ( gEnv && gEnv->pGameFramework && gEnv->pGame )
-                    {
-                        // ...
-                    }
+                    // TODO: Cleanup stuff that can only be cleaned up if the plugin was initialized
                 }
 
                 // Cleanup like this always (since the class is static its cleaned up when the dll is unloaded)
@@ -63,26 +53,65 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         gPluginManager = ( PluginManager::IPluginManager* )pPluginManager->GetConcreteInterface( NULL );
         CPluginBase::Init( env, startupParams, pPluginManager, sPluginDirectory );
 
-        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
-        {
-            // Register CVars/Commands
-            if ( gEnv && gEnv->pConsole )
-            {
-                // TODO: Register CVARs/Commands here if you have some
-                // ...
-            }
+        return true;
+    }
 
-            // Register Game Objects
-            if ( gEnv && gEnv->pGameFramework )
+    bool CPlugin[!output PROJECT_NAME_SAFE]::RegisterTypes( int nFactoryType, bool bUnregister )
+    {
+        // Note: Autoregister Flownodes will be automatically registered by the Base class
+        bool bRet = CPluginBase::RegisterTypes( nFactoryType, bUnregister );
+
+        eFactoryType enFactoryType = eFactoryType( nFactoryType );
+
+        if ( bRet )
+        {
+            if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
             {
-                // TODO: Register Game Objects here if you have some
-                // ...
+                // CVars
+                if ( gEnv->pConsole && ( enFactoryType == FT_All || enFactoryType == FT_CVar ) )
+                {
+                    if ( !bUnregister )
+                    {
+                        // TODO: Register CVars here if you have some
+                        // ...
+                    }
+
+                    else
+                    {
+                        // TODO: Unregister CVars here if you have some
+                        // ...
+                    }
+                }
+
+                // CVars Commands
+                if ( gEnv->pConsole && ( enFactoryType == FT_All || enFactoryType == FT_CVarCommand ) )
+                {
+                    if ( !bUnregister )
+                    {
+                        // TODO: Register CVar Commands here if you have some
+                        // ...
+                    }
+
+                    else
+                    {
+                        // TODO: Unregister CVar Commands here if you have some
+                        // ...
+                    }
+                }
+
+                // Game Objects
+                if ( gEnv->pGameFramework && ( enFactoryType == FT_All || enFactoryType == FT_GameObjectExtension ) )
+                {
+                    if ( !bUnregister )
+                    {
+                        // TODO: Register Game Object Extensions here if you have some
+                        // ...
+                    }
+                }
             }
         }
 
-        // Note: Autoregister Flownodes will be automatically registered
-
-        return true;
+        return bRet;
     }
 
     const char* CPlugin[!output PROJECT_NAME_SAFE]::ListCVars() const

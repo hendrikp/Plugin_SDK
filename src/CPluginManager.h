@@ -198,9 +198,11 @@ namespace PluginManager
 
             bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory );
 
+            bool RegisterTypes( int nFactoryType, bool bUnregister );
+
             const char* GetVersion() const
             {
-                return "1.0.0.0";
+                return "1.1.0.0";
             };
 
             const char* GetName() const
@@ -224,7 +226,7 @@ namespace PluginManager
 
             const char* GetCurrentConcreteInterfaceVersion() const
             {
-                return "1.0";
+                return "1.1";
             };
 
             void* GetConcreteInterface( const char* sInterfaceVersion )
@@ -249,6 +251,8 @@ namespace PluginManager
             bool InitializePlugin(  const char* sPluginName );
 
             void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
+
+            bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false  );
 
             IPluginBase* GetPluginByName( const char* sPluginName ) const;
 
@@ -304,9 +308,9 @@ namespace PluginManager
                 return m_qDelayedCalls;
             };
 
-            void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, int eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
+            void DelayFunction( const char* sFilter = NULL, tDelayedCall pFunc = NULL, tDelayedCall pFuncCleanup = NULL, void* pData = NULL, float fDelay = 1.0f, int eType = int( eDT_Default ), tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
 
-            void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = CallDelay::eDT_Default, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
+            void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = int( eDT_Default ), tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
 
             void DelayCancel( const char* sFilter = NULL );
 
@@ -314,7 +318,7 @@ namespace PluginManager
 
             bool RunLua( const char* sCode );
 
-            void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
+            void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = int( eDT_Default ), tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL );
 
             /**
             * @internal

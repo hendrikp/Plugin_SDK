@@ -48,6 +48,19 @@ namespace PluginManager
 
     /**
     * @internal
+    * @brief delay type enum
+    */
+    enum eDelayType
+    {
+        eDT_None = 0, //!< initialization
+        eDT_Frames = 1, //!< frame based delay
+        eDT_Seconds = 2, //!< time based delay
+        eDT_Trigger = 3, //!< trigger based delay
+        eDT_Default = eDT_Frames
+    };
+
+    /**
+    * @internal
     * @brief delayed function type
     * @param pData data for the delayed call
     * This is the delayed call
@@ -211,6 +224,7 @@ namespace PluginManager
         * @param pData Data for delayed function
         * @param fDelay delay amount
         * @param eType delay type
+        * @see eDelayType
         * @param pFuncTrigger function pointer delay trigger function
         * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
         * @param pDataTrigger Data for delay trigger function
@@ -224,11 +238,12 @@ namespace PluginManager
         * @param sCommand the console command
         * @param fDelay delay amount
         * @param eType delay type
+        * @see eDelayType
         * @param pFuncTrigger function pointer delay trigger function
         * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
         * @param pDataTrigger Data for delay trigger function
         */
-        virtual void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
+        virtual void DelayCommand( const char* sCommand, const char* sFilter = NULL, float fDelay = 1.0f, int eType = int( eDT_Default ), tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
 
         /**
         * @brief Cancels registered delayed calls
@@ -261,8 +276,20 @@ namespace PluginManager
         * @param pFuncTriggerCleanup function pointer that cleans up the data when the delayed call is canceled or finished
         * @param pDataTrigger Data for delay trigger function
         */
-        virtual void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = 1, tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
+        virtual void DelayLua( const char* sCode, const char* sFilter = NULL, float fDelay = 1.0f, int eType = int( eDT_Default ), tDelayedCallTrigger pFuncTrigger = NULL, tDelayedCall pFuncTriggerCleanup = NULL, void* pDataTrigger = NULL ) = 0;
 
+        /**
+        * @brief Register/Unregister Types in a range of plugins (independent of Init / InitDependencies)
+        * Certain object types need to be registered or reregistered at certain points in time or even certain threads.
+        * This functionality was added to allow for more flexibility in that regard.
+        * @param nBeginAtMode Start of the range
+        * @param nEndAtMode End of the range
+        * @param nFactoryType The factory type objects to be registered.
+        * @see eFactoryType
+        * @param bUnregister Set to true if types should be unregistered (most types can't be unregistered atm, but maybe it'll be possible in the future)
+        * @return success
+        */
+        virtual bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false  ) = 0;
     };
 }
 

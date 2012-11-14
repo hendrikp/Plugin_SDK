@@ -36,6 +36,8 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             bool Init( SSystemGlobalEnvironment& env, SSystemInitParams& startupParams, IPluginBase* pPluginManager, const char* sPluginDirectory );
 
+            bool RegisterTypes( int nFactoryType, bool bUnregister );
+
             const char* GetVersion() const
             {
                 return "[!output PLUGIN_VERSION]";
