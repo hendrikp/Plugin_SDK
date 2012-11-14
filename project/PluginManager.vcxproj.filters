@@ -44,7 +44,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Changelog.txt" />
     <None Include="..\LICENSE.txt" />
     <None Include="..\authors.txt" />
     <None Include="..\readme.md" />
@@ -69,6 +68,7 @@
     <None Include="..\tools\build_all.bat">
       <Filter>Tools</Filter>
     </None>
+    <None Include="..\changelog.md" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">

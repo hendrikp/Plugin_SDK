@@ -226,7 +226,7 @@ stylecode.bat</Command>
     <None Include="..\.gitattributes" />
     <None Include="..\.gitignore" />
     <None Include="..\authors.txt" />
-    <None Include="..\changelog.txt" />
+    <None Include="..\changelog.md" />
     <None Include="..\license.txt" />
     <None Include="..\readme.md" />
     <None Include="..\tools\build.bat" />
