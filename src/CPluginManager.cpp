@@ -733,7 +733,7 @@ namespace PluginManager
         }
 
         else
-        {   
+        {
             // Its important to set it to NULL if last was empty, else Sandbox skinning wont work (probably windows defaults to another search mode then)
             SetDllDirectory( NULL );
         }
