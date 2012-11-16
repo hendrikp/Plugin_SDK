@@ -142,6 +142,8 @@ namespace PluginManager
                 return m_bIsInitialized;
             };
 
+#pragma warning(push)
+#pragma warning( disable : 4800 )
             virtual bool RegisterTypes( int nFactoryType, bool bUnregister )
             {
                 return gEnv;
@@ -149,12 +151,14 @@ namespace PluginManager
 
             virtual bool CheckDependencies() const
             {
+
 #if !defined(PLUGINMANAGER_EXPORTS)
                 return gEnv && gEnv->pSystem && gPluginManager && gPluginManager->GetBase();
 #else
                 return gEnv && gEnv->pSystem;
 #endif
             };
+#pragma warning(pop)
 
             virtual bool InitDependencies()
             {
