@@ -61,6 +61,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
         // Note: Autoregister Flownodes will be automatically registered by the Base class
         bool bRet = CPluginBase::RegisterTypes( nFactoryType, bUnregister );
 
+        using namespace PluginManager;
         eFactoryType enFactoryType = eFactoryType( nFactoryType );
 
         if ( bRet )
