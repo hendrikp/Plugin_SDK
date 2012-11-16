@@ -637,10 +637,10 @@ namespace PluginManager
 
         ICryPak* pCryPak = gEnv->pCryPak;
 
-        // Append Path Seperator if not present
+        // Append Path Separator if not present
         string sSearchDirectory = pathWithSeperator( sPath );
 
-        // Append wildcard search
+        // Append wild card search
         string sSearchFilter = sSearchDirectory;
         sSearchFilter += "*";
 
@@ -708,23 +708,35 @@ namespace PluginManager
         LogAlways( "Loading: File(%s) CWD(%s)", sPluginPath, sAbsPluginDirectory.c_str() );
 
         // Better not change the current directory (SetCurrentDirectory)
-        // (threadsafety: it's used internally for cachefile/logs which would be created sporadically in plugin directory)
+        // (thread safety: it's used internally for cache file/logs which would be created sporadically in plugin directory)
         // better use SetDllDirectory so we can still handle plugin dependencies properly.
         int nPathLen = GetDllDirectory( 0, NULL );
-        string sDllDirectory;
+        string sDllDirectory = "";
+
+        if ( nPathLen > 0 )
         {
             char* sTempPath = new char[nPathLen + 1];
             GetDllDirectory( nPathLen + 1, sTempPath );
             sDllDirectory = sTempPath;
             delete [] sTempPath;
         }
+
         SetDllDirectory( sAbsPluginDirectory );
 
         // Load the library and non lazy linked dependencies
         hModule = CryLoadLibrary( sPluginPath );
 
         // Reset the dll directory to old value
-        SetDllDirectory( sDllDirectory );
+        if ( sDllDirectory.length() )
+        {
+            SetDllDirectory( sDllDirectory );
+        }
+
+        else
+        {   
+            // Its important to set it to NULL if last was empty, else Sandbox skinning wont work (probably windows defaults to another search mode then)
+            SetDllDirectory( NULL );
+        }
 
         return hModule;
     }

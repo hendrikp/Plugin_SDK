@@ -16,8 +16,8 @@ Changes:
 * Wizard adjusted for new registration interface
 * Wizard generates nsis installer script
 
-Known Limitations:
-* Sandbox CryDark skin doesn't activate
+Fixes:
+* Sandbox CryDark skin didn't load
 
 Plugin SDK 1.0.1 (29.10.2012)
 -----------------------------
