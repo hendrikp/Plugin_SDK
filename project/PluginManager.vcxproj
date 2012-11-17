@@ -233,6 +233,9 @@ stylecode.bat</Command>
     <None Include="..\tools\build_all.bat" />
     <None Include="..\tools\build_game.bat" />
     <None Include="..\tools\codestyle.astylerc" />
+    <None Include="..\tools\Plugin_SDK_Installer.nsi" />
+    <None Include="..\tools\Plugin_SDK_PluginDescription.nsh" />
+    <None Include="..\tools\Plugin_SDK_PluginList.nsh" />
     <None Include="..\tools\stylecode.bat" />
   </ItemGroup>
   <ItemGroup>

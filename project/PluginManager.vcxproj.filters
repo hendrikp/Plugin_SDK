@@ -69,6 +69,15 @@
       <Filter>Tools</Filter>
     </None>
     <None Include="..\changelog.md" />
+    <None Include="..\tools\Plugin_SDK_PluginList.nsh">
+      <Filter>Tools\Installer</Filter>
+    </None>
+    <None Include="..\tools\Plugin_SDK_Installer.nsi">
+      <Filter>Tools\Installer</Filter>
+    </None>
+    <None Include="..\tools\Plugin_SDK_PluginDescription.nsh">
+      <Filter>Tools\Installer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Headers">
@@ -85,6 +94,9 @@
     </Filter>
     <Filter Include="Tools">
       <UniqueIdentifier>{4a46776a-27ef-489c-8e23-5cf4379ce9a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Tools\Installer">
+      <UniqueIdentifier>{5c7f2dd5-7db4-4564-95a7-02b191ab4477}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

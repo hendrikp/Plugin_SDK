@@ -1,7 +1,9 @@
 !include "MUI2.nsh"
 !include "Sections.nsh"
 
-; requires http://nsis.sourceforge.net/Crypto_plug-in
+; requires
+; Versioncheck: http://nsis.sourceforge.net/Crypto_plug-in
+; Download: http://nsis.sourceforge.net/Inetc_plug-in // Used instead of NSISdl because of SSL, Redirection and better proxy support
 
 ##################################
 XPStyle on
@@ -31,20 +33,20 @@ RequestExecutionLevel user
 ###################################
 
 ;Welcome page
-;!define MUI_TEXT_WELCOME_INFO_TITLE     "Welcome to the Plugin SDK installer!"
-;!define MUI_TEXT_WELCOME_INFO_TEXT      "This is a test info text which will appear below your welcome page title! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
-;!define MUI_WELCOMEFINISHPAGE_BITMAP    "welcome_finish.bmp"
+;!define MUI_TEXT_WELCOME_INFO_TITLE "Welcome to the Plugin SDK installer!"
+;!define MUI_TEXT_WELCOME_INFO_TEXT "This is a test info text which will appear below your welcome page title! Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua."
+;!define MUI_WELCOMEFINISHPAGE_BITMAP "welcome_finish.bmp"
 ;!insertmacro MUI_PAGE_WELCOME
 
 ; License page
-!insertmacro MUI_PAGE_LICENSE					"..\license.txt"
+!insertmacro MUI_PAGE_LICENSE "..\license.txt"
 
 ; Components page
 !insertmacro MUI_PAGE_COMPONENTS
 
 ; Directory page
-!define MUI_DIRECTORYPAGE_VARIABLE				$INSTDIR
-!define MUI_PAGE_CUSTOMFUNCTION_LEAVE           "IsValidCEInstallation"
+!define MUI_DIRECTORYPAGE_VARIABLE $INSTDIR
+!define MUI_PAGE_CUSTOMFUNCTION_LEAVE "IsValidCEInstallation"
 !insertmacro MUI_PAGE_DIRECTORY
 
 ; Install files page
@@ -54,9 +56,7 @@ RequestExecutionLevel user
 
 ; Sections
 SectionGroup "Redistributable" SEC_BIN
-
     Section "Plugin Manager" SEC_PLUGINMANAGER
-    
         SectionIn RO
         
         SetOutPath $INSTDIR\Bin32\Plugins
@@ -67,33 +67,44 @@ SectionGroup "Redistributable" SEC_BIN
         
         CreateDirectory $INSTDIR\Bin32\Plugins
         CreateDirectory $INSTDIR\Bin64\Plugins
+
+		; Root path for Plugin Downloads and Informations
+        SetOutPath $INSTDIR\Plugin_SDK
+        File "${FILES_ROOT}\authors.txt"
+        File "${FILES_ROOT}\license.txt"
+        File "${FILES_ROOT}\readme.md"
+        File "${FILES_ROOT}\changelog.md"
+
+		; Root path for Plugin Downloads and Informations
+		Var /GLOBAL PLUGINDOWNLOADDIR
+		StrCpy $PLUGINDOWNLOADDIR "$INSTDIR\Plugin_SDK\Downloads"
+		CreateDirectory $PLUGINDOWNLOADDIR
     SectionEnd
 
-    Section "Pre-built GameDLL" SEC_CRYGAME
-    
+    Section "Prebuilt GameDLL" SEC_CRYGAME
         SetOutPath $INSTDIR\Bin32
         File "${FILES_ROOT}\..\..\Bin32\CryGame.dll"
 
         SetOutPath $INSTDIR\Bin64
         File "${FILES_ROOT}\..\..\Bin64\CryGame.dll"
     SectionEnd
-  
 SectionGroupEnd
 
-SectionGroup  "Developer Tools" SEC_DEV
 
-    Section "Plugin Wizard VS2010" SEC_WIZ
+SectionGroup "Developer Tools" SEC_DEV
+    Section "VS2010 Wizard" SEC_WIZ
         SetOutPath "$DOCUMENTS\Visual Studio 2010\Wizards\PluginWizard"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsz"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsdir"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.ico"
         
+		; Set Wizard install location
         Push C:\cryengine3_3.4.0 #text to be replaced
         Push $INSTDIR #replace with
         Push all #replace all occurrences
         Push all #replace all occurrences
         Push "$DOCUMENTS\Visual Studio 2010\Wizards\PluginWizard\PluginWizard.vsz" #file to replace in
-	Call AdvReplaceInFile
+        Call AdvReplaceInFile
 
         SetOutPath $INSTDIR\Code\Plugin_SDK\wizard\vc10
         File /r /x *.sdf "${FILES_ROOT}\wizard\vc10\"
@@ -104,13 +115,31 @@ SectionGroup  "Developer Tools" SEC_DEV
         SetOutPath $INSTDIR\Code\Plugin_SDK\inc
         File /r "${FILES_ROOT}\inc\"
         
+		; Standard Code directory also used in git repo
         SetOutPath $INSTDIR\Code\Plugin_SDK
         File "${FILES_ROOT}\authors.txt"
         File "${FILES_ROOT}\license.txt"
         File "${FILES_ROOT}\readme.md"
         File "${FILES_ROOT}\changelog.md"
     SectionEnd
-    
+SectionGroupEnd
+
+####################################
+
+!macro DownloadAndExecutePluginInstaller dlsource dltarget
+	; Download
+	inetc::get ${dlsource} ${dltarget} /END
+	Pop $R0 ; Get the return value
+	StrCmp $R0 "OK" +3
+		MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Download failed:$\n${dlsource}$\n$R0"
+		Goto +3
+	ExecWait '${dltarget} /S /D="$INSTDIR"'
+	IfErrors +1 +2
+	MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Installation failed:$\n${dltarget}"
+!macroend
+
+SectionGroup "Download Plugins" SEC_PLUGINS
+	!include "Plugin_SDK_PluginList.nsh"
 SectionGroupEnd
 
 ####################################
@@ -122,13 +151,14 @@ SectionGroupEnd
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_CRYGAME} "Pre-built GameDLL with pre-integrated Plugin SDK.$\nWARNING! This will overwrite the existing GameDLL."
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_DEV} "Install optional Developer components."
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ} "The Wizard for Visual Studio 2010 allows fast and easy creation of new Plugin projects."
+	!include "Plugin_SDK_PluginDescription.nsh"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
 ; Finish files page
 ;!define MUI_FINISHPAGE_NOAUTOCLOSE
 ;!insertmacro MUI_PAGE_FINISH
 
-!insertmacro MUI_LANGUAGE   "English"
+!insertmacro MUI_LANGUAGE "English"
 
 ####################################
 
@@ -140,7 +170,6 @@ Function "IsValidCEInstallation"
 			$INSTDIR $\n$\n\
 			The Plugin SDK, Plugins and the Wizard will NOT work,$\ncontinue anyways?" \
 			IDOK cont1
-			
 		Abort
         cont:
 	
@@ -150,16 +179,18 @@ Function "IsValidCEInstallation"
 		; Now check if is the version a prebuilt CryGame will work with
 		Crypto::HashFile "MD5" "$INSTDIR\Bin32\CrySystem.dll"
 		Pop $0
-		StrCmp $0 "640E910A60654A0CF91CC827640F7314" hashok
+
+		; 3.4.0 640E910A60654A0CF91CC827640F7314
+		; 3.4.3 2693B54AECDB7C63361ABB3437E628FA <- current
+		StrCmp $0 "2693B54AECDB7C63361ABB3437E628FA" hashok
 			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
 				"This version of CryEngine is not compatible with the pre-built GameDLL$\n\
 				The pre-built GameDLL will be deselected you need to build it yourself."\
-				IDOK hashfailok
-				
+				/SD IDOK IDOK hashfailok
 			Abort
 				
 			hashfailok:
-			!insertmacro UnselectSection ${SEC_CRYGAME}
+				!insertmacro UnselectSection ${SEC_CRYGAME}
 		hashok:
 	notSel:
 	cont1:
