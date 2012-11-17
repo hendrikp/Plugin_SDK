@@ -1,6 +1,6 @@
 ; Contains the plugin descriptions
 
-!insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGINS} "Plugins that can be installed automatically see also https://github.com/hendrikp/Plugin_SDK/wiki"
+!insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGINS} "Plugins that can be installed automatically also Plugin SDK for more avaible Plugins.$\n$\nReview the licenses of the Plugins!"
 
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_VIDEOPLAYER} "Videoplayer for 2D screen and 3D objects using WebM format, requires D3D Plugin"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_OSC} "Open Sound Control protocol support for integrating external applications / sound hardware"

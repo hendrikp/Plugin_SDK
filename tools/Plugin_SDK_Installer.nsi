@@ -1,18 +1,21 @@
 !include "MUI2.nsh"
 !include "Sections.nsh"
 
-; requires
+; Requires those NSIS Plugins to build installer:
 ; Versioncheck: http://nsis.sourceforge.net/Crypto_plug-in
 ; Download: http://nsis.sourceforge.net/Inetc_plug-in // Used instead of NSISdl because of SSL, Redirection and better proxy support
 
 ##################################
 XPStyle on
 
-Name "Plugin SDK for CryEngine"
+!define VERSIONCDK "3.4.3"
+!define VERSION "1.1.0.0"
+Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write
 OutFile "Plugin_SDK.exe"
 
+; Default Installdir
 InstallDir "C:\cryengine3\"
 
 ; Request application privileges for Windows Vista/7
@@ -136,6 +139,7 @@ SectionGroupEnd
 	ExecWait '${dltarget} /S /D="$INSTDIR"'
 	IfErrors +1 +2
 	MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Installation failed:$\n${dltarget}"
+	ClearErrors
 !macroend
 
 SectionGroup "Download Plugins" SEC_PLUGINS
@@ -159,6 +163,14 @@ SectionGroupEnd
 ;!insertmacro MUI_PAGE_FINISH
 
 !insertmacro MUI_LANGUAGE "English"
+
+; Set Fileinfos
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Plugin SDK"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2012, The authors of the Plugin SDK project"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
+VIProductVersion "${VERSION}"
 
 ####################################
 
