@@ -4,18 +4,16 @@ TODO: Describe where you tested it.
 
 TODO: Describe the purpose of your plugin
 
-For redistribution please see license.txt.
-
 TODO: Describe where the latest version of your plugin can be found.
 
 Installation / Integration
 ==========================
-Extract the files to your Cryengine SDK Folder so that the Code and BinXX/Plugins directory match up.
+Use the installer or extract the files to your CryEngine SDK Folder so that the Code and BinXX/Plugins directories match up.
 
 The plugin manager will automatically load up the plugin when the game/editor is restarted or if you directly load it.
 
-CVars
-=====
+CVars / Commands
+================
 * ```prefix_samplecvar```
   TODO: Describe the cvar
 

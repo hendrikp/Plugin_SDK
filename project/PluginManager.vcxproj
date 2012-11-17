@@ -227,15 +227,19 @@ stylecode.bat</Command>
     <None Include="..\.gitignore" />
     <None Include="..\authors.txt" />
     <None Include="..\changelog.md" />
+    <None Include="..\latestredist.info" />
     <None Include="..\license.txt" />
     <None Include="..\readme.md" />
     <None Include="..\tools\build.bat" />
     <None Include="..\tools\build_all.bat" />
     <None Include="..\tools\build_game.bat" />
+    <None Include="..\tools\build_installer.bat" />
     <None Include="..\tools\codestyle.astylerc" />
+    <None Include="..\tools\DownloadHelper.nsh" />
     <None Include="..\tools\Plugin_SDK_Installer.nsi" />
     <None Include="..\tools\Plugin_SDK_PluginDescription.nsh" />
     <None Include="..\tools\Plugin_SDK_PluginList.nsh" />
+    <None Include="..\tools\Plugin_SDK_WebInstaller.nsi" />
     <None Include="..\tools\stylecode.bat" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,5 @@
 [!output PROJECT_NAME_SAFE] Plugin
-==================================================================================
+====================
 Copyright (c) [!output CURRENT_YEAR], The authors of the [!output PROJECT_NAME_SAFE] Plugin project
 All rights reserved.
 

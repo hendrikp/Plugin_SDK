@@ -176,6 +176,9 @@ function AddFilters(proj)
 
         group = proj.Object.AddFilter("Tools");
         group.Filter = "exe;bat;astylerc";
+
+        group = proj.Object.AddFilter("Installer");
+        group.Filter = "nsi;nsh";
     }
     catch(e)
     {
@@ -278,6 +281,9 @@ function GetTargetName(strName, strProjectName)
         if (strName == "readme.md")
             strTarget = "..\\" + strName;
 
+        if (strName == "changelog.md")
+            strTarget = "..\\" + strName;
+
         if (strName == "license.txt")
             strTarget = "..\\" + strName;
 
@@ -316,6 +322,12 @@ function GetTargetName(strName, strProjectName)
 
         if (strName == "tools\\stylecode.bat")
             strTarget = "..\\" + strName;
+
+        if (strName == "tools\\build_installer.bat")
+            strTarget = "..\\" + strName;
+
+        if (strName == "tools\\Sample_Installer.nsi")
+            strTarget = "..\\tools\\" + strProjectNameSafe + "_Installer.nsi";
 
         return strTarget;
     }
@@ -359,6 +371,9 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
                 if (strFile.indexOf('resource.h') !== -1) 
                 {      
                     var filterRc = projFilters.Item("Resource Files");
+                    filterRc.AddFile(strFile);
+                } else if (strFile.indexOf('Installer') !== -1 || strFile.indexOf('installer') !== -1 || strFile.indexOf('.nsi') !== -1) {
+                    var filterRc = projFilters.Item("Installer");
                     filterRc.AddFile(strFile);
                 } else if (strFile.indexOf('.exe') !== -1 || strFile.indexOf('.bat') !== -1 || strFile.indexOf('.astyle') !== -1) {
                     var filterRc = projFilters.Item("Tools");

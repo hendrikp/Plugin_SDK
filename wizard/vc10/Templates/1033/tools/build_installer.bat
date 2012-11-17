@@ -25,9 +25,7 @@ if not defined nsis_compiler (
 )
 
 if defined nsis_compiler (
-    "%nsis_compiler%\makensis.exe" "Plugin_SDK_Installer.nsi"
-
-    "%nsis_compiler%\makensis.exe" "Plugin_SDK_WebInstaller.nsi"
+    "%nsis_compiler%\makensis.exe" "[!output PROJECT_NAME_SAFE]_Installer.nsi"
 ) else (
     echo "Error, build system cannot find NSIS! Please reinstall it, add makensis.exe to your PATH, or define the NSIS_HOME environment variable."
 )

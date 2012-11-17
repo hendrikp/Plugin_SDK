@@ -1,3 +1,7 @@
+; Plugin SDK - for licensing and copyright see license.txt
+
+; The latest normaler installer
+
 !include "MUI2.nsh"
 !include "Sections.nsh"
 
@@ -13,10 +17,10 @@ XPStyle on
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write
-OutFile "Plugin_SDK.exe"
+OutFile "Plugin_SDK_${VERSION}.exe"
 
 ; Default Installdir
-InstallDir "C:\cryengine3\"
+InstallDir "C:\CryENGINE_PC\"
 
 ; Request application privileges for Windows Vista/7
 RequestExecutionLevel user
@@ -26,11 +30,11 @@ RequestExecutionLevel user
 ; MUI Settings
 !define MUI_ABORTWARNING
 
-!define MUI_ICON "..\images\logos\PluginWizard.ico"
-!define MUI_UNICON "..\images\logos\PluginWizard.ico"
+!define MUI_ICON "${FILES_ROOT}\images\logos\PluginWizard.ico"
+!define MUI_UNICON "${FILES_ROOT}\images\logos\PluginWizard.ico"
 
 !define MUI_HEADERIMAGE
-!define MUI_HEADERIMAGE_BITMAP "..\images\logos\PluginSDK_Logo_Installer.bmp"
+!define MUI_HEADERIMAGE_BITMAP "${FILES_ROOT}\images\logos\PluginSDK_Logo_Installer.bmp"
 !define MUI_HEADERIMAGE_BITMAP_NOSTRETCH
 
 ###################################
@@ -42,7 +46,7 @@ RequestExecutionLevel user
 ;!insertmacro MUI_PAGE_WELCOME
 
 ; License page
-!insertmacro MUI_PAGE_LICENSE "..\license.txt"
+!insertmacro MUI_PAGE_LICENSE "${FILES_ROOT}\license.txt"
 
 ; Components page
 !insertmacro MUI_PAGE_COMPONENTS
@@ -61,18 +65,24 @@ RequestExecutionLevel user
 SectionGroup "Redistributable" SEC_BIN
     Section "Plugin Manager" SEC_PLUGINMANAGER
         SectionIn RO
-        
-        SetOutPath $INSTDIR\Bin32\Plugins
+
+        SetOutPath "$INSTDIR\Bin32\Plugins"
         File "${FILES_ROOT}\..\..\Bin32\Plugins\Plugin_Manager.dll"
 
-        SetOutPath $INSTDIR\Bin64\Plugins
+        SetOutPath "$INSTDIR\Bin64\Plugins"
         File "${FILES_ROOT}\..\..\Bin64\Plugins\Plugin_Manager.dll"
-        
-        CreateDirectory $INSTDIR\Bin32\Plugins
-        CreateDirectory $INSTDIR\Bin64\Plugins
+
+		; Standard Code directory also used in git repo
+        SetOutPath "$INSTDIR\Code\Plugin_SDK"
+        File "${FILES_ROOT}\authors.txt"
+        File "${FILES_ROOT}\license.txt"
+        File "${FILES_ROOT}\readme.md"
+        File "${FILES_ROOT}\changelog.md"
+
+		Call ShowChangelog
 
 		; Root path for Plugin Downloads and Informations
-        SetOutPath $INSTDIR\Plugin_SDK
+        SetOutPath "$INSTDIR\Plugin_SDK"
         File "${FILES_ROOT}\authors.txt"
         File "${FILES_ROOT}\license.txt"
         File "${FILES_ROOT}\readme.md"
@@ -85,10 +95,10 @@ SectionGroup "Redistributable" SEC_BIN
     SectionEnd
 
     Section "Prebuilt GameDLL" SEC_CRYGAME
-        SetOutPath $INSTDIR\Bin32
+        SetOutPath "$INSTDIR\Bin32"
         File "${FILES_ROOT}\..\..\Bin32\CryGame.dll"
 
-        SetOutPath $INSTDIR\Bin64
+        SetOutPath "$INSTDIR\Bin64"
         File "${FILES_ROOT}\..\..\Bin64\CryGame.dll"
     SectionEnd
 SectionGroupEnd
@@ -109,40 +119,22 @@ SectionGroup "Developer Tools" SEC_DEV
         Push "$DOCUMENTS\Visual Studio 2010\Wizards\PluginWizard\PluginWizard.vsz" #file to replace in
         Call AdvReplaceInFile
 
-        SetOutPath $INSTDIR\Code\Plugin_SDK\wizard\vc10
-        File /r /x *.sdf "${FILES_ROOT}\wizard\vc10\"
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc10"
+        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
         
-        SetOutPath $INSTDIR\Code\Plugin_SDK\project
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\project"
         File "${FILES_ROOT}\project\Plugin_Settings.props"
         
-        SetOutPath $INSTDIR\Code\Plugin_SDK\inc
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\inc"
         File /r "${FILES_ROOT}\inc\"
-        
-		; Standard Code directory also used in git repo
-        SetOutPath $INSTDIR\Code\Plugin_SDK
-        File "${FILES_ROOT}\authors.txt"
-        File "${FILES_ROOT}\license.txt"
-        File "${FILES_ROOT}\readme.md"
-        File "${FILES_ROOT}\changelog.md"
     SectionEnd
 SectionGroupEnd
 
 ####################################
 
-!macro DownloadAndExecutePluginInstaller dlsource dltarget
-	; Download
-	inetc::get ${dlsource} ${dltarget} /END
-	Pop $R0 ; Get the return value
-	StrCmp $R0 "OK" +3
-		MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Download failed:$\n${dlsource}$\n$R0"
-		Goto +3
-	ExecWait '${dltarget} /S /D="$INSTDIR"'
-	IfErrors +1 +2
-	MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Installation failed:$\n${dltarget}"
-	ClearErrors
-!macroend
+!include "DownloadHelper.nsh"
 
-SectionGroup "Download Plugins" SEC_PLUGINS
+SectionGroup /e "Download Plugins" SEC_PLUGINS
 	!include "Plugin_SDK_PluginList.nsh"
 SectionGroupEnd
 
@@ -174,7 +166,12 @@ VIProductVersion "${VERSION}"
 
 ####################################
 
-; Custom functions
+; Show changelog
+Function "ShowChangelog"
+	Exec 'notepad "$INSTDIR\Code\Plugin_SDK\changelog.md"'
+FunctionEnd
+
+; Check Installation prequisits
 Function "IsValidCEInstallation"
 	IfFileExists "$INSTDIR\Bin32\CrySystem.dll" cont
 		MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \

@@ -104,7 +104,10 @@
     <None Include="Templates\1033\readme.md" />
     <None Include="Templates\1033\Templates.inf" />
     <None Include="Templates\1033\tools\build.bat" />
+    <None Include="Templates\1033\changelog.md" />
+    <None Include="Templates\1033\tools\build_installer.bat" />
     <None Include="Templates\1033\tools\codestyle.astylerc" />
+    <None Include="Templates\1033\tools\Sample_Installer.nsi" />
     <None Include="Templates\1033\tools\stylecode.bat" />
     <None Include="Templates\1033\tools\_stylehelper.bat" />
   </ItemGroup>

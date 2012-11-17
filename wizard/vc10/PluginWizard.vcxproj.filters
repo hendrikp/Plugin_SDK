@@ -36,6 +36,9 @@
     <Filter Include="Template Files\Tools">
       <UniqueIdentifier>{f3581f87-6ba3-493b-b0f4-2a542b952aa7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Template Files\Installer">
+      <UniqueIdentifier>{8c025980-4e5c-4cea-a7e5-cd21e860502f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Templates\1033\Templates.inf">
@@ -100,6 +103,15 @@
     </None>
     <None Include="1033\Images\spacer.gif">
       <Filter>Image Files</Filter>
+    </None>
+    <None Include="Templates\1033\changelog.md">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="Templates\1033\tools\Sample_Installer.nsi">
+      <Filter>Template Files\Installer</Filter>
+    </None>
+    <None Include="Templates\1033\tools\build_installer.bat">
+      <Filter>Template Files\Installer</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

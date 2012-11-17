@@ -1,4 +1,5 @@
 readme.md
+changelog.md
 license.txt
 authors.txt
 StdAfx.cpp
@@ -14,3 +15,5 @@ tools\_stylehelper.bat
 tools\build.bat
 tools\codestyle.astylerc
 tools\stylecode.bat
+tools\build_installer.bat
+tools\Sample_Installer.nsi
