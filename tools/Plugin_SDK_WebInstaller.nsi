@@ -12,7 +12,7 @@
 XPStyle on
 
 !define VERSION "1.0.0.0"
-Name "Plugin SDK Webinstaller for CryEngine"
+Name "Plugin SDK Webinstaller"
 
 ; The file to write
 OutFile "Plugin_SDK_Webinstaller.exe"
