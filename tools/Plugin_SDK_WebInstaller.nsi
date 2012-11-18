@@ -53,6 +53,7 @@ RequestExecutionLevel user
 SectionGroup "Redistributable" SEC_BIN
     Section "Plugin Manager" SEC_PLUGINMANAGER
         SectionIn RO
+		AddSize 6500
 
 		; Root path for Plugin Downloads and Informations
 		Var /GLOBAL PLUGINDOWNLOADDIR
