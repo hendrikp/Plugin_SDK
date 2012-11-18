@@ -5,6 +5,11 @@
 #include <platform_impl.h>
 #include <Nodes/G2FlowBaseNode.h>
 
+namespace PluginManager
+{
+    CPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer for game link libraries.
+}
+
 extern "C"
 {
     DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion )

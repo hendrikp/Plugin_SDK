@@ -296,12 +296,6 @@ namespace PluginManager
 // Forces you to declare global PluginManager when including IPluginManager
 #if !defined(PLUGINMANAGER_EXPORTS)
 extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager pointer for game link libraries.
-#else
-namespace PluginManager
-{
-    class CPluginManager;
-    static CPluginManager* gPluginManager; //!< Global plugin manager pointer for game link libraries.
-}
 #endif
 
 // Helper functions

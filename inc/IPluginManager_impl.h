@@ -3,15 +3,15 @@
 #include <IPluginManager.h>
 #include <CryLibrary.h>
 
-#ifdef __GAMESTARTUP_H__
+// Definition can only happen once
+#if defined(__GAMESTARTUP_H__) || defined(PLUGIN_SDK_DEFINE_MANAGER)
 PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer inside game dll
-#else
-extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager pointer inside game dll
 #endif
 
 /**
 * @brief Provide a macro to realize WinProc injector with minimal modifications
 */
+#ifndef PLUGIN_SDK_WINPROC_INJECTOR
 #define PLUGIN_SDK_WINPROC_INJECTOR(...) \
     LRESULT CALLBACK WndProc_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam); \
     __VA_ARGS__ { \
@@ -25,6 +25,7 @@ extern PluginManager::IPluginManager* gPluginManager; //!< Global plugin manager
         return WndProc_(hWnd, msg, wParam, lParam); \
     } \
     LRESULT CALLBACK WndProc_(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
+#endif
 
 namespace PluginManager
 {

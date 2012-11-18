@@ -3,7 +3,6 @@
 #pragma once
 
 #include <Game.h>
-
 #include <IPluginBase.h>
 #include <IPluginManager.h>
 
@@ -12,9 +11,7 @@
 #endif
 
 #include <Nodes/G2FlowBaseNode.h>
-
 #include <CPluginBaseMinimal.hpp>
-
 #include <PMUtils.hpp>
 
 namespace PluginManager
