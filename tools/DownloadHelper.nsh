@@ -109,7 +109,7 @@ skipplugin:
 	StrCmp $R0 "OK" +3
 		MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Download failed:$\n${dlsource}$\n${dltarget}$\n$R0"
 		Goto +4
-	${dlcommand} '${dltarget} ${dlparam}"$INSTDIR"'
+	${dlcommand} '${dltarget} ${dlparam}$INSTDIR'
 	IfErrors 0 +2
 		MessageBox MB_OK|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND "Plugin Installation failed:$\n${dltarget}"
 	ClearErrors
