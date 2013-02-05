@@ -10,14 +10,14 @@ IF EXIST %VCTOOLS% (
   :: Compile x86
   call %VCTOOLS% x86
 
-  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Release
+  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Profile
   IF ERRORLEVEL 1 GOTO COMPILERROR
 
 
   :: Compile x64
   call %VCTOOLS% x64
 
-  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Release
+  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Profile
   IF ERRORLEVEL 1 GOTO COMPILERROR
 )
 

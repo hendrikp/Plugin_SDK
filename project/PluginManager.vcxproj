@@ -243,6 +243,7 @@ stylecode.bat</Command>
     <None Include="..\tools\stylecode.bat" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\inc\CDKVersion.h" />
     <ClInclude Include="..\inc\CPluginBase.hpp" />
     <ClInclude Include="..\inc\CPluginBaseMinimal.hpp" />
     <ClInclude Include="..\inc\IPluginBase.h" />

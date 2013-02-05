@@ -3,36 +3,9 @@
 #define PLUGIN_TEXT "Plugin" //!< for logging and misc
 #define PLUGIN_FOLDER "Plugins" //!< directory
 
-/* SDK Version detection ------------------------------------------- */
-#include <IRenderer.h>
-#include <I3DEngine.h>
-
-/* for reuse of compiled Cryengine SDK version (its not defined in CDK directly so we have to do it ourself) */
-// Detected Version 3.4.4
-#if defined(DEFAULT_SID) 
-#define CDK_VERSION 344
-#define PLUGIN_COMPILED_CDK_VERSION "3.4.4"
-
-// Detected Version 3.4.3
-#elif defined(FRT_CLEAR_RESET_VIEWPORT) 
-#define CDK_VERSION 343
-#define PLUGIN_COMPILED_CDK_VERSION "3.4.3"
-
-// Detected Version 3.4.0
-#elif defined(R_DX11_RENDERER)
-#define CDK_VERSION 340
-#define PLUGIN_COMPILED_CDK_VERSION "3.4.0"
-
- // Detected Version 3.3.9
-#else
-#define CDK_VERSION 339
-#define PLUGIN_COMPILED_CDK_VERSION "3.3.9"
-
-#endif
-
-/* ----------------------------------------------------------------- */
-
 #pragma once
+
+#include <CDKVersion.h>
 
 namespace PluginManager
 {
