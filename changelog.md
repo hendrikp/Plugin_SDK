@@ -1,3 +1,16 @@
+Plugin SDK 1.2.0 (08.02.2013)
+-----------------------------
+Stable Release for CryEngine 3.4.4 (32/64 bit)
+
+New:
+* Support for CryEngine 3.4.4
+
+Changes:
+* CDKVersion header to keep backward compatibility
+
+Installer:
+* All redistributable binaries moved from github to bintray
+
 Plugin SDK 1.1.0 (19.11.2012)
 -----------------------------
 Stable Release for CryEngine 3.4.3 (32/64 bit)

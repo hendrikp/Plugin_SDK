@@ -12,8 +12,8 @@
 ##################################
 XPStyle on
 
-!define VERSIONCDK "3.4.3"
-!define VERSION "1.1.0.0"
+!define VERSIONCDK "3.4.4"
+!define VERSION "1.2.0.0"
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write
@@ -158,7 +158,7 @@ SectionGroupEnd
 
 ; Set Fileinfos
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Plugin SDK"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2012, The authors of the Plugin SDK project"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2013, The authors of the Plugin SDK project"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
@@ -190,8 +190,9 @@ Function "IsValidCEInstallation"
 		Pop $0
 
 		; 3.4.0 640E910A60654A0CF91CC827640F7314
-		; 3.4.3 2693B54AECDB7C63361ABB3437E628FA <- current
-		StrCmp $0 "2693B54AECDB7C63361ABB3437E628FA" hashok
+		; 3.4.3 2693B54AECDB7C63361ABB3437E628FA
+		; 3.4.4 43B3E57037F6DF8CF5A4D3568420BF74 <- current
+		StrCmp $0 "43B3E57037F6DF8CF5A4D3568420BF74" hashok
 			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
 				"This version of CryEngine is not compatible with the pre-built GameDLL$\n\
 				The pre-built GameDLL will be deselected you need to build it yourself."\
