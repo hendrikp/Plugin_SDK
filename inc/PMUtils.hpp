@@ -181,7 +181,7 @@ namespace PluginManager
         const char* pBuffer = sSource.c_str();
         int nLength = sSource.length();
 
-        // Convert file from ACP to UTF-8 via the Windows UNICODE (AKA UCS-2)
+        // Convert string from ACP to UTF-8 via the Windows UNICODE (AKA UCS-2)
         int nWideLength = MultiByteToWideChar( CP_ACP, 0, pBuffer, nLength, NULL, 0 );
         wchar_t* pWideBuffer = new wchar_t[nWideLength];
         MultiByteToWideChar( CP_ACP, 0, pBuffer, nLength, pWideBuffer, nWideLength );
@@ -190,11 +190,11 @@ namespace PluginManager
         char* pUtf8Buffer = new char[nUtf8Length];
         WideCharToMultiByte( CP_UTF8, 0, pWideBuffer, nWideLength, pUtf8Buffer, nUtf8Length, NULL, NULL );
 
-        string utf8 ( pUtf8Buffer, nUtf8Length );
+        string sUTF8 ( pUtf8Buffer, nUtf8Length );
         delete [] pWideBuffer;
         delete [] pUtf8Buffer;
 
-        return utf8;
+        return sUTF8;
     }
 
     /**
@@ -208,7 +208,7 @@ namespace PluginManager
         const char* pBuffer = sSource.c_str();
         int nLength = sSource.length();
 
-        // Convert file from UTF-8 to ACP via the Windows UNICODE (AKA UCS-2)
+        // Convert string from UTF-8 to ACP via the Windows UNICODE (AKA UCS-2)
         int nWideLength = MultiByteToWideChar( CP_UTF8, 0, pBuffer, nLength, NULL, 0 );
         wchar_t* pWideBuffer = new wchar_t[nWideLength];
         MultiByteToWideChar( CP_UTF8, 0, pBuffer, nLength, pWideBuffer, nWideLength );
@@ -217,11 +217,55 @@ namespace PluginManager
         char* pUtf8Buffer = new char[nUtf8Length];
         WideCharToMultiByte( CP_ACP, 0, pWideBuffer, nWideLength, pUtf8Buffer, nUtf8Length, NULL, NULL );
 
-        string utf8 ( pUtf8Buffer, nUtf8Length );
+        string sACP( pUtf8Buffer, nUtf8Length );
         delete [] pWideBuffer;
         delete [] pUtf8Buffer;
 
-        return utf8;
+        return sACP;
+    }
+
+    /**
+    * @internal
+    * @brief Convert UCS-2 to UTF-8
+    * @param sSource UCS-2 String
+    * @return UTF-8 String
+    */
+    static string UCS22UTF8( const wstring sSource )
+    {
+        const wchar_t* pBuffer = sSource.c_str();
+        int nLength = sSource.length();
+
+        // Convert string from Windows UNICODE (AKA UCS-2) to UTF-8
+        int nUtf8Length = WideCharToMultiByte( CP_UTF8, 0, pBuffer, nLength, NULL, 0, NULL, NULL );
+        char* pUtf8Buffer = new char[nUtf8Length];
+        WideCharToMultiByte( CP_UTF8, 0, pBuffer, nLength, pUtf8Buffer, nUtf8Length, NULL, NULL );
+
+        string sUTF8( pUtf8Buffer, nUtf8Length );
+        delete [] pUtf8Buffer;
+
+        return sUTF8;
+    }
+
+    /**
+    * @internal
+    * @brief Convert UTF-8 to UCS-2
+    * @param sSource UTF-8 String
+    * @return UCS-2 String
+    */
+    static wstring UTF82UCS2( const string sSource )
+    {
+        const char* pBuffer = sSource.c_str();
+        int nLength = sSource.length();
+
+        // Convert string from UTF-8 to Windows UNICODE (AKA UCS-2)
+        int nWideLength = MultiByteToWideChar( CP_UTF8, 0, pBuffer, nLength, NULL, 0 );
+        wchar_t* pWideBuffer = new wchar_t[nWideLength];
+        MultiByteToWideChar( CP_UTF8, 0, pBuffer, nLength, pWideBuffer, nWideLength );
+
+        wstring sUCS2 ( pWideBuffer, nWideLength );
+        delete [] pWideBuffer;
+
+        return sUCS2;
     }
 
     /**
