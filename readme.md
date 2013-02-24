@@ -8,6 +8,10 @@ Available Plugins
 
 Feature Requests/Bug Reports on GitHub:
  [Wishes / Issues](https://github.com/hendrikp/Plugin_SDK/issues)
+ 
+Video Tutorial Series
+--------------------
+See my video tutorial series on [Plugin Creation on Youtube](http://www.youtube.com/watch?feature=player_embedded&v=W7wHus-bunk)
 
 Installation / Integration
 ==========================
