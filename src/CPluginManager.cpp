@@ -234,18 +234,15 @@ namespace PluginManager
 
             if ( bRet )
             {
-                if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
+                // Unregister listeners
+                if ( gEnv && gEnv->pSystem && gEnv->pGameFramework && gEnv->pGame )
                 {
-                    // Unregister listeners
-                    if ( gEnv && gEnv->pGameFramework && gEnv->pGame )
-                    {
-                        gEnv->pGameFramework->UnregisterListener( this );
-                    }
+                    gEnv->pGameFramework->UnregisterListener( this );
+                }
 
-                    if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
-                    {
-                        gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
-                    }
+                if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
+                {
+                    gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
                 }
 
                 // Cleanup all plugins (special case only in manager...)
