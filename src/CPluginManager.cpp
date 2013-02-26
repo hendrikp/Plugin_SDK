@@ -376,10 +376,10 @@ namespace PluginManager
                         gEnv->pConsole->AddCommand( COMMAND_LISTSI, Command_ListStaticInterfaces, VF_NULL, "List all registered static interfaces" );
                         gEnv->pConsole->AddCommand( COMMAND_DUMP, Command_Dump, VF_NULL, "Dump info on a specific plugins" );
                         gEnv->pConsole->AddCommand( COMMAND_DUMPALL, Command_DumpAll, VF_NULL, "Dump info on all plugins" );
-                        gEnv->pConsole->AddCommand( COMMAND_UNLOAD, Command_Unload, VF_NULL, "Unload a specific plugin using its name" );
-                        gEnv->pConsole->AddCommand( COMMAND_UNLOADALL, Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager" );
-                        gEnv->pConsole->AddCommand( COMMAND_RELOAD, Command_Reload, VF_NULL, "Reload a specific plugin using its path" );
-                        gEnv->pConsole->AddCommand( COMMAND_RELOADALL, Command_ReloadAll, VF_NULL, "Reload all plugins" );
+                        gEnv->pConsole->AddCommand( COMMAND_UNLOAD, Command_Unload, VF_NULL, "Unload a specific plugin using its name [DANGEROUS]" );
+                        gEnv->pConsole->AddCommand( COMMAND_UNLOADALL, Command_UnloadAll, VF_NULL, "Unload all plugins with the exception of the plugin manager [DANGEROUS]" );
+                        gEnv->pConsole->AddCommand( COMMAND_RELOAD, Command_Reload, VF_NULL, "Reload a specific plugin using its path [DANGEROUS if already loaded]" );
+                        gEnv->pConsole->AddCommand( COMMAND_RELOADALL, Command_ReloadAll, VF_NULL, "Reload all plugins [DANGEROUS]" );
                         gEnv->pConsole->AddCommand( COMMAND_DELAY, Command_Delay, VF_NULL, "Delays a commands | " COMMAND_DELAY " <filter> <type (1:frames, 2:seconds)> <amount> <commands...>" );
                         gEnv->pConsole->AddCommand( COMMAND_DELAYCANCEL, Command_DelayCancel, VF_NULL, "Delays a commands | " COMMAND_DELAYCANCEL " <filter>" );
                     }
