@@ -1,6 +1,11 @@
 @echo off
+
 :: Build all Plugins and the Game.DLL
 setlocal
+
+:: Determine Version
+cd %~dp0
+call determine_cdkversion.bat
 
 :: Set start time http://stackoverflow.com/questions/739606/how-long-a-batch-file-takes-to-execute
 set t0=%time: =0%
