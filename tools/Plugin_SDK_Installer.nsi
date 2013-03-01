@@ -12,8 +12,8 @@
 ##################################
 XPStyle on
 
-!define VERSIONCDK "3.4.4"
-!define VERSION "1.2.0.0"
+!define VERSIONCDK "3.4.5"
+!define VERSION "1.3.0.0"
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write

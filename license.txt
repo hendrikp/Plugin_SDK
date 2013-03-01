@@ -1,6 +1,6 @@
 Plugin SDK for CryEngine SDK
 ============================
-Copyright (c) 2012, The authors of the Plugin SDK project
+Copyright (c) 2013, The authors of the Plugin SDK project
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without

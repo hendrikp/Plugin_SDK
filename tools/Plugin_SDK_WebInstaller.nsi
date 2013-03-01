@@ -11,7 +11,7 @@
 ##################################
 XPStyle on
 
-!define VERSION "1.0.0.0"
+!define VERSION "1.3.0.0"
 Name "Plugin SDK Webinstaller"
 
 ; The file to write
@@ -75,7 +75,7 @@ SectionGroupEnd
 
 ; Set Fileinfos
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductName" "Plugin SDK Webinstaller"
-VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2012, The authors of the Plugin SDK project"
+VIAddVersionKey /LANG=${LANG_ENGLISH} "LegalCopyright" "Copyright (c) 2013, The authors of the Plugin SDK project"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription" "Plugin SDK Webinstaller"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "FileVersion" "${VERSION}"
 VIAddVersionKey /LANG=${LANG_ENGLISH} "ProductVersion" "${VERSION}"
