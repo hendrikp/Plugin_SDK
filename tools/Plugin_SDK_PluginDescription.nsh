@@ -12,3 +12,4 @@
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_D3D} "Exposes Direct3D 9 and 11 functionality, also access to the renderthread"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_JOYSTICK} "Adds Joystick / Controllers as Flownode Input node"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_CRASH} "Crashes the process and serves as sample plugin"
+!insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_VARIOUS} "Various stuff from tutorials"

@@ -1,3 +1,11 @@
+Plugin SDK 1.3.0 (02.03.2013)
+-----------------------------
+Stable Release for CryEngine 3.4.5 (32/64 bit)
+
+New:
+* Build version scripts (detection of CryEngine version on rebuild)
+* UCS-2 conversions utils
+
 Plugin SDK 1.2.0 (08.02.2013)
 -----------------------------
 Stable Release for CryEngine 3.4.4 (32/64 bit)
