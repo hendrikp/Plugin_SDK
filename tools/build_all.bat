@@ -10,6 +10,18 @@ call determine_cdkversion.bat
 :: Set start time http://stackoverflow.com/questions/739606/how-long-a-batch-file-takes-to-execute
 set t0=%time: =0%
 
+:: Build the Game.DLL (needs to be built first since it is included in Plugin_SDK installer)
+setlocal
+
+cd %~dp0
+call build_game.bat
+if ERRORLEVEL 1 (
+  endlocal
+  goto COMPILE_ERROR
+)
+
+endlocal
+
 :: Build all Plugins
 set FILES="%~dp0..\..\*"
 for /D %%a in (%FILES%) do (
@@ -42,18 +54,6 @@ for /D %%a in (%FILES%) do (
     endlocal
   )
 )
-
-:: Build the Game.DLL
-setlocal
-
-cd %~dp0
-call build_game.bat
-if ERRORLEVEL 1 (
-  endlocal
-  goto COMPILE_ERROR
-)
-
-endlocal
 
 :NO_ERRORS
 color A
