@@ -25,7 +25,7 @@ echo %PLUGINDIR%
 
 :: Definitions for sed usage
 set WRITEOPT=-i
-set SEDCMD= %PSDKTOOLDIR%\sed
+set SEDCMD= %PSDKTOOLDIR%\sed\sed
 
 :: Replace Header Version
 %SEDCMD% %WRITEOPT% -n -r "1h;1!H;${g;s/(const\s*char\*\s*GetVersion\s*\(\s*\)\s*const\s*\{\s*return\s*\")[0-9\.]*(\"\;\s*\}\s*\;)/\1%NEWVERSION%\2/p}" "%PLUGINDIR%\..\src\CPlugin*.h"
@@ -58,6 +58,10 @@ ren "%PLUGINDIR%\..\project\_version.rc" "version.rc"
 :: Replace Installer CDK Version
 %SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSIONCDK\s*\").*(\")/\1%NEWCDKVERSION%\2/g" "%PLUGINDIR%\*_Installer.nsi"
 %SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSIONCDK\s*\").*(\")/\1%NEWCDKVERSION%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi"
+
+:: Replace Installer CDK Version MD5
+%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*CDKMD5\s*\").*(\")/\1%NEWCDKVERSIONMD5%\2/g" "%PLUGINDIR%\*_Installer.nsi"
+%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*CDKMD5\s*\").*(\")/\1%NEWCDKVERSIONMD5%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi"
 
 :: Replace Latest Version
 %SEDCMD% %WRITEOPT% -r "s/(_)[0-9\.]*(\.exe)/\1%NEWVERSION%\2/g" "%PLUGINDIR%\..\latestredist.info"

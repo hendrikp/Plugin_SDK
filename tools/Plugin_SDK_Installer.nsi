@@ -13,6 +13,7 @@
 XPStyle on
 
 !define VERSIONCDK "3.4.5"
+!define CDKMD5 "7f840fa7272825dc819e05209ae3d05a"
 !define VERSION "1.3.0.0"
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
@@ -191,8 +192,8 @@ Function "IsValidCEInstallation"
 
 		; 3.4.0 640E910A60654A0CF91CC827640F7314
 		; 3.4.3 2693B54AECDB7C63361ABB3437E628FA
-		; 3.4.4 43B3E57037F6DF8CF5A4D3568420BF74 <- current
-		StrCmp $0 "43B3E57037F6DF8CF5A4D3568420BF74" hashok
+		; 3.4.4 43B3E57037F6DF8CF5A4D3568420BF74
+		StrCmp $0 "${CDKMD5}" hashok
 			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
 				"This version of CryEngine is not compatible with the pre-built GameDLL$\n\
 				The pre-built GameDLL will be deselected you need to build it yourself."\

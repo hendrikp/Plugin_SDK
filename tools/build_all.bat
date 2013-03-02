@@ -101,4 +101,6 @@ set runtime = %s%.%c%
 echo Started at %t0% Ended at %t%
 echo Ran for %runtime%0 ms
 
+endlocal
+
 pause

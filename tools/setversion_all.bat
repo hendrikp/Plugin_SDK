@@ -1,9 +1,10 @@
 :: This is an built script part of the Plugin SDK
-::@echo off
+@echo off
 
 setlocal
 
 set PSDKTOOLDIR=%~dp0
+set FCIVCMD= %PSDKTOOLDIR%\fciv\fciv
 
 :: Go into Backup directory
 cd %~dp0
@@ -25,6 +26,14 @@ for /f "tokens=1-3 delims=, " %%A in ('%PSDKTOOLDIR%\sigcheck -n -q ""%PSDKTOOLD
   set NEWCDKVERSION=%%~A.%%~B.%%~C
 )
 
+:: Determine CDK Version checksum
+set NEWCDKVERSIONMD5=
+for /f "eol=/" %%A in ('%FCIVCMD% ""%PSDKTOOLDIR%\..\..\..\Bin32\CrySystem.dll""') do (
+  set NEWCDKVERSIONMD5=%%A
+)
+
+echo CryEngine Version %NEWCDKVERSION% (MD5: %NEWCDKVERSIONMD5%)
+
 :: Set versions
 for /f "tokens=1-2 delims=	" %%A in (%PSDKTOOLDIR%\versions.txt) do (
   call "%PSDKTOOLDIR%\setversion.bat" "%%B" "%%A"
@@ -37,5 +46,5 @@ rmdir /S /Q SED_Backups
 
 endlocal
 
-echo Done
+echo Set Version Done
 pause
