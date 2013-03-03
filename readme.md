@@ -11,7 +11,7 @@ Feature Requests/Bug Reports on GitHub:
  
 Video Tutorial Series
 --------------------
-See my video tutorial series on [Plugin Creation on Youtube](http://www.youtube.com/watch?feature=player_embedded&v=W7wHus-bunk)
+See my video tutorial series on [Plugin Creation on Youtube](http://www.youtube.com/watch?v=W7wHus-bunk&list=PL1DcRWGqhCQRIBhLfd9pyfeyH-GZZobkR)
 
 Installation / Integration
 ==========================
