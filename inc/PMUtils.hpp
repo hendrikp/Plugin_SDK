@@ -573,7 +573,7 @@ namespace PluginManager
 
         nLen = sDelimiter.length();
 
-        while ( ( sSource = sSource.find( sDelimiter ) ) != string::npos )
+        while ( ( nStart = sSource.find( sDelimiter ) ) != string::npos )
         {
             vTarget.push_back( sSource.substr( 0, nStart ) );
             sSource.erase( 0, nStart + nLen );
