@@ -710,7 +710,7 @@ namespace PluginManager
         int nPathLen = GetDllDirectory( 0, NULL );
         string sDllDirectory = "";
 
-        if ( nPathLen > 0 )
+        if ( nPathLen > 1 )
         {
             char* sTempPath = new char[nPathLen + 1];
             GetDllDirectory( nPathLen + 1, sTempPath );
@@ -722,6 +722,11 @@ namespace PluginManager
 
         // Load the library and non lazy linked dependencies
         hModule = CryLoadLibrary( sPluginPath );
+
+        if ( !hModule )
+        {
+            LogError( "CryLoadLibrary(%s) OS reports error: %s", SAFESTR( sPluginPath ), SAFESTR( getOSError() ) );
+        }
 
         // Reset the dll directory to old value
         if ( sDllDirectory.length() )
@@ -818,7 +823,7 @@ namespace PluginManager
 
         else
         {
-            LogError( "Path(%s) not found or dependencies not present", SAFESTR( sPluginPath ) );
+            LogError( "Path(%s) not found or dependencies not present or error in DllMain", SAFESTR( sPluginPath ) );
         }
 
         return false;

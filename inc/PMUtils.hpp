@@ -555,32 +555,90 @@ namespace PluginManager
         }
     }
 
-    static int stringExplode( string tear_me, string cut, std::vector<string>& store )
+    /**
+    * @internal
+    * @brief split string into string array
+    * @param sSource string to split
+    * @param sDelimiter delimiter to use
+    * @param[out] vTarget output array
+    * @return success
+    *  @arg else element count
+    */
+    static int stringExplode( string sSource, string sDelimiter, std::vector<string>& vTarget )
     {
-        size_t start = 0;
-        int len = 0;
+        size_t nStart = 0;
+        int nLen = 0;
         int i = 0;
-        store.clear();
+        vTarget.clear();
 
-        len = cut.length();
+        nLen = sDelimiter.length();
 
-        if ( tear_me.find( cut ) == string::npos )
+        while ( ( sSource = sSource.find( sDelimiter ) ) != string::npos )
         {
-            return -1;
-        }
-
-        while ( ( start = tear_me.find( cut ) ) != string::npos )
-        {
-            store.push_back( tear_me.substr( 0, start ) );
-            tear_me.erase( 0, start + len );
+            vTarget.push_back( sSource.substr( 0, nStart ) );
+            sSource.erase( 0, nStart + nLen );
             i++;
         }
 
-        store.push_back( tear_me );
+        vTarget.push_back( sSource );
 
         return i;
     };
 
+    /**
+    * @internal
+    * @brief small helper for getting last OS error text
+    * @return error text
+    */
+    static string getOSError()
+    {
+        string sReturn = "";
+
+        PVOID   sMessage    = NULL;
+        DWORD   nCode       = GetLastError();
+
+        if ( nCode )
+        {
+            FormatMessage(
+                FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS | FORMAT_MESSAGE_ALLOCATE_BUFFER,
+                NULL,
+                nCode,
+                MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT ),
+                ( LPSTR )&sMessage,
+                0,
+                NULL
+            );
+
+            sReturn = sReturn.Format( "%u: %s", unsigned( nCode ), ( LPCSTR )sMessage );
+
+            LocalFree( sMessage );
+        }
+
+        return sReturn;
+    }
+
+    /**
+    * @internal
+    * @brief    convert string to value
+    * @tparam   tDataType datatype of value
+    * @param    value
+    * @return   string
+    */
+    template <typename tDataType>
+    static string ToString( const tDataType& value )
+    {
+        std::ostringstream oss;
+        oss << value;
+        return oss.str();
+    };
+
+    /**
+    * @internal
+    * @brief    convert value to string
+    * @tparam   tDataType datatype of value
+    * @param    string
+    * @return   value
+    */
     template<typename tDataType>
     static tDataType ParseString( const char* c )
     {
