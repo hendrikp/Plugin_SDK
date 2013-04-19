@@ -3,6 +3,6 @@
 1.9.0.0	Plugin_D3D
 1.2.1.0	Plugin_OSC
 1.1.1.0	Plugin_Flite
-1.0.3.0	Plugin_VariousStuff
+1.0.4.0	Plugin_VariousStuff
 1.2.1.0	Plugin_Joystick
 1.2.1.0	Plugin_Crash
