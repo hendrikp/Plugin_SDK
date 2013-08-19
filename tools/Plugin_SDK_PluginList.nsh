@@ -32,6 +32,11 @@ Section /o "Flite" SEC_PLUGIN_FLITE
 	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_Flite/master/latestredist.info" ExecWait "/S /D="
 SectionEnd
 
+Section /o "Animation" SEC_PLUGIN_ANIMATION
+	AddSize 200
+	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_Animation/master/latestredist.info" ExecWait "/S /D="
+SectionEnd
+
 Section /o "D3D" SEC_PLUGIN_D3D
 	AddSize 200
 	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_D3D/master/latestredist.info" ExecWait "/S /D="

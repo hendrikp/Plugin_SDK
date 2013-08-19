@@ -9,6 +9,7 @@
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_VIDEOPLAYER_SAMPLES} "Usage Samples for Designers and Developers"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_OSC} "Open Sound Control protocol support for integrating external applications / sound hardware"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_FLITE} "Provides Text to Speech Commands and Flownodes"
+!insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_ANIMATION} "Provides Lipsync and bone control, recommended in combination with Flite"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_D3D} "Exposes Direct3D 9 and 11 functionality, also access to the renderthread"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_JOYSTICK} "Adds Joystick / Controllers as Flownode Input node"
 !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGIN_CRASH} "Crashes the process and serves as sample plugin"
