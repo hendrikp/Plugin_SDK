@@ -74,7 +74,7 @@ namespace PluginManager
                     {
                         IFlowSystem* pFlow = NULL;
 
-                        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() && gEnv->pGameFramework && ( pFlow = gEnv->pGameFramework->GetIFlowSystem() ) )
+                        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() && gEnv->pGame && gEnv->pGame->GetIGameFramework() && ( pFlow = gEnv->pGame->GetIGameFramework()->GetIFlowSystem() ) )
                         {
                             if ( !bUnregister )
                             {

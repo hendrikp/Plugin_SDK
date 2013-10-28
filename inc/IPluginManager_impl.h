@@ -55,7 +55,8 @@ namespace PluginManager
                 if ( iface )
                 {
                     char buildVersion[MAX_PATH];
-                    startupParams.pSystem->GetBuildVersion().ToShortString( buildVersion );
+                    const SFileVersion& buildVer = startupParams.pSystem->GetBuildVersion();
+                    sprintf( buildVersion, "%d.%d.%d", buildVer.v[3], buildVer.v[2], buildVer.v[1] );
 
                     if ( iface->Check( buildVersion ) )
                     {
