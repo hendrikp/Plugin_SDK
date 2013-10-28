@@ -2,6 +2,12 @@
 
 #pragma once
 
+#if defined(XENON) || defined(PS3)
+#define MAX_PLAYER_LIMIT 12
+#else
+#define MAX_PLAYER_LIMIT 16
+#endif
+
 // Insert your headers here
 #include <platform.h>
 #include <algorithm>
