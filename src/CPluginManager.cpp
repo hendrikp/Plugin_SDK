@@ -235,9 +235,9 @@ namespace PluginManager
             if ( bRet )
             {
                 // Unregister listeners
-                if ( gEnv && gEnv->pSystem && gEnv->pGameFramework && gEnv->pGame )
+                if ( gEnv && gEnv->pSystem && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
                 {
-                    gEnv->pGameFramework->UnregisterListener( this );
+                    gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
                 }
 
                 if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
@@ -328,9 +328,9 @@ namespace PluginManager
             if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() )
             {
                 // Register Listeners
-                if ( gEnv && gEnv->pGameFramework )
+                if ( gEnv && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
                 {
-                    gEnv->pGameFramework->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
+                    gEnv->pGame->GetIGameFramework()->RegisterListener( this, PLUGIN_NAME, FRAMEWORKLISTENERPRIORITY_DEFAULT );
                 }
 
                 if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
@@ -400,7 +400,7 @@ namespace PluginManager
                 }
 
                 // Lua functionality
-                if ( gEnv->pGameFramework && ( enFactoryType == FT_All || enFactoryType == FT_None ) )
+                if ( gEnv->pGame && gEnv->pGame->GetIGameFramework() && ( enFactoryType == FT_All || enFactoryType == FT_None ) )
                 {
                     if ( !bUnregister )
                     {
