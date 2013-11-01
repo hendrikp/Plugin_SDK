@@ -1,3 +1,7 @@
+Plugin SDK 1.4.0 (??.11.2013)
+-----------------------------
+Stable Release for CryEngine 3.5.4 (32/64 bit)
+
 Plugin SDK 1.3.0 (02.03.2013)
 -----------------------------
 Stable Release for CryEngine 3.4.5 (32/64 bit)

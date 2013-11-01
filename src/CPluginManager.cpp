@@ -330,7 +330,7 @@ namespace PluginManager
                 // Register Listeners
                 if ( gEnv && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
                 {
-                    gEnv->pGame->GetIGameFramework()->RegisterListener( this, PLUGIN_NAME, FRAMEWORKLISTENERPRIORITY_DEFAULT );
+                    gEnv->pGame->GetIGameFramework()->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
                 }
 
                 if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )

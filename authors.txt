@@ -1,5 +1,6 @@
 Hendrik Polczynski <hendrikpolczyn at gmail dot com>
 Raphael "MrHankey89" Leiteritz < ? at ? dot com>
+Nick - Coherent Labs (http://coherent-labs.com/)
 Filip "i59" Lundgren <filip at inkdev dot net>
 Lavizh - Vascotia Studios - Plugin SDK Logo
 
