@@ -50,8 +50,9 @@
 #if CDK_VERSION >= 350
 #define eFLPriority_Default FRAMEWORKLISTENERPRIORITY_DEFAULT
 
-#define gEnv->pGameFramework (gEnv->pGame?gEnv->pGame->GetIGameFramework():NULL)
-
+#ifndef MAX_PLAYER_LIMIT
 #include <ICrysis3Lobby.h>
 #define MAX_PLAYER_LIMIT DETAILED_SESSION_MAX_PLAYERS
+#endif
+
 #endif

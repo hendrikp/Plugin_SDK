@@ -2,10 +2,10 @@
 
 #pragma once
 
+#include <IPluginBase.h>
 #include <Game.h>
 
 #include <IPluginManager.h>
-#include <IPluginBase.h>
 #include <CPluginBase.hpp>
 
 #include <IPlugin[!output PROJECT_NAME_SAFE].h>
