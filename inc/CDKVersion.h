@@ -49,6 +49,7 @@
 
 #if CDK_VERSION >= 350
 #define eFLPriority_Default FRAMEWORKLISTENERPRIORITY_DEFAULT
+#define eFLPriority_Menu FRAMEWORKLISTENERPRIORITY_MENU
 
 #ifndef MAX_PLAYER_LIMIT
 #include <ICrysis3Lobby.h>
