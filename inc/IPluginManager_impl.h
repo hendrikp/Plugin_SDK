@@ -63,7 +63,11 @@ namespace PluginManager
                         // plugin link library found
                         if ( !iface->IsInitialized() ) // Initialize plugins in order
                         {
+#if defined(SYS_ENV_AS_STRUCT)
+                            if ( !iface->Init( gEnv, startupParams, NULL, NULL ) )
+#else
                             if ( !iface->Init( *gEnv, startupParams, NULL, NULL ) )
+#endif
                             {
                                 CryLogAlways( "[" PLUGIN_TEXT "_" PLUGIN_MANAGER "] Init failed" );
                             }
