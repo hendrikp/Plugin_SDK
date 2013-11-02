@@ -64,6 +64,7 @@ namespace PluginManager
                         if ( !iface->IsInitialized() ) // Initialize plugins in order
                         {
 #if defined(SYS_ENV_AS_STRUCT)
+
                             if ( !iface->Init( gEnv, startupParams, NULL, NULL ) )
 #else
                             if ( !iface->Init( *gEnv, startupParams, NULL, NULL ) )
