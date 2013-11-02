@@ -38,8 +38,20 @@
 
 /* make some defines for backward/forward compatibility */
 #if CDK_VERSION < 344 || CDK_VERSION >= 350
-#define InputPortConfig_Null() {0} //!< End of Input Ports
-#define OutputPortConfig_Null() {0} //!< End of Output Ports
+#include <IFlowSystem.h>
+ILINE SOutputPortConfig OutputPortConfig_Null()
+{
+    ScopedSwitchToGlobalHeap useGlobalHeap;
+    SOutputPortConfig result = {NULL, NULL, NULL, 0};
+    return result;
+}
+
+ILINE SInputPortConfig InputPortConfig_Null()
+{
+    ScopedSwitchToGlobalHeap useGlobalHeap;
+    SInputPortConfig result = {NULL, NULL, NULL, NULL, TFlowInputData( 0, false )};
+    return result;
+}
 #endif
 
 #if CDK_VERSION < 340
