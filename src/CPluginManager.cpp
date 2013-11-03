@@ -540,6 +540,11 @@ namespace PluginManager
                 LogAlways( "System Shutdown detected, unloading all plugins!" );
                 UnloadAllPlugins();
                 OnPostUpdate( 0 ); // call our gc
+
+#if CDK_VERSION >= 350 // In new CDK version gEnv is already invalid in destructor
+                Release( true );
+                gPluginManager = NULL;
+#endif
             }
         }
     }
