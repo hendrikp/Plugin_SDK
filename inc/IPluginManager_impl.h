@@ -8,6 +8,12 @@
 PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer inside game dll
 #endif
 
+#if defined(__GAMESTARTUP_H__)
+SSystemInitParams* gStartupParams = NULL; //!< Global startup params
+#elif defined(__GAME_H__)
+extern SSystemInitParams* gStartupParams;
+#endif
+
 /**
 * @brief Provide a macro to realize WinProc injector with minimal modifications
 */
@@ -29,6 +35,8 @@ PluginManager::IPluginManager* gPluginManager = NULL; //!< Global plugin manager
 
 namespace PluginManager
 {
+
+
     /**
     * @brief Initialize the Plugin Manager
     * This code must be called once in the game dll GameStartup
@@ -137,6 +145,21 @@ namespace PluginManager
         return false; // Failure
     }
 
+    static void RememberStartupParams( SSystemInitParams& startupParams )
+    {
+        gStartupParams = &startupParams;
+    }
+
+    static bool InitPluginManager( const char* sBaseInterfaceVersion = NULL, const char* sConcreteInterfaceVersion = NULL )
+    {
+        if ( gStartupParams )
+        {
+            return InitPluginManager( *gStartupParams, sBaseInterfaceVersion, sConcreteInterfaceVersion );
+        }
+
+        return false;
+    }
+
     /**
     * @brief Initialize plugins before the framework
     * Only sensible if the plugin has no game objects and flownodes.
@@ -153,6 +176,7 @@ namespace PluginManager
             gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_CVar );
             gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_CVarCommand );
             gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_GameObjectExtension );
+            gPluginManager->RegisterTypesPluginRange( IM_BeforeFramework, IM_BeforeFramework_3, FT_UIEvent );
         }
     }
 
@@ -169,6 +193,7 @@ namespace PluginManager
             gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_CVar );
             gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_CVarCommand );
             gPluginManager->RegisterTypesPluginRange( IM_Last, IM_Last_3, FT_GameObjectExtension );
+            // UI Events cant be registered at this point
 
             if ( gEnv && gEnv->pConsole )
             {

@@ -36,6 +36,7 @@ namespace PluginManager
         FT_GameObjectExtension = 2, //!< For Game Object Classes
         FT_CVar = 3, //!< For CVars
         FT_CVarCommand = 4, //!< For Console Commands
+        FT_UIEvent = 5, //!< For UI Events
         FT_All = 99, //! For all Types affected at once
         // To be extended once needed
     };
