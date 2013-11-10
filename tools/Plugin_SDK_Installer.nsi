@@ -12,9 +12,9 @@
 ##################################
 XPStyle on
 
-!define VERSIONCDK "3.4.5"
-!define CDKMD5 "7f840fa7272825dc819e05209ae3d05a"
-!define VERSION "1.3.0.0"
+!define VERSIONCDK "3.5.4"
+!define CDKMD5 "a5d9c04ddb33d5b351adc5e5ddd2f40c"
+!define VERSION "1.4.0.0"
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write
@@ -97,22 +97,37 @@ SectionGroup "Redistributable" SEC_BIN
 
     Section "Prebuilt GameDLL" SEC_CRYGAME
         SetOutPath "$INSTDIR\Bin32"
-        File "${FILES_ROOT}\..\..\Bin32\CryGame.dll"
+        File "${FILES_ROOT}\..\..\Bin32\CryGameSDK.dll"
 
         SetOutPath "$INSTDIR\Bin64"
-        File "${FILES_ROOT}\..\..\Bin64\CryGame.dll"
+        File "${FILES_ROOT}\..\..\Bin64\CryGameSDK.dll"
     SectionEnd
 SectionGroupEnd
 
-
 SectionGroup "Developer Tools" SEC_DEV
-    Section "VS2010 Wizard" SEC_WIZ
+    Section "Include files" SEC_HEADERS
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\project"
+        File "${FILES_ROOT}\project\Plugin_Settings.props"
+        
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\inc"
+        File /r "${FILES_ROOT}\inc\"
+    SectionEnd
+    
+    Section "Build tools" SEC_BUILDTOOLS
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\project"
+        File "${FILES_ROOT}\project\Plugin_Settings.props"
+        
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\tools"
+        File /r "${FILES_ROOT}\tools\"
+    SectionEnd
+
+    Section "VS2010 Wizard" SEC_WIZ_2010
         SetOutPath "$DOCUMENTS\Visual Studio 2010\Wizards\PluginWizard"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsz"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsdir"
         File "${FILES_ROOT}\wizard\vc10\PluginWizard.ico"
         
-		; Set Wizard install location
+	; Set Wizard install location
         Push C:\cryengine3_3.4.0 #text to be replaced
         Push $INSTDIR #replace with
         Push all #replace all occurrences
@@ -122,12 +137,30 @@ SectionGroup "Developer Tools" SEC_DEV
 
         SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc10"
         File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+    SectionEnd
+    
+    Section "VS2012 Wizard" SEC_WIZ_2012
+        SetOutPath "$DOCUMENTS\Visual Studio 2012\Wizards\PluginWizard"
+        File "${FILES_ROOT}\wizard\vc12\PluginWizard.vsz"
+        File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsdir"
+        File "${FILES_ROOT}\wizard\vc10\PluginWizard.ico"
         
-        SetOutPath "$INSTDIR\Code\Plugin_SDK\project"
-        File "${FILES_ROOT}\project\Plugin_Settings.props"
-        
-        SetOutPath "$INSTDIR\Code\Plugin_SDK\inc"
-        File /r "${FILES_ROOT}\inc\"
+	; Set Wizard install location
+        Push C:\cryengine3_3.4.0 #text to be replaced
+        Push $INSTDIR #replace with
+        Push all #replace all occurrences
+        Push all #replace all occurrences
+        Push "$DOCUMENTS\Visual Studio 2012\Wizards\PluginWizard\PluginWizard.vsz" #file to replace in
+        Call AdvReplaceInFile
+
+	; Reuse VS2010 stuff
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc12"
+        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+	
+	; Now overwrite with VS2012 overrides
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc12"
+        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc12\"
+	
     SectionEnd
 SectionGroupEnd
 
@@ -147,7 +180,10 @@ SectionGroupEnd
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_PLUGINMANAGER} "The Plugin Manger automatically loads all Plugins and must be integrated in the GameDLL."
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_CRYGAME} "Pre-built GameDLL with pre-integrated Plugin SDK.$\nWARNING! This will overwrite the existing GameDLL."
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_DEV} "Install optional Developer components."
-        !insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ} "The Wizard for Visual Studio 2010 allows fast and easy creation of new Plugin projects."
+	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_HEADERS} "The include/header files required to built plugins."
+	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_BUILDTOOLS} "The build tools helping to build plugins."
+        !insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ_2010} "The Wizard for Visual Studio 2010 allows fast and easy creation of new Plugin projects."
+	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ_2012} "The Wizard for Visual Studio 2012 allows fast and easy creation of new Plugin projects."
 	!include "Plugin_SDK_PluginDescription.nsh"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 
@@ -193,6 +229,7 @@ Function "IsValidCEInstallation"
 		; 3.4.0 640E910A60654A0CF91CC827640F7314
 		; 3.4.3 2693B54AECDB7C63361ABB3437E628FA
 		; 3.4.4 43B3E57037F6DF8CF5A4D3568420BF74
+		; 3.4.5 7f840fa7272825dc819e05209ae3d05a
 		StrCmp $0 "${CDKMD5}" hashok
 			MessageBox MB_OKCANCEL|MB_ICONEXCLAMATION|MB_TOPMOST|MB_SETFOREGROUND \
 				"This version of CryEngine is not compatible with the pre-built GameDLL$\n\

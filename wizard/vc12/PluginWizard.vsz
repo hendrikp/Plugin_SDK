@@ -1,0 +1,6 @@
+VSWIZARD 7.0
+Wizard=VsWizard.VsWizardEngine.11.0
+
+Param="WIZARD_NAME = PluginWizard"
+Param="ABSOLUTE_PATH = C:\cryengine3_3.4.0\Code\Plugin_SDK\wizard\vc12"
+Param="FALLBACK_LCID = 1033"
