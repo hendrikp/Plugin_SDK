@@ -1,4 +1,4 @@
-1.4.0.0	Plugin_SDK
+2.0.0.0	Plugin_SDK
 2.0.0.0	Plugin_Videoplayer
 2.0.0.0	Plugin_D3D
 1.2.2.0	Plugin_OSC

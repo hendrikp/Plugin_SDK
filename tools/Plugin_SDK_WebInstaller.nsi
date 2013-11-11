@@ -11,7 +11,7 @@
 ##################################
 XPStyle on
 
-!define VERSION "1.4.0.0"
+!define VERSION "2.0.0.0"
 Name "Plugin SDK Webinstaller"
 
 ; The file to write

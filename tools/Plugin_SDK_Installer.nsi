@@ -14,7 +14,7 @@ XPStyle on
 
 !define VERSIONCDK "3.5.4"
 !define CDKMD5 "a5d9c04ddb33d5b351adc5e5ddd2f40c"
-!define VERSION "1.4.0.0"
+!define VERSION "2.0.0.0"
 Name "Plugin SDK ${VERSION} for CryEngine ${VERSIONCDK}"
 
 ; The file to write
@@ -119,6 +119,9 @@ SectionGroup "Developer Tools" SEC_DEV
         
         SetOutPath "$INSTDIR\Code\Plugin_SDK\tools"
         File /r "${FILES_ROOT}\tools\"
+	
+	SetOutPath "$INSTDIR\Code\Plugin_SDK\images"
+        File /r "${FILES_ROOT}\images\"
     SectionEnd
 
     Section "VS2010 Wizard" SEC_WIZ_2010
@@ -136,7 +139,10 @@ SectionGroup "Developer Tools" SEC_DEV
         Call AdvReplaceInFile
 
         SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc10"
-        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+        File /r /x PluginWizard.* /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+    
+	SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc10\Images"
+        File "${FILES_ROOT}\wizard\vc10\Images\PluginWizard.gif"
     SectionEnd
     
     Section "VS2012 Wizard" SEC_WIZ_2012
@@ -155,12 +161,40 @@ SectionGroup "Developer Tools" SEC_DEV
 
 	; Reuse VS2010 stuff
         SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc12"
-        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+        File /r /x PluginWizard.* /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
+	
+	SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc12\Images"
+        File "${FILES_ROOT}\wizard\vc10\Images\PluginWizard.gif"
 	
 	; Now overwrite with VS2012 overrides
         SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc12"
-        File /r /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc12\"
+        File /r /x PluginWizard.* /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc12\"
+    SectionEnd
+    
+    Section "VS2013 Wizard" SEC_WIZ_2013
+        SetOutPath "$DOCUMENTS\Visual Studio 2013\Wizards\PluginWizard"
+        File "${FILES_ROOT}\wizard\vc13\PluginWizard.vsz"
+        File "${FILES_ROOT}\wizard\vc10\PluginWizard.vsdir"
+        File "${FILES_ROOT}\wizard\vc10\PluginWizard.ico"
+        
+	; Set Wizard install location
+        Push C:\cryengine3_3.4.0 #text to be replaced
+        Push $INSTDIR #replace with
+        Push all #replace all occurrences
+        Push all #replace all occurrences
+        Push "$DOCUMENTS\Visual Studio 2013\Wizards\PluginWizard\PluginWizard.vsz" #file to replace in
+        Call AdvReplaceInFile
+
+	; Reuse VS2010 stuff
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc13"
+        File /r /x PluginWizard.* /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc10\"
 	
+	SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc13\Images"
+        File "${FILES_ROOT}\wizard\vc10\Images\PluginWizard.gif"
+	
+	; Now overwrite with VS2013 overrides
+        SetOutPath "$INSTDIR\Code\Plugin_SDK\wizard\vc13"
+        File /r /x PluginWizard.* /x *.sdf /x *.aps /x *.suo /x *.user /x Release /x Debug /x x64 "${FILES_ROOT}\wizard\vc13\"
     SectionEnd
 SectionGroupEnd
 
@@ -184,6 +218,7 @@ SectionGroupEnd
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_BUILDTOOLS} "The build tools helping to build plugins."
         !insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ_2010} "The Wizard for Visual Studio 2010 allows fast and easy creation of new Plugin projects."
 	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ_2012} "The Wizard for Visual Studio 2012 allows fast and easy creation of new Plugin projects."
+	!insertmacro MUI_DESCRIPTION_TEXT ${SEC_WIZ_2013} "The Wizard for Visual Studio 2013 allows fast and easy creation of new Plugin projects."
 	!include "Plugin_SDK_PluginDescription.nsh"
 !insertmacro MUI_FUNCTION_DESCRIPTION_END
 

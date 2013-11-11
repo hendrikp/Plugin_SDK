@@ -202,7 +202,7 @@ namespace PluginManager
 
             const char* GetVersion() const
             {
-                return "1.4.0.0";
+                return "2.0.0.0";
             };
 
             const char* GetName() const
