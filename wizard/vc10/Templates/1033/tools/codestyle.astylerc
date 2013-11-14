@@ -3,12 +3,14 @@
 --indent-cases
 --indent-namespaces
 --indent-classes
---indent-preprocessor
+--indent-preproc-define
 --indent-col1-comments
+--indent-modifiers
 --max-instatement-indent=40
 --break-blocks=all
 --pad-oper
 --pad-header
+--unpad-paren
 --pad-paren-in
 --add-brackets
 --align-pointer=type
@@ -18,3 +20,4 @@
 --lineend=windows
 --mode=c
 --suffix=none
+--close-templates

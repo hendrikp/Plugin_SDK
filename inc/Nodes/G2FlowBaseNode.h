@@ -258,7 +258,7 @@ class CFlowBaseNodeInternal : public IFlowNode
             }
 
             SFlowNodeConfig config;
-            const_cast<CFlowBaseNodeInternal*> ( this )->GetConfiguration( config );
+            const_cast<CFlowBaseNodeInternal*>( this )->GetConfiguration( config );
             GameWarning( "CFlowBaseNodeInternal::GetPortBool: Node=%p Port=%d '%s' Tag=%d -> Not a bool tag!", this, nPort,
                          config.pInputPorts[nPort].name,
                          pActInfo->pInputPorts[nPort].GetTag() );
@@ -298,9 +298,9 @@ class CFlowBaseNodeInternal : public IFlowNode
                 return *p_x;
             }
 
-            const static string empty ( "" );
+            const static string empty( "" );
             SFlowNodeConfig config;
-            const_cast<CFlowBaseNodeInternal*> ( this )->GetConfiguration( config );
+            const_cast<CFlowBaseNodeInternal*>( this )->GetConfiguration( config );
             GameWarning( "CFlowBaseNodeInternal::GetPortString: Node=%p Port=%d '%s' Tag=%d -> Not a string tag!", this, nPort,
                          config.pInputPorts[nPort].name,
                          pActInfo->pInputPorts[nPort].GetTag() );

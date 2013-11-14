@@ -1,17 +1,21 @@
-@echo off
+@echo OFF
 
-cmd /C "_stylehelper.bat ..\src cpp" 2>NUL
-cmd /C "_stylehelper.bat ..\src h" 2>NUL
-cmd /C "_stylehelper.bat ..\src hpp" 2>NUL
-cmd /C "_stylehelper.bat ..\src c" 2>NUL
-cmd /C "_stylehelper.bat ..\src cc" 2>NUL
-cmd /C "_stylehelper.bat ..\src inc" 2>NUL
+set ASTYLE=%~dp0AStyle\AStyle.exe
+set APROFILE=%~dp0codestyle.astylerc
 
-cmd /C "_stylehelper.bat ..\inc cpp" 2>NUL
-cmd /C "_stylehelper.bat ..\inc h" 2>NUL
-cmd /C "_stylehelper.bat ..\inc hpp" 2>NUL
-cmd /C "_stylehelper.bat ..\inc c" 2>NUL
-cmd /C "_stylehelper.bat ..\inc cc" 2>NUL
-cmd /C "_stylehelper.bat ..\inc inc" 2>NUL
+:: Use a personal style or a style suitable for source control / team?
+if not (%~1)==() (
+  set APROFILE=%~1
+)
 
-pause
+:: Now indent the files
+
+set EXTENSIONS=h hpp c cc cpp
+
+for %%i in (%EXTENSIONS%) do (
+  "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\src\*.%%i 2> nul
+  "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\inc\*.%%i 2> nul
+  "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\wizard\*.%%i 2> nul
+)
+
+exit /B 0

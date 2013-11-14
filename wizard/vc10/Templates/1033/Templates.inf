@@ -10,8 +10,9 @@ CPluginSample.h
 IPluginSample.h
 resource.h
 version.rc
-tools\_astyle.exe
-tools\_stylehelper.bat
+tools\AStyle\AStyle.exe
+tools\AStyle\license.html
+tools\AStyle\styles.css
 tools\build.bat
 tools\codestyle.astylerc
 tools\stylecode.bat

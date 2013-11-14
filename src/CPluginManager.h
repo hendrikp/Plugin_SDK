@@ -248,11 +248,11 @@ namespace PluginManager
 
             bool ReloadPlugin( const char* sPluginPath, bool bInitialize = false );
 
-            bool InitializePlugin(  const char* sPluginName );
+            bool InitializePlugin( const char* sPluginName );
 
             void InitializePluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max );
 
-            bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false  );
+            bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false );
 
             IPluginBase* GetPluginByName( const char* sPluginName ) const;
 
@@ -286,7 +286,7 @@ namespace PluginManager
 
             void* GetStaticInterface( const char* sName, const char* sVersion = NULL ) const;
 
-            void RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion = NULL );
+            void RegisterStaticInterface( void* pInterface, const char* sName, const char* sVersion = NULL );
 
             // Directory information functions
 #if defined(WIN_INTERCEPTORS)

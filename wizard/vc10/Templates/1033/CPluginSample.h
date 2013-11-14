@@ -69,7 +69,7 @@ namespace [!output PROJECT_NAME_SAFE]Plugin
 
             void* GetConcreteInterface( const char* sInterfaceVersion )
             {
-                return static_cast < IPlugin[!output PROJECT_NAME_SAFE]* > ( this );
+                return static_cast < IPlugin[!output PROJECT_NAME_SAFE]* >( this );
             };
 
             // IPlugin[!output PROJECT_NAME_SAFE]

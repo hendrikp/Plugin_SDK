@@ -583,7 +583,7 @@ namespace PluginManager
             // this worked very well for all of my plugins in all cases (quit in main menu, quit in level and quit using the menu or X)
         }
 
-        else if (  m_UnloadingPlugins.size() )
+        else if ( m_UnloadingPlugins.size() )
         {
             bool bUnloadedSomething = false;
 
@@ -894,7 +894,7 @@ namespace PluginManager
 
                 if ( iface && iface->GetInitializationMode() == nMode && !iface->IsInitialized() ) // Initialize plugins in order
                 {
-                    if ( !iface->Init( *gEnv, gStartupInitParams, GetBase(), pluginIter->second.m_sDirectory  ) )
+                    if ( !iface->Init( *gEnv, gStartupInitParams, GetBase(), pluginIter->second.m_sDirectory ) )
                     {
                         LogError( "Init failed: Name(%s)", SAFESTR( iface->GetName() ) );
                     }
@@ -1056,7 +1056,7 @@ namespace PluginManager
         return NULL;
     }
 
-    void CPluginManager::RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion )
+    void CPluginManager::RegisterStaticInterface( void* pInterface, const char* sName, const char* sVersion )
     {
         if ( !sName || !pInterface )
         {

@@ -185,7 +185,7 @@ namespace PluginManager
         * @param sVersion of the interface to retrieve
         *  @arg NULL current version/doesn't matter
         */
-        virtual void RegisterStaticInterface ( void* pInterface, const char* sName, const char* sVersion = NULL ) = 0;
+        virtual void RegisterStaticInterface( void* pInterface, const char* sName, const char* sVersion = NULL ) = 0;
 
 #if defined(WIN_INTERCEPTORS)
         /**
@@ -289,7 +289,7 @@ namespace PluginManager
         * @param bUnregister Set to true if types should be unregistered (most types can't be unregistered atm, but maybe it'll be possible in the future)
         * @return success
         */
-        virtual bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false  ) = 0;
+        virtual bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false ) = 0;
     };
 }
 

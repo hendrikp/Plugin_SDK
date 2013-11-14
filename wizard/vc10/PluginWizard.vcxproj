@@ -109,7 +109,6 @@
     <None Include="Templates\1033\tools\codestyle.astylerc" />
     <None Include="Templates\1033\tools\Sample_Installer.nsi" />
     <None Include="Templates\1033\tools\stylecode.bat" />
-    <None Include="Templates\1033\tools\_stylehelper.bat" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Templates\1033\CPluginSample.h" />

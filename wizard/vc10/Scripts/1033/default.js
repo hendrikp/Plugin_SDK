@@ -175,7 +175,7 @@ function AddFilters(proj)
         group = proj.Object.AddFilter("Flownodes");
 
         group = proj.Object.AddFilter("Tools");
-        group.Filter = "exe;bat;astylerc";
+        group.Filter = "bat;astylerc";
 
         group = proj.Object.AddFilter("Installer");
         group.Filter = "nsi;nsh";
@@ -308,15 +308,18 @@ function GetTargetName(strName, strProjectName)
         if (strName == "StdAfx.h")
             strTarget = "..\\src\\" + strName;
 
-        if (strName == "tools\\_astyle.exe")
-            strTarget = "..\\" + strName;
-
-        if (strName == "tools\\_stylehelper.bat")
-            strTarget = "..\\" + strName;
-
         if (strName == "tools\\build.bat")
             strTarget = "..\\" + strName;
-
+	    
+        if (strName == "tools\\AStyle\\AStyle.exe")
+            strTarget = "..\\" + strName;
+	    
+        if (strName == "tools\\AStyle\\license.html")
+            strTarget = "..\\" + strName;
+	    
+        if (strName == "tools\\AStyle\\styles.css")
+            strTarget = "..\\" + strName;
+	    
         if (strName == "tools\\codestyle.astylerc")
             strTarget = "..\\" + strName;
 
@@ -368,7 +371,10 @@ function AddFilesToCustomProj(proj, strProjectName, strProjectPath, InfFile)
 
                 var projFilters = proj.Object.Filters;
                 // Filter / add
-                if (strFile.indexOf('resource.h') !== -1) 
+                if (strFile.indexOf('tools\\AStyle') !== -1) 
+                {      
+			// dont add Astyle tool itself to project
+		} else if (strFile.indexOf('resource.h') !== -1) 
                 {      
                     var filterRc = projFilters.Item("Resource Files");
                     filterRc.AddFile(strFile);

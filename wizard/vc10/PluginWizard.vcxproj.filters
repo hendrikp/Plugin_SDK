@@ -77,9 +77,6 @@
     <None Include="Templates\1033\default.vcxproj">
       <Filter>Template Files\Project</Filter>
     </None>
-    <None Include="Templates\1033\tools\_stylehelper.bat">
-      <Filter>Template Files\Tools</Filter>
-    </None>
     <None Include="Templates\1033\tools\build.bat">
       <Filter>Template Files\Tools</Filter>
     </None>

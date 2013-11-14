@@ -190,7 +190,7 @@ namespace PluginManager
         char* pUtf8Buffer = new char[nUtf8Length];
         WideCharToMultiByte( CP_UTF8, 0, pWideBuffer, nWideLength, pUtf8Buffer, nUtf8Length, NULL, NULL );
 
-        string sUTF8 ( pUtf8Buffer, nUtf8Length );
+        string sUTF8( pUtf8Buffer, nUtf8Length );
         delete [] pWideBuffer;
         delete [] pUtf8Buffer;
 
@@ -262,7 +262,7 @@ namespace PluginManager
         wchar_t* pWideBuffer = new wchar_t[nWideLength];
         MultiByteToWideChar( CP_UTF8, 0, pBuffer, nLength, pWideBuffer, nWideLength );
 
-        wstring sUCS2 ( pWideBuffer, nWideLength );
+        wstring sUCS2( pWideBuffer, nWideLength );
         delete [] pWideBuffer;
 
         return sUCS2;
@@ -525,7 +525,7 @@ namespace PluginManager
     {
         if ( sCommand )
         {
-            delete [] ( const char* )( sCommand );
+            delete []( const char* )( sCommand );
         }
     }
 
