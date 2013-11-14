@@ -15,7 +15,6 @@ set EXTENSIONS=h hpp c cc cpp
 for %%i in (%EXTENSIONS%) do (
   "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\src\*.%%i 2> nul
   "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\inc\*.%%i 2> nul
-  "%ASTYLE%" --options="%APROFILE%" -RnqZ %~dp0..\wizard\*.%%i 2> nul
 )
 
 exit /B 0
