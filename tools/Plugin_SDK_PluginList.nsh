@@ -52,6 +52,11 @@ Section /o "VariousStuff" SEC_PLUGIN_VARIOUS
 	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_VariousStuff/master/latestredist.info" ExecWait "/S /D="
 SectionEnd
 
+Section /o "Camera" SEC_PLUGIN_CAMERA
+	AddSize 500
+	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_Camera/master/latestredist.info" ExecWait "/S /D="
+SectionEnd
+
 Section /o "Crash" SEC_PLUGIN_CRASH
 	AddSize 200
 	!insertmacro DownloadAndExecuteLatestPluginInstaller "https://raw.github.com/hendrikp/Plugin_Crash/master/latestredist.info" ExecWait "/S /D="
