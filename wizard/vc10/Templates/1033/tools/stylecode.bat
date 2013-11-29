@@ -5,12 +5,12 @@ set "APROFILE=%~dp0codestyle.astylerc"
 set "SOURCEDIR=%~dp0.."
 
 :: sourcecode path to indent
-if not (%~1)==() (
+if not ("%~1")==("") (
   set "SOURCEDIR=%~1"
 )
 
 :: use a personal style or a style suitable for source control / team?
-if not (%~2)==() (
+if not ("%~2")==("") (
   if exist "%~2" (
     set "APROFILE=%~2"
   )
