@@ -2,6 +2,8 @@ Plugin SDK for CryEngine
 ========================
 Purpose of the Plugin SDK is to automatically load Plugins without modifying the GameDll. Developers can use the Wizard to save time when setting up Plugin projects.
 
+If you want to support my endeavours please feel free to pre-order a copy of [Miscreated](http://miscreatedgame.com/buy) an multiplayer, post-apocalyptic, survival-based sandbox game created using CRYENGINE.
+
 Available Plugins
 -----------------
 * See [Wiki: Plugin SDK](https://github.com/hendrikp/Plugin_SDK/wiki)
