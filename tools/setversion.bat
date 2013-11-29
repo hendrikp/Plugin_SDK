@@ -49,19 +49,19 @@ ren "%PLUGINDIR%\..\project\_version.rc" "version.rc"
 %SEDCMD% %WRITEOPT% -r "0,/(\s*Copyright\s*\(c\)\s*)[0-9]{4}/s//\1%NEWYEAR%/" "%PLUGINDIR%\..\license.txt"
 
 %SEDCMD% %WRITEOPT% -r "s/(\s*Copyright\s*\(c\)\s*)[0-9]{4}/\1%NEWYEAR%/g" "%PLUGINDIR%\*_Installer.nsi"
-%SEDCMD% %WRITEOPT% -r "s/(\s*Copyright\s*\(c\)\s*)[0-9]{4}/\1%NEWYEAR%/g" "%PLUGINDIR%\*_WebInstaller.nsi"
+%SEDCMD% %WRITEOPT% -r "s/(\s*Copyright\s*\(c\)\s*)[0-9]{4}/\1%NEWYEAR%/g" "%PLUGINDIR%\*_WebInstaller.nsi" 2> nul
 
 :: Replace Installer Version
 %SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSION\s*\").*(\")/\1%NEWVERSION%\2/g" "%PLUGINDIR%\*_Installer.nsi"
-%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSION\s*\").*(\")/\1%NEWVERSION%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi"
+%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSION\s*\").*(\")/\1%NEWVERSION%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi" 2> nul
 
 :: Replace Installer CDK Version
 %SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSIONCDK\s*\").*(\")/\1%NEWCDKVERSION%\2/g" "%PLUGINDIR%\*_Installer.nsi"
-%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSIONCDK\s*\").*(\")/\1%NEWCDKVERSION%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi"
+%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*VERSIONCDK\s*\").*(\")/\1%NEWCDKVERSION%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi" 2> nul
 
 :: Replace Installer CDK Version MD5
 %SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*CDKMD5\s*\").*(\")/\1%NEWCDKVERSIONMD5%\2/g" "%PLUGINDIR%\*_Installer.nsi"
-%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*CDKMD5\s*\").*(\")/\1%NEWCDKVERSIONMD5%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi"
+%SEDCMD% %WRITEOPT% -r "s/(\s*!define\s*CDKMD5\s*\").*(\")/\1%NEWCDKVERSIONMD5%\2/g" "%PLUGINDIR%\*_WebInstaller.nsi" 2> nul
 
 :: Replace Latest Version
 %SEDCMD% %WRITEOPT% -r "s/(_)[0-9\.]*(\.exe)/\1%NEWVERSION%\2/g" "%PLUGINDIR%\..\latestredist.info"
