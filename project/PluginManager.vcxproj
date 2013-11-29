@@ -125,8 +125,8 @@
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)/../tools/determine_cdkversion.bat
-call $(ProjectDir)/../tools/stylecode.bat</Command>
+      <Command>call "$(ProjectDir)\..\tools\determine_cdkversion.bat"
+call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
       <Message>Indent and Version determination</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -155,8 +155,8 @@ call $(ProjectDir)/../tools/stylecode.bat</Command>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)/../tools/determine_cdkversion.bat
-call $(ProjectDir)/../tools/stylecode.bat</Command>
+      <Command>call "$(ProjectDir)\..\tools\determine_cdkversion.bat"
+call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
       <Message>Indent and Version determination</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -189,8 +189,8 @@ call $(ProjectDir)/../tools/stylecode.bat</Command>
       <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)/../tools/determine_cdkversion.bat
-call $(ProjectDir)/../tools/stylecode.bat</Command>
+      <Command>call "$(ProjectDir)\..\tools\determine_cdkversion.bat"
+call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
       <Message>Indent and Version determination</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -221,8 +221,8 @@ call $(ProjectDir)/../tools/stylecode.bat</Command>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
     </Link>
     <PreBuildEvent>
-      <Command>call $(ProjectDir)/../tools/determine_cdkversion.bat
-call $(ProjectDir)/../tools/stylecode.bat</Command>
+      <Command>call "$(ProjectDir)\..\tools\determine_cdkversion.bat"
+call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
       <Message>Indent and Version determination</Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>

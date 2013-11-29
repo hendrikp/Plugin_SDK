@@ -1,23 +1,32 @@
 :: Set project relevant settings
 
-:: not buildable without solution 
-:: set VCPROJECT="..\..\Game\GameDll\GameDll.vcxproj"
+set "VCPROJECT=%~dp0..\..\Solutions\CryEngine_GameCodeOnly.sln"
+set "VCTOOLS=%VS100COMNTOOLS%..\..\VC\vcvarsall.bat"
 
-set VCPROJECT="..\..\Solutions\CryEngine_GameCodeOnly.sln"
-set VCTOOLS="%VS100COMNTOOLS%..\..\VC\vcvarsall.bat"
+set BUILDCONFIG=Profile
+set BUILDPROJECT=Game\CryGame
+set BUILDACTION=Rebuild
 
-IF EXIST %VCTOOLS% (
+:: new sdk version is using different project name
+
+if exist "%~dp0..\..\GameSDK" (
+  set BUILDPROJECT=Game\CryGameSDK
+)
+
+:: now build the game.dll
+
+if exist %VCTOOLS% (
   :: Compile x86
-  call %VCTOOLS% x86
+  call "%VCTOOLS%" x86
 
-  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Profile
+  MSBuild "%VCPROJECT%" /t:%BUILDPROJECT%:%BUILDACTION% /p:Configuration=%BUILDCONFIG%
   IF ERRORLEVEL 1 GOTO COMPILERROR
 
 
   :: Compile x64
-  call %VCTOOLS% x64
+  call "%VCTOOLS%" x64
 
-  MSBuild %VCPROJECT% /t:Game\CryGame:Rebuild /p:Configuration=Profile
+  MSBuild "%VCPROJECT%" /t:%BUILDPROJECT%:%BUILDACTION% /p:Configuration=%BUILDCONFIG%
   IF ERRORLEVEL 1 GOTO COMPILERROR
 )
 
