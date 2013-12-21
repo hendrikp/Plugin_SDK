@@ -391,13 +391,17 @@ class CFlowBaseNode : public CFlowBaseNodeInternal
         static const int myCloneType = CLONE_TYPE;
 };
 
-#if defined(WIN32)
-// prevent derived classes overriding Clone().
-// NB VC10 uses 'sealed'; VC11 may use 'final'.
-#define FINAL sealed
+// to prevent inheriting from classes or overriding function in derived class
+#ifndef FINAL
+#if defined(WIN32) || defined(XENON) || defined(DURANGO)
+#if _MSC_VER >= 1700
+#define FINAL final
 #else
-// other platforms can ignore
+#define FINAL sealed
+#endif
+#else
 #define FINAL
+#endif
 #endif
 
 // specialization for singleton nodes: Clone() is
@@ -412,7 +416,5 @@ class CFlowBaseNode<eNCT_Singleton> : public CFlowBaseNodeInternal
 
         static const int myCloneType = eNCT_Singleton;
 };
-
-#undef FINAL
 
 #endif
