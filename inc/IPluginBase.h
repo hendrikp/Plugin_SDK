@@ -264,3 +264,79 @@ extern "C"
     */
     DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion = NULL );
 }
+
+/** Now some macros required for entity classes */
+#ifndef REGISTER_GAME_OBJECT_EXTENSION
+
+#define HIDE_FROM_EDITOR(className)																																				\
+{ IEntityClass *pItemClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(className);\
+    pItemClass->SetFlags(pItemClass->GetFlags() | ECLF_INVISIBLE); }																				\
+
+#define REGISTER_EDITOR_VOLUME_CLASS(frameWork, className)                                          \
+{	                                                                                                  \
+    IGameVolumes* pGameVolumes = frameWork->GetIGameVolumesManager();                                 \
+    IGameVolumesEdit* pGameVolumesEdit = pGameVolumes ? pGameVolumes->GetEditorInterface() : NULL;    \
+    if (pGameVolumesEdit != NULL)                                                                     \
+{                                                                                                 \
+    pGameVolumesEdit->RegisterEntityClass( className );                                             \
+}                                                                                                 \
+} 
+
+#define REGISTER_GAME_OBJECT(framework, name, script)\
+{\
+    IEntityClassRegistry::SEntityClassDesc clsDesc;\
+    clsDesc.sName = #name;\
+    clsDesc.sScriptFile = script;\
+struct C##name##Creator : public IGameObjectExtensionCreatorBase\
+{\
+    IGameObjectExtensionPtr Create()\
+{\
+    return ComponentCreate_DeleteWithRelease<C##name>();\
+}\
+    void GetGameObjectExtensionRMIData( void ** ppRMI, size_t * nCount )\
+{\
+    C##name::GetGameObjectExtensionRMIData( ppRMI, nCount );\
+}\
+};\
+    static C##name##Creator _creator;\
+    framework->GetIGameObjectSystem()->RegisterExtension(#name, &_creator, &clsDesc);\
+}
+
+#define REGISTER_GAME_OBJECT_WITH_IMPL(framework, name, impl, script)\
+{\
+    IEntityClassRegistry::SEntityClassDesc clsDesc;\
+    clsDesc.sName = #name;\
+    clsDesc.sScriptFile = script;\
+struct C##name##Creator : public IGameObjectExtensionCreatorBase\
+{\
+    IGameObjectExtensionPtr Create()\
+{\
+    return ComponentCreate_DeleteWithRelease<C##impl>();\
+}\
+    void GetGameObjectExtensionRMIData( void ** ppRMI, size_t * nCount )\
+{\
+    C##impl::GetGameObjectExtensionRMIData( ppRMI, nCount );\
+}\
+};\
+    static C##name##Creator _creator;\
+    framework->GetIGameObjectSystem()->RegisterExtension(#name, &_creator, &clsDesc);\
+}
+
+#define REGISTER_GAME_OBJECT_EXTENSION(framework, name)\
+{\
+struct C##name##Creator : public IGameObjectExtensionCreatorBase\
+{\
+    IGameObjectExtensionPtr Create()\
+{\
+    return ComponentCreate_DeleteWithRelease<C##name>();\
+}\
+    void GetGameObjectExtensionRMIData( void ** ppRMI, size_t * nCount )\
+{\
+    C##name::GetGameObjectExtensionRMIData( ppRMI, nCount );\
+}\
+};\
+    static C##name##Creator _creator;\
+    framework->GetIGameObjectSystem()->RegisterExtension(#name, &_creator, NULL);\
+}
+
+#endif
