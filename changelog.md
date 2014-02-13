@@ -1,3 +1,11 @@
+Plugin SDK 2.0.1 (x.x.2014)
+-----------------------------
+Stable Release for CryEngine 3.5.X (32/64 bit)
+
+New:
+* Built in support for the GameObjectExtenstion REGISTER macros
+ (custom entity class inside of plugin)
+
 Plugin SDK 2.0.0 (29.11.2013)
 -----------------------------
 Stable Release for CryEngine 3.5.4 (32/64 bit)
