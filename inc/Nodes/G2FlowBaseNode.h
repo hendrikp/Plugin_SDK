@@ -14,8 +14,8 @@ History:
 #ifndef __G2FLOWBASENODE_H__
 #define __G2FLOWBASENODE_H__
 
-#include "Game.h"
 #include <IFlowSystem.h>
+#include <IActorSystem.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Enum used for templating node base class

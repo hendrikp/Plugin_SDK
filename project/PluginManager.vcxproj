@@ -22,7 +22,7 @@
     <ProjectGuid>{90193419-7421-4233-BEBD-148D6566622B}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>PluginManager</RootNamespace>
-    <ProjectName>Manager</ProjectName>
+    <ProjectName>PluginSDK</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -71,28 +71,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin32\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin64\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>

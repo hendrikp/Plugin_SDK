@@ -3,6 +3,7 @@
 #include <StdAfx.h>
 #include <CPluginManager.h>
 #include <PMUtils.hpp>
+#include "CDKVersion.h"
 
 #define COMMAND_LIST        "pm_list"
 #define COMMAND_LISTSI      "pm_listsi"
