@@ -37,8 +37,6 @@ Creating a new plugin
 For plugin dependencies
 -----------------------
 * See [Wiki: Plugin Dependencies](https://github.com/hendrikp/Plugin_SDK/wiki/Plugin-Dependencies)
-* [Plugin_D3D](https://github.com/hendrikp/Plugin_D3D) (See C++ Integration)
-* [Plugin_Videoplayer](https://github.com/hendrikp/Plugin_Videoplayer) (Optionally uses Plugin_D3D)
 
 Building / Compiling
 --------------------
