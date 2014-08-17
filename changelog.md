@@ -1,6 +1,7 @@
-Plugin SDK 2.0.1 (x.x.2014)
+Plugin SDK 2.0.1 (17.08.2014)
 -----------------------------
-Stable Release for CryEngine 3.5.X (32/64 bit)
+Stable Release for CryEngine 3.5.X - 3.6.5+ (32/64 bit)
+There is no binary release it requires compilation.
 
 New:
 * Built in support for the GameObjectExtenstion REGISTER macros
