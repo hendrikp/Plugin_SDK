@@ -303,10 +303,6 @@ namespace PluginManager
             tDelayedCall m_pFuncTriggerCleanup; //!< trigger cleanup function
             void* m_pDataTrigger; //!< data for delay trigger function
 
-        private:
-            CallDelay() {};
-            //CallDelay( CallDelay& copy ) {};
-
         public:
 
             /**
