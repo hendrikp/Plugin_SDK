@@ -3,7 +3,6 @@
 #pragma once
 
 #include <IPluginBase.h>
-#include <Game.h>
 #include <IPluginManager.h>
 
 #if defined(PLUGINMANAGER_EXPORTS)

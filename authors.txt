@@ -1,9 +1,11 @@
 Hendrik Polczynski <hendrikpolczyn at gmail dot com>
-Raphael "MrHankey89" Leiteritz < ? at ? dot com>
+Ivan Hawkes (http://ivan.hawkes.info)
+Sasha "xulture" Petrovich (http://www.allegragames.com)
+Marvin "pampersrocker" Pohl (http://www.MindYourByte.de)
+Raphael "MrHankey89" Leiteritz
 Nick - Coherent Labs (http://coherent-labs.com/)
 Filip "i59" Lundgren <filip at inkdev dot net>
 Lavizh - Vascotia Studios - Plugin SDK Logo
-Ivan Hawkes - AStyle indenter ideas for customization
 
 Special thanks for the idea to the authors of the FGPS:
 Kevin "Cry-Vlok" Kirst <kkirst at gmail dot com>

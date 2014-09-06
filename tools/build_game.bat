@@ -1,7 +1,7 @@
 :: Set project relevant settings
 
 set "VCPROJECT=%~dp0..\..\Solutions\CryEngine_GameCodeOnly.sln"
-set "VCTOOLS=%VS100COMNTOOLS%..\..\VC\vcvarsall.bat"
+set "VCTOOLS=%VS110COMNTOOLS%..\..\VC\vcvarsall.bat"
 
 set BUILDCONFIG=Profile
 set BUILDPROJECT=Game\CryGame

@@ -3,9 +3,7 @@
 #pragma once
 
 #include <IPluginBase.h>
-#include <Game.h>
 #include <map>
-
 #include <IPluginManager.h>
 #include <CPluginBase.hpp>
 #include <CryLibrary.h>

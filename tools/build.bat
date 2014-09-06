@@ -2,7 +2,7 @@
 
 :: Set project relevant settings
 set VCPROJECT="..\project\PluginManager.vcxproj"
-set VCTOOLS="%VS100COMNTOOLS%..\..\VC\vcvarsall.bat"
+set VCTOOLS="%VS110COMNTOOLS%..\..\VC\vcvarsall.bat"
 
 IF EXIST %VCTOOLS% (
   :: Compile x86

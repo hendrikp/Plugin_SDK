@@ -1,3 +1,15 @@
+Plugin SDK 2.0.2 (06.09.2014)
+-----------------------------
+Stable Release for CryEngine 3.6.6+ (32/64 bit)
+There is no binary release it requires compilation.
+
+Changes:
+* Reduced game dependencies
+* Now using Visual Studio 2012 project
+
+Fixes:
+* Debug Build compilable out of the box
+
 Plugin SDK 2.0.1 (17.08.2014)
 -----------------------------
 Stable Release for CryEngine 3.5.X - 3.6.5+ (32/64 bit)

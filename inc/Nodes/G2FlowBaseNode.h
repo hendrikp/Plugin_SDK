@@ -1,3 +1,5 @@
+/* Plugin SDK - for licensing and copyright see license.txt */
+
 /*************************************************************************
 Crytek Source File.
 Copyright (C), Crytek Studios, 2001-2006.
@@ -11,11 +13,12 @@ History:
 - 16:01:2006: Created by Mathieu Pinard
 
 *************************************************************************/
+
 #ifndef __G2FLOWBASENODE_H__
 #define __G2FLOWBASENODE_H__
 
-#include "Game.h"
 #include <IFlowSystem.h>
+#include <IActorSystem.h>
 
 //////////////////////////////////////////////////////////////////////////
 // Enum used for templating node base class
