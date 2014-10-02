@@ -1,3 +1,11 @@
+Plugin SDK 2.1.0 (02.10.2014)
+-----------------------------
+Stable Release for CryEngine 3.6.8+ (32/64 bit)
+
+New:
+* Support for update/delays during editing
+* Included hooking tools
+
 Plugin SDK 2.0.2 (06.09.2014)
 -----------------------------
 Stable Release for CryEngine 3.6.6+ (32/64 bit)

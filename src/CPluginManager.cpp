@@ -4,6 +4,8 @@
 #include <CPluginManager.h>
 #include <PMUtils.hpp>
 
+#include <HookTool.hpp>
+
 #define COMMAND_LIST        "pm_list"
 #define COMMAND_LISTSI      "pm_listsi"
 #define COMMAND_DUMP        "pm_dump"
@@ -222,6 +224,36 @@ namespace PluginManager
         gPluginManager = NULL;
     }
 
+    typedef void ( *updateFunc )( IEntitySystem* );
+    static updateFunc fpoUpdateFunc = nullptr;
+    void __stdcall hookedUpdate( IEntitySystem* THIS )
+    {
+        if ( gEnv->IsEditor() && gEnv->IsEditing() )
+        {
+            gPluginManager->OnPostUpdate( gEnv->pTimer->GetFrameTime() );
+        }
+
+        fpoUpdateFunc( THIS );
+    }
+
+    void hookUpdate( bool bHook )
+    {
+        int nNo = VTableIndex<IEntitySystem>( &IEntitySystem::Update );
+
+        if ( bHook )
+        {
+            void** vt = getVT( gEnv->pEntitySystem );
+            fpoUpdateFunc = ( updateFunc ) vt[nNo];
+            Mhook_SetHook( ( PVOID* )&fpoUpdateFunc, hookedUpdate );
+        }
+
+        else if ( fpoUpdateFunc != nullptr )
+        {
+            Mhook_Unhook( ( PVOID* )&fpoUpdateFunc );
+            fpoUpdateFunc = nullptr;
+        }
+    }
+
     bool CPluginManager::Release( bool bForce )
     {
         bool bRet = true;
@@ -234,6 +266,9 @@ namespace PluginManager
 
             if ( bRet )
             {
+                // Remove update hook
+                hookUpdate( false );
+
                 // Unregister listeners
                 if ( gEnv && gEnv->pSystem && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
                 {
@@ -330,6 +365,7 @@ namespace PluginManager
                 // Register Listeners
                 if ( gEnv && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
                 {
+                    hookUpdate( true );
                     gEnv->pGame->GetIGameFramework()->RegisterListener( this, PLUGIN_NAME, eFLPriority_Default );
                 }
 

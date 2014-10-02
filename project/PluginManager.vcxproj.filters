@@ -10,6 +10,21 @@
     <ClCompile Include="..\src\CPluginManagerModule.cpp">
       <Filter>Source</Filter>
     </ClCompile>
+    <ClCompile Include="..\mhook-lib\mhook.cpp">
+      <Filter>mhook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\disasm-lib\cpu.c">
+      <Filter>mhook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\disasm-lib\disasm.c">
+      <Filter>mhook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\disasm-lib\disasm_x86.c">
+      <Filter>mhook</Filter>
+    </ClCompile>
+    <ClCompile Include="..\disasm-lib\misc.c">
+      <Filter>mhook</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\StdAfx.h">
@@ -44,6 +59,27 @@
     </ClInclude>
     <ClInclude Include="..\inc\CDKVersion.h">
       <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\mhook-lib\mhook.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\disasm-lib\cpu.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\disasm-lib\disasm.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\disasm-lib\disasm_x86.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\disasm-lib\disasm_x86_tables.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\disasm-lib\misc.h">
+      <Filter>mhook</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\HookTool.hpp">
+      <Filter>Source</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,6 +146,9 @@
     </Filter>
     <Filter Include="Installer">
       <UniqueIdentifier>{5c7f2dd5-7db4-4564-95a7-02b191ab4477}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mhook">
+      <UniqueIdentifier>{ebc19540-0816-4d44-841b-eb2f4e83b9bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
