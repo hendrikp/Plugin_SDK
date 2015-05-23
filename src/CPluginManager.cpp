@@ -4,6 +4,7 @@
 #include <CPluginManager.h>
 #include <PMUtils.hpp>
 
+#include <mhook.h>
 #include <HookTool.hpp>
 
 #define COMMAND_LIST        "pm_list"
@@ -270,14 +271,17 @@ namespace PluginManager
                 hookUpdate( false );
 
                 // Unregister listeners
-                if ( gEnv && gEnv->pSystem && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
+                if ( gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) )
                 {
-                    gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
-                }
+                    if ( gEnv->pGame && gEnv->pGame->GetIGameFramework() )
+                    {
+                        gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
+                    }
 
-                if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
-                {
-                    gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
+                    if ( gEnv->pSystem->GetISystemEventDispatcher() )
+                    {
+                        gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
+                    }
                 }
 
                 // Cleanup all plugins (special case only in manager...)
@@ -607,7 +611,17 @@ namespace PluginManager
 
     void CPluginManager::PluginGarbageCollector()
     {
-        bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
+        bool bQuit = false;
+
+        if ( gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) )
+        {
+            bQuit = gEnv->pSystem->IsQuitting();
+        }
+
+        else
+        {
+            bQuit = true;
+        }
 
         // Something to do?
         if ( bQuit )
