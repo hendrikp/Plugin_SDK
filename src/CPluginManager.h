@@ -345,7 +345,7 @@ namespace PluginManager
 }
 
 static PluginManager::CPluginManager* gPluginManager; //!< Global internal Plugin Manager
-
+static HMODULE gOwnModule = NULL;
 static struct SSystemInitParams gStartupInitParams; //!< Global internal CryEngine Startup Init Params (important for Plugin Manager only)
 static string gsSDKInterfaceVersion; //!< Global internal CryEngine SDK Version (important for Plugin Manager only, so he can provide this info to the plugins)
 static string gsBaseInterfaceVersion; //!< Global internal Plugin SDK Base Interface Version (important for Plugin Manager only, so he can provide this info to the plugins)

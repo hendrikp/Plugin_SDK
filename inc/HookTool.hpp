@@ -1,6 +1,8 @@
 /* CE3 Plugin Manager - for licensing and copyright see license.txt */
 #pragma once
 
+#include <CryWindows.h>
+
 // Check memory address access
 const DWORD dwForbiddenArea = PAGE_GUARD | PAGE_NOACCESS;
 const DWORD dwReadRights = PAGE_READONLY | PAGE_READWRITE | PAGE_WRITECOPY | PAGE_EXECUTE_READ | PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY;

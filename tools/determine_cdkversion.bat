@@ -4,7 +4,11 @@
 set "dynheaderfile=%~dp0..\inc\CDKVersion_generated.tmp"
 set "tempvers=%~dp0tempvers.tmp"
 
-"%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\Bin32\CrySystem.dll" > "%tempvers%"
+if exist "%~dp0..\..\..\Bin64\CrySystem.dll" (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\Bin64\CrySystem.dll" > "%tempvers%"
+) else (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\Bin32\CrySystem.dll" > "%tempvers%"
+)
 
 for /f "usebackq tokens=1-3 delims=, " %%A in ("%tempvers%") do (
   echo Plugin SDK detected CryEngine %%~A.%%~B.%%~C
