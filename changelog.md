@@ -1,3 +1,10 @@
+Plugin SDK 2.3.0 (11.10.2015)
+-----------------------------
+Stable Release for CryEngine 3.8.4 (32/64 bit)
+
+New:
+* Verfied 3.8.4 compatibility
+
 Plugin SDK 2.2.0 (11.10.2015)
 -----------------------------
 Stable Release for CryEngine 3.8.3 (32/64 bit)

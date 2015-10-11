@@ -6,8 +6,26 @@ set "tempvers=%~dp0tempvers.tmp"
 
 if exist "%~dp0..\..\..\Bin64\CrySystem.dll" (
   "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\Bin64\CrySystem.dll" > "%tempvers%"
-) else (
+)
+
+if exist "%~dp0..\..\..\Bin32\CrySystem.dll" (
   "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\Bin32\CrySystem.dll" > "%tempvers%"
+)
+
+if exist "%~dp0..\..\..\bin\win_x64_release\CrySystem.dll" (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\bin\win_x64_release\CrySystem.dll" > "%tempvers%"
+)
+
+if exist "%~dp0..\..\..\bin\win_x86_release\CrySystem.dll" (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\bin\win_x86_release\CrySystem.dll" > "%tempvers%"
+)
+
+if exist "%~dp0..\..\..\bin\win_x64\CrySystem.dll" (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\bin\win_x64\CrySystem.dll" > "%tempvers%"
+)
+
+if exist "%~dp0..\..\..\bin\win_x86\CrySystem.dll" (
+  "%~dp0sigcheck.exe" -n -q "%~dp0..\..\..\bin\win_x86\CrySystem.dll" > "%tempvers%"
 )
 
 for /f "usebackq tokens=1-3 delims=, " %%A in ("%tempvers%") do (
