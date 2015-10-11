@@ -317,9 +317,8 @@ namespace PluginManager
         m_sRootDirectory = sCurrentDirectory;
 
         // The binary directory depends on dll type
-
         /*
-		// keep for linux
+        // keep for linux
         m_sBinaryDirectory = sCurrentDirectory;
         m_sBinaryDirectory += PATH_SEPERATOR "Bin";
 

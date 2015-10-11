@@ -12,7 +12,6 @@
 #include <Nodes/G2FlowBaseNode.h>
 #include <CPluginBaseMinimal.hpp>
 #include <PMUtils.hpp>
-#include <HookTool.hpp>
 
 namespace PluginManager
 {

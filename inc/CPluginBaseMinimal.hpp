@@ -10,6 +10,8 @@
 #include <CPluginManager.h>
 #endif
 
+#include <HookTool.hpp>
+
 namespace PluginManager
 {
     /**
