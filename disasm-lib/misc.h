@@ -10,6 +10,8 @@ extern "C" {
 #include <stdarg.h>
 #include <assert.h>
 
+#undef MIN
+#undef MAX
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
 

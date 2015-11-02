@@ -8,7 +8,7 @@
 
 // Needed for some Windows types
 #include <platform.h>
-#if defined(WIN32) || defined(WIN64)
+#if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
 #define WIN_INTERCEPTORS
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -187,34 +187,6 @@ namespace PluginManager
         */
         virtual void RegisterStaticInterface( void* pInterface, const char* sName, const char* sVersion = NULL ) = 0;
 
-#if defined(WIN_INTERCEPTORS)
-        /**
-        * @brief Redirect unprocessed Message to interceptors
-        * Can manipulate the parameters and skip the default implementation.
-        * @return If true doen't process the original WinProc
-        */
-        virtual bool PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const = 0;
-
-        /**
-        * @brief Redirect processed Message to interceptors
-        * Can manipulate the LRESULT.
-        * @param lResult original WinProc LRESULT
-        */
-        virtual LRESULT PostWinProcInterceptor( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT lResult ) const = 0;
-
-        /**
-        * @brief Register a WinProc Message Interceptor
-        * @param pInterceptor Interceptor to register
-        */
-        virtual void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor ) = 0;
-
-        /**
-        * @brief Unregister a WinProc Message Interceptor
-        * @param pInterceptor Interceptor to unregister
-        */
-        virtual void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor ) = 0;
-#endif
-
         /**
         * @brief Delay the call of the function
         * can be used if you don't need full control over delayed execution (the plugin manager will handle it)
@@ -290,6 +262,35 @@ namespace PluginManager
         * @return success
         */
         virtual bool RegisterTypesPluginRange( int nBeginAtMode = IM_Min, int nEndAtMode = IM_Max, int nFactoryType = int( FT_None ), bool bUnregister = false ) = 0;
+
+#if defined(WIN_INTERCEPTORS)
+        /**
+        * @brief Redirect unprocessed Message to interceptors
+        * Can manipulate the parameters and skip the default implementation.
+        * @return If true doen't process the original WinProc
+        */
+        virtual bool PreWinProcInterceptor( HWND& hWnd, UINT& msg, WPARAM& wParam, LPARAM& lParam ) const = 0;
+
+        /**
+        * @brief Redirect processed Message to interceptors
+        * Can manipulate the LRESULT.
+        * @param lResult original WinProc LRESULT
+        */
+        virtual LRESULT PostWinProcInterceptor( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam, LRESULT lResult ) const = 0;
+
+        /**
+        * @brief Register a WinProc Message Interceptor
+        * @param pInterceptor Interceptor to register
+        */
+        virtual void RegisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor ) = 0;
+
+        /**
+        * @brief Unregister a WinProc Message Interceptor
+        * @param pInterceptor Interceptor to unregister
+        */
+        virtual void UnregisterWinProcInterceptor( IPluginWinProcInterceptor* pInterceptor ) = 0;
+#endif
+
     };
 }
 

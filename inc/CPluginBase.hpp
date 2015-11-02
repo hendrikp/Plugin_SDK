@@ -73,7 +73,7 @@ namespace PluginManager
                     {
                         IFlowSystem* pFlow = NULL;
 
-                        if ( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() && gEnv->pGame && gEnv->pGame->GetIGameFramework() && ( pFlow = gEnv->pGame->GetIGameFramework()->GetIFlowSystem() ) )
+                        if ( !IsBadReadPtr( gEnv, sizeof( void* ) ) && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) && !gEnv->pSystem->IsQuitting() && gEnv->pGame && gEnv->pGame->GetIGameFramework() && ( pFlow = gEnv->pGame->GetIGameFramework()->GetIFlowSystem() ) )
                         {
                             if ( !bUnregister )
                             {
@@ -178,7 +178,7 @@ namespace PluginManager
                 strFormat += "] ";
                 strFormat += sFormat;
 
-                if ( gEnv && gEnv->pSystem && gEnv->pLog )
+                if ( gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) && gEnv->pLog )
                 {
                     gEnv->pLog->LogV( nType, strFormat.c_str(), ArgList );
                 }

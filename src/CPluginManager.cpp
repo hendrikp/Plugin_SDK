@@ -4,6 +4,7 @@
 #include <CPluginManager.h>
 #include <PMUtils.hpp>
 
+#include <mhook.h>
 #include <HookTool.hpp>
 
 #define COMMAND_LIST        "pm_list"
@@ -270,14 +271,17 @@ namespace PluginManager
                 hookUpdate( false );
 
                 // Unregister listeners
-                if ( gEnv && gEnv->pSystem && gEnv->pGame && gEnv->pGame->GetIGameFramework() )
+                if ( gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) )
                 {
-                    gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
-                }
+                    if ( gEnv->pGame && gEnv->pGame->GetIGameFramework() )
+                    {
+                        gEnv->pGame->GetIGameFramework()->UnregisterListener( this );
+                    }
 
-                if ( gEnv && gEnv->pSystem && gEnv->pSystem->GetISystemEventDispatcher() )
-                {
-                    gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
+                    if ( gEnv->pSystem->GetISystemEventDispatcher() )
+                    {
+                        gEnv->pSystem->GetISystemEventDispatcher()->RemoveListener( this );
+                    }
                 }
 
                 // Cleanup all plugins (special case only in manager...)
@@ -313,16 +317,30 @@ namespace PluginManager
         m_sRootDirectory = sCurrentDirectory;
 
         // The binary directory depends on dll type
+        /*
+        // keep for linux
         m_sBinaryDirectory = sCurrentDirectory;
         m_sBinaryDirectory += PATH_SEPERATOR "Bin";
 
-#if defined(WIN64)
+        #if defined(WIN64)
         m_sBinaryDirectory += "64";
-#elif defined(WIN32)
+        #elif defined(WIN32)
         m_sBinaryDirectory += "32";
-#else
+        #else
         // Add platforms
-#endif
+        #endif
+
+        if ( gEnv->IsDedicated() )
+        {
+            m_sBinaryDirectory += "_dedicated";
+        } */
+
+        char sDirectory[MAX_PATH];
+        sDirectory[0] = 0;
+        GetModuleFileName( NULL, sDirectory, sizeof( sDirectory ) );
+
+        m_sBinaryDirectory = PathUtil::RemoveSlash( PathUtil::GetPath( sDirectory ) );
+
         // The plugins folders lies within binary directory
         m_sPluginsDirectory = m_sBinaryDirectory + PATH_SEPERATOR + PLUGIN_FOLDER;
 
@@ -607,7 +625,17 @@ namespace PluginManager
 
     void CPluginManager::PluginGarbageCollector()
     {
-        bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
+        bool bQuit = false;
+
+        if ( gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) ) )
+        {
+            bQuit = gEnv->pSystem->IsQuitting();
+        }
+
+        else
+        {
+            bQuit = true;
+        }
 
         // Something to do?
         if ( bQuit )

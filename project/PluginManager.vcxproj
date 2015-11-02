@@ -75,28 +75,28 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\bin\win_$(PlatformTarget)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\bin\win_$(PlatformTarget)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\bin\win_$(PlatformTarget)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)..\..\..\Bin$(PlatformArchitecture)\Plugins\</OutDir>
+    <OutDir>$(ProjectDir)..\..\..\bin\win_$(PlatformTarget)\Plugins\</OutDir>
     <TargetName>Plugin_Manager</TargetName>
     <LocalDebuggerCommand>$(OutDir)\..\Launcher.exe</LocalDebuggerCommand>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
@@ -261,6 +261,7 @@ call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
     <ClInclude Include="..\inc\CDKVersion.h" />
     <ClInclude Include="..\inc\CPluginBase.hpp" />
     <ClInclude Include="..\inc\CPluginBaseMinimal.hpp" />
+    <ClInclude Include="..\inc\HookTool.hpp" />
     <ClInclude Include="..\inc\IPluginBase.h" />
     <ClInclude Include="..\inc\IPluginManager.h" />
     <ClInclude Include="..\inc\IPluginManager_impl.h" />
@@ -268,7 +269,6 @@ call "$(ProjectDir)\..\tools\stylecode.bat" "$(ProjectDir)\.." </Command>
     <ClInclude Include="..\inc\PMUtils.hpp" />
     <ClInclude Include="..\mhook-lib\mhook.h" />
     <ClInclude Include="..\src\CPluginManager.h" />
-    <ClInclude Include="..\src\HookTool.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="..\src\StdAfx.h" />
   </ItemGroup>

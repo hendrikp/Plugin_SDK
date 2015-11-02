@@ -266,6 +266,9 @@ extern "C"
 }
 
 /** Now some macros required for entity classes */
+
+/* This causes a redefinition error when using uber files
+
 #ifndef REGISTER_GAME_OBJECT_EXTENSION
 
 #define HIDE_FROM_EDITOR(className)                                                                                                                                             \
@@ -340,3 +343,5 @@ extern "C"
     }
 
 #endif
+
+*/

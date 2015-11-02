@@ -68,4 +68,12 @@ ILINE SInputPortConfig InputPortConfig_Null()
 #define MAX_PLAYER_LIMIT DETAILED_SESSION_MAX_PLAYERS
 #endif
 
+#ifndef CrySharedLibrayExtension
+#define CrySharedLibrayExtension CrySharedLibraryExtension
+#endif
+
+#ifndef ESYSTEM_EVENT_SHUTDOWN
+#define ESYSTEM_EVENT_SHUTDOWN ESYSTEM_EVENT_FULL_SHUTDOWN
+#endif
+
 #endif

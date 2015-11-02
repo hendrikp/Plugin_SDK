@@ -1,3 +1,30 @@
+Plugin SDK 2.3.0 (11.10.2015)
+-----------------------------
+Stable Release for CryEngine 3.8.4 (32/64 bit)
+
+New:
+* Verfied 3.8.4 compatibility
+
+Plugin SDK 2.2.0 (11.10.2015)
+-----------------------------
+Stable Release for CryEngine 3.8.3 (32/64 bit)
+
+New:
+* Verfied 3.8.3 compatibility
+
+Plugin SDK 2.1.0 (24.05.2015)
+-----------------------------
+Stable Release for CryEngine 3.6.16+ (32/64 bit)
+
+New:
+* Verfied 3.6.16 compatibility
+
+Fixes:
+* Plugins can now detect better if CryENGINE is shutting down
+
+Changes:
+* Hooking tools improved
+
 Plugin SDK 2.1.0 (02.10.2014)
 -----------------------------
 Stable Release for CryEngine 3.6.8+ (32/64 bit)

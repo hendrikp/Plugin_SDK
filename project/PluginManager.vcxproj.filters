@@ -78,8 +78,8 @@
     <ClInclude Include="..\disasm-lib\misc.h">
       <Filter>mhook</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\HookTool.hpp">
-      <Filter>Source</Filter>
+    <ClInclude Include="..\inc\HookTool.hpp">
+      <Filter>Headers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,6 +10,8 @@
 #include <CPluginManager.h>
 #endif
 
+#include <HookTool.hpp>
+
 namespace PluginManager
 {
     /**
@@ -146,7 +148,7 @@ namespace PluginManager
 #pragma warning( disable : 4800 )
             virtual bool RegisterTypes( int nFactoryType, bool bUnregister )
             {
-                return gEnv;
+                return gEnv && !IsBadReadPtr( gEnv, sizeof( void* ) ) && gEnv->pSystem && !IsBadReadPtr( gEnv->pSystem, sizeof( void* ) );
             };
 
             virtual bool CheckDependencies() const
