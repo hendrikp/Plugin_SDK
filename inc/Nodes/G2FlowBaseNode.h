@@ -17,7 +17,12 @@ History:
 #ifndef __G2FLOWBASENODE_H__
 #define __G2FLOWBASENODE_H__
 
+#if USE_NEW_INCLUDE_PATHS
+#include <CryFlowGraph/IFlowSystem.h>
+#else
 #include <IFlowSystem.h>
+#endif
+
 #include <IActorSystem.h>
 
 //////////////////////////////////////////////////////////////////////////

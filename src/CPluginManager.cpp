@@ -716,8 +716,7 @@ namespace PluginManager
 
         _finddata_t fileData;
 
-        intptr_t hFileFind = intptr_t( INVALID_HANDLE_VALUE );
-        int hNextFile = int( INVALID_HANDLE_VALUE );
+        intptr_t hFileFind, hNextFile = intptr_t( INVALID_HANDLE_VALUE );
 
         // CryPak is used because its cross platform not because libraries can actually be in a pak.
         // In fact they shouldn't be since its not supported by CryLoadLibrary
@@ -727,8 +726,8 @@ namespace PluginManager
         //const int nDontMessWithPath = ICryPak::FLAGS_PATH_REAL | ICryPak::FLAGS_NO_LOWCASE | ICryPak::FLAGS_NEVER_IN_PAK | ICryPak::FLAGS_COPY_DEST_ALWAYS;
 
         // findfirst uses utf-8 (who would have guessed :P)
-        for ( hNextFile = hFileFind = pCryPak->FindFirst( ACP2UTF8( sSearchFilter ), &fileData, 0, true );
-                hNextFile != int( INVALID_HANDLE_VALUE );
+        for ( intptr_t hNextFile = hFileFind = pCryPak->FindFirst( ACP2UTF8( sSearchFilter ), &fileData, 0, true );
+                hNextFile != reinterpret_cast<intptr_t>( INVALID_HANDLE_VALUE );
                 hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
         {
             // Don't work with . and ..
@@ -748,7 +747,7 @@ namespace PluginManager
             }
         }
 
-        if ( hFileFind != int( INVALID_HANDLE_VALUE ) )
+        if ( hFileFind != reinterpret_cast<intptr_t>( INVALID_HANDLE_VALUE ) )
         {
             pCryPak->FindClose( hFileFind );
         }

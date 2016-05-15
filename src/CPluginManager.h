@@ -6,7 +6,12 @@
 #include <map>
 #include <IPluginManager.h>
 #include <CPluginBase.hpp>
+
+#if USE_NEW_INCLUDE_PATHS
+#include <CryCore/Platform/CryLibrary.h>
+#else
 #include <CryLibrary.h>
+#endif
 
 #include <PMUtils.hpp>
 

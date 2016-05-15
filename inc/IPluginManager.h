@@ -7,11 +7,20 @@
 #define PLUGIN_MANAGER "Manager"
 
 // Needed for some Windows types
+#if USE_NEW_INCLUDE_PATHS
+#include <CryCore/Platform/platform.h>
+#else
 #include <platform.h>
+#endif
+
 #if defined(WIN32) || defined(WIN64) || defined(_WIN32) || defined(_WIN64)
 #define WIN_INTERCEPTORS
 #define WIN32_LEAN_AND_MEAN
+#if USE_NEW_INCLUDE_PATHS
+#include <CryCore/Platform/CryWindows.h>
+#else
 #include <windows.h>
+#endif
 // get rid of (really) annoying MS defines
 #undef min
 #undef max

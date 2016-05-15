@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Template Files">
+      <UniqueIdentifier>{c76e4347-2111-44ee-9e27-d96000d056a0}</UniqueIdentifier>
+      <Extensions>txt</Extensions>
+    </Filter>
+    <Filter Include="HTML Files">
+      <UniqueIdentifier>{d0a72eed-8711-49b8-969f-86771aebe613}</UniqueIdentifier>
+      <Extensions>htm</Extensions>
+    </Filter>
+    <Filter Include="Image Files">
+      <UniqueIdentifier>{57ca8bed-0b4d-4a85-8534-00dd0a9a962c}</UniqueIdentifier>
+      <Extensions>bmp</Extensions>
+    </Filter>
+    <Filter Include="Script Files">
+      <UniqueIdentifier>{2eb03f9b-1ad7-4c10-b630-970e76fa7b58}</UniqueIdentifier>
+      <Extensions>js</Extensions>
+    </Filter>
+    <Filter Include="Miscellaneous Files">
+      <UniqueIdentifier>{5b70fa67-be4f-423a-8ccd-aab39d16e6fe}</UniqueIdentifier>
+      <Extensions>vsz;vsdir;ico;vcxproj;csproj;css;inf</Extensions>
+    </Filter>
+    <Filter Include="Plugin SDK">
+      <UniqueIdentifier>{235bfed0-a4e4-40a5-8f81-073e1f51dd0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Template Files\Project">
+      <UniqueIdentifier>{88ef566d-406d-4fc7-9f98-619e7776bd1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Template Files\Source Files">
+      <UniqueIdentifier>{4567b31a-0225-4e9b-94ce-d4a3897016eb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Template Files\Headers">
+      <UniqueIdentifier>{a30988a7-1cf3-4e74-ba23-898d9ca4addc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Template Files\Tools">
+      <UniqueIdentifier>{f3581f87-6ba3-493b-b0f4-2a542b952aa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Template Files\Installer">
+      <UniqueIdentifier>{8c025980-4e5c-4cea-a7e5-cd21e860502f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Templates\1033\Templates.inf">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="PluginWizard.vsz">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="Scripts\1033\default.js">
+      <Filter>Script Files</Filter>
+    </None>
+    <None Include="PluginWizard.vsdir">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="PluginWizard.ico">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="HTML\1033\default.htm">
+      <Filter>HTML Files</Filter>
+    </None>
+    <None Include="1033\NewStyles.css">
+      <Filter>Miscellaneous Files</Filter>
+    </None>
+    <None Include="Templates\1033\license.txt">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="Templates\1033\readme.md">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="Templates\1033\authors.txt">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="..\..\project\Plugin_Settings.props">
+      <Filter>Plugin SDK</Filter>
+    </None>
+    <None Include="Templates\1033\default.vcxproj">
+      <Filter>Template Files\Project</Filter>
+    </None>
+    <None Include="Templates\1033\tools\build.bat">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="Templates\1033\tools\codestyle.astylerc">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="Templates\1033\tools\stylecode.bat">
+      <Filter>Template Files\Tools</Filter>
+    </None>
+    <None Include="1033\Images\DottedHori.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="1033\Images\DottedVert.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="Images\PluginWizard.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="Images\PluginWizard_Background.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="1033\Images\spacer.gif">
+      <Filter>Image Files</Filter>
+    </None>
+    <None Include="Templates\1033\changelog.md">
+      <Filter>Template Files</Filter>
+    </None>
+    <None Include="Templates\1033\tools\Sample_Installer.nsi">
+      <Filter>Template Files\Installer</Filter>
+    </None>
+    <None Include="Templates\1033\tools\build_installer.bat">
+      <Filter>Template Files\Installer</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Templates\1033\CPluginSample.h">
+      <Filter>Template Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\IPluginSample.h">
+      <Filter>Template Files\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\resource.h">
+      <Filter>Template Files\Project</Filter>
+    </ClInclude>
+    <ClInclude Include="Templates\1033\StdAfx.h">
+      <Filter>Template Files\Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Templates\1033\CPluginSample.cpp">
+      <Filter>Template Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Templates\1033\CPluginSampleModule.cpp">
+      <Filter>Template Files\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Templates\1033\StdAfx.cpp">
+      <Filter>Template Files\Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Templates\1033\version.rc">
+      <Filter>Template Files\Project</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

@@ -1,7 +1,11 @@
 /* CE3 Plugin Manager - for licensing and copyright see license.txt */
 #pragma once
 
+#if USE_NEW_INCLUDE_PATHS
+#include <CryCore/Platform/CryWindows.h>
+#else
 #include <CryWindows.h>
+#endif
 
 // Check memory address access
 const DWORD dwForbiddenArea = PAGE_GUARD | PAGE_NOACCESS;
