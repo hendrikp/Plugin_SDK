@@ -1,33 +1,23 @@
-/* CE3 Plugin Manager - for licensing and copyright see license.txt */
+/* [!output PROJECT_NAME_SAFE]_Plugin - for licensing and copyright see license.txt */
 
 #include <StdAfx.h>
-#include "CPluginManager.h"
-
-#if USE_NEW_INCLUDE_PATHS
-#include <CryCore/Platform/platform_impl.inl>
-#else
+#include <IPluginManager.h>
+#include "CPlugin[!output PROJECT_NAME_SAFE].h"
 #include <platform_impl.h>
-#endif
-
 #include <Nodes/G2FlowBaseNode.h>
-
-namespace PluginManager
-{
-    CPluginManager* gPluginManager = NULL; //!< Global plugin manager pointer for game link libraries.
-}
 
 extern "C"
 {
     DLL_EXPORT PluginManager::IPluginBase* GetPluginInterface( const char* sInterfaceVersion )
     {
         // This function should not create a new interface class each call.
-        static PluginManager::CPluginManager modulePlugin;
-        gPluginManager = &modulePlugin;
-        gsBaseInterfaceVersion = sInterfaceVersion;
+        static [!output PROJECT_NAME_SAFE]Plugin::CPlugin[!output PROJECT_NAME_SAFE] modulePlugin;
+        [!output PROJECT_NAME_SAFE]Plugin::gPlugin = &modulePlugin;
         return modulePlugin.GetBase();
     }
 }
 
+PluginManager::IPluginManager* gPluginManager = NULL; //!< pointer to plugin manager
 
 // Needed for module specific flow node
 CG2AutoRegFlowNodeBase* CG2AutoRegFlowNodeBase::m_pFirst = 0; //!< pointer to first flownode inside this plugin
@@ -45,11 +35,9 @@ BOOL APIENTRY DllMain( HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReser
     switch ( ul_reason_for_call )
     {
         case DLL_PROCESS_ATTACH:
-            gOwnModule = hModule;
             break;
 
         case DLL_THREAD_ATTACH:
-            gOwnModule = hModule;
             break;
 
         case DLL_THREAD_DETACH:

@@ -4,7 +4,12 @@
 
 #include <IPluginBase.h>
 #include <IPluginManager.h>
+
+#if USE_NEW_INCLUDE_PATHS
+#include <CrySystem/CryVersion.h>
+#else
 #include <CryVersion.h>
+#endif
 
 #if defined(PLUGINMANAGER_EXPORTS)
 #include <CPluginManager.h>

@@ -274,7 +274,7 @@ extern "C"
 #define HIDE_FROM_EDITOR(className)                                                                                                                                             \
     { IEntityClass *pItemClass = gEnv->pEntitySystem->GetClassRegistry()->FindClass(className);\
         pItemClass->SetFlags(pItemClass->GetFlags() | ECLF_INVISIBLE); }                                                                                \
-     
+
 #define REGISTER_EDITOR_VOLUME_CLASS(frameWork, className)                                          \
     {                                                                                                     \
         IGameVolumes* pGameVolumes = frameWork->GetIGameVolumesManager();                                 \
