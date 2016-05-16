@@ -42,7 +42,7 @@ namespace PluginManager
 
     void Command_Dump( IConsoleCmdArgs* pArgs )
     {
-        if ( !gPluginManager && pArgs && pArgs->GetArgCount() > 1 )
+        if ( ( !gPluginManager || !pArgs ) || ( pArgs && pArgs->GetArgCount() > 1 ) )
         {
             return;
         }
@@ -62,7 +62,7 @@ namespace PluginManager
 
     void Command_Unload( IConsoleCmdArgs* pArgs )
     {
-        if ( !gPluginManager && pArgs && pArgs->GetArgCount() > 1 )
+        if ( ( !gPluginManager || !pArgs ) || ( pArgs && pArgs->GetArgCount() > 1 ) )
         {
             return;
         }
@@ -82,7 +82,7 @@ namespace PluginManager
 
     void Command_Reload( IConsoleCmdArgs* pArgs )
     {
-        if ( !gPluginManager && pArgs && pArgs->GetArgCount() > 1 )
+        if ( ( !gPluginManager || !pArgs ) || ( pArgs && pArgs->GetArgCount() > 1 ) )
         {
             return;
         }
@@ -203,7 +203,7 @@ namespace PluginManager
 
             const char* sFilterC = ( sFilter && sFilter[0] ) ? sFilter : "luacode";
 
-            GetDelayQueue().DelayFunction( sFilter, &_DelayedLuaCode, &_CleanupDelayedConsoleCommand, sCmd, fDelay, eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+            GetDelayQueue().DelayFunction( sFilterC, &_DelayedLuaCode, &_CleanupDelayedConsoleCommand, sCmd, fDelay, eDelayType( eType ), pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
         }
     };
 
@@ -244,8 +244,12 @@ namespace PluginManager
         if ( bHook )
         {
             void** vt = getVT( gEnv->pEntitySystem );
-            fpoUpdateFunc = ( updateFunc ) vt[nNo];
-            Mhook_SetHook( ( PVOID* )&fpoUpdateFunc, hookedUpdate );
+
+            if ( vt )
+            {
+                fpoUpdateFunc = ( updateFunc )vt[nNo];
+                Mhook_SetHook( ( PVOID* )&fpoUpdateFunc, hookedUpdate );
+            }
         }
 
         else if ( fpoUpdateFunc != nullptr )
@@ -258,7 +262,6 @@ namespace PluginManager
     bool CPluginManager::Release( bool bForce )
     {
         bool bRet = true;
-        bool bWasInitialized = m_bIsFullyInitialized; // Will be reset by base class so backup
 
         if ( !m_bCanUnload )
         {
@@ -346,26 +349,29 @@ namespace PluginManager
 
         assert( gEnv && gEnv->pCryPak );
 
-        // create plugin directory if it doesn't exist
-        if ( !gEnv->pCryPak->IsFileExist( m_sPluginsDirectory ) )
+        if ( gEnv && gEnv->pCryPak )
         {
-            gEnv->pCryPak->MakeDir( m_sPluginsDirectory );
-        }
+            // create plugin directory if it doesn't exist
+            if ( !gEnv->pCryPak->IsFileExist( m_sPluginsDirectory ) )
+            {
+                gEnv->pCryPak->MakeDir( m_sPluginsDirectory );
+            }
 
-        // User directory depends on various settings so query current setting from crypak
-        m_sUserDirectory = gEnv->pCryPak->GetAlias( "%USER%", false );
+            // User directory depends on various settings so query current setting from crypak
+            m_sUserDirectory = gEnv->pCryPak->GetAlias( "%USER%", false );
 
-        if ( !isAbsolute( m_sUserDirectory ) )
-        {
-            m_sUserDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sUserDirectory;
-        }
+            if ( !isAbsolute( m_sUserDirectory ) )
+            {
+                m_sUserDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sUserDirectory;
+            }
 
-        // The game directory also can be influenced so query current setting from crypak
-        m_sGameDirectory = gEnv->pCryPak->GetGameFolder();
+            // The game directory also can be influenced so query current setting from crypak
+            m_sGameDirectory = gEnv->pCryPak->GetGameFolder();
 
-        if ( !isAbsolute( m_sGameDirectory ) )
-        {
-            m_sGameDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sGameDirectory;
+            if ( !isAbsolute( m_sGameDirectory ) )
+            {
+                m_sGameDirectory = m_sRootDirectory + PATH_SEPERATOR + m_sGameDirectory;
+            }
         }
     };
 
@@ -582,12 +588,13 @@ namespace PluginManager
     // ISystemEventListener
     void CPluginManager::OnSystemEvent( ESystemEvent event, UINT_PTR wparam, UINT_PTR lparam )
     {
-        static bool bQuitOnce = false;
         bool bQuit = !( gEnv && gEnv->pSystem && !gEnv->pSystem->IsQuitting() );
 
         // Detect quit before plugin dlls get unloaded in undefined order
         if ( event == ESYSTEM_EVENT_SHUTDOWN || event == ESYSTEM_EVENT_LEVEL_POST_UNLOAD && bQuit )
         {
+            static bool bQuitOnce = false;
+
             if ( !bQuitOnce )
             {
                 bQuitOnce = true;
@@ -649,7 +656,7 @@ namespace PluginManager
 
         else if ( m_UnloadingPlugins.size() )
         {
-            bool bUnloadedSomething = false;
+            //bool bUnloadedSomething = false;
 
             // Check all plugins marked for unloading if they can now unload
             for ( tPluginNameMap::iterator pluginIter = m_UnloadingPlugins.begin(); pluginIter != m_UnloadingPlugins.end(); ++pluginIter )
@@ -658,7 +665,7 @@ namespace PluginManager
                 {
                     LogAlways( "Garbage Collector Unloading: Name(%s)", SAFESTR( pluginIter->second.m_pBase->GetName() ) );
                     CryFreeLibrary( pluginIter->second.m_hModule );
-                    bUnloadedSomething = true;
+                    //bUnloadedSomething = true;
 
                     // Cleanup the plugin from the unloading plugin container
                     pluginIter = m_UnloadingPlugins.erase( pluginIter );
@@ -685,8 +692,6 @@ namespace PluginManager
 
     void CPluginManager::ReloadAllPlugins()
     {
-        ICryPak* pCryPak = gEnv->pCryPak;
-
         // Load Plugins from the main directory and then also recursively load subdirectories (max depth 1)
         LoadPluginsFromDirectory( m_sPluginsDirectory );
 
@@ -726,7 +731,7 @@ namespace PluginManager
         //const int nDontMessWithPath = ICryPak::FLAGS_PATH_REAL | ICryPak::FLAGS_NO_LOWCASE | ICryPak::FLAGS_NEVER_IN_PAK | ICryPak::FLAGS_COPY_DEST_ALWAYS;
 
         // findfirst uses utf-8 (who would have guessed :P)
-        for ( intptr_t hNextFile = hFileFind = pCryPak->FindFirst( ACP2UTF8( sSearchFilter ), &fileData, 0, true );
+        for ( hNextFile = hFileFind = pCryPak->FindFirst( ACP2UTF8( sSearchFilter ), &fileData, 0, true );
                 hNextFile != reinterpret_cast<intptr_t>( INVALID_HANDLE_VALUE );
                 hNextFile = pCryPak->FindNext( hFileFind, &fileData ) )
         {

@@ -547,7 +547,7 @@ namespace PluginManager
 
             const char* sFilterC = ( sFilter && sFilter[0] ) ? sFilter : "consolecommand";
 
-            qDelayer.DelayFunction( sFilter, &_DelayedConsoleCommand, &_CleanupDelayedConsoleCommand, sCmd, fDelay, eType, pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
+            qDelayer.DelayFunction( sFilterC, &_DelayedConsoleCommand, &_CleanupDelayedConsoleCommand, sCmd, fDelay, eType, pFuncTrigger, pFuncTriggerCleanup, pDataTrigger );
         }
     }
 

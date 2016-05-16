@@ -26,7 +26,7 @@ namespace TODOPlugin
 	    
         public:
 
-            CFlowTODONode( SActivationInfo* pActInfo )
+            explicit CFlowTODONode( SActivationInfo* pActInfo )
             {
             }
 

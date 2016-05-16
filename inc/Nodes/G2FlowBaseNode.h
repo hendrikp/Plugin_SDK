@@ -319,13 +319,13 @@ class CFlowBaseNodeInternal : public IFlowNode
         template <class T>
         void ActivateOutput( SActivationInfo* pActInfo, int nPort, const T& value )
         {
-            SFlowAddress addr( pActInfo->myID, nPort, true );
+            SFlowAddress addr( pActInfo->myID, static_cast<TFlowPortId>( nPort ), true );
             pActInfo->pGraph->ActivatePort( addr, value );
         }
         //////////////////////////////////////////////////////////////////////////
         bool IsOutputConnected( SActivationInfo* pActInfo, int nPort ) const
         {
-            SFlowAddress addr( pActInfo->myID, nPort, true );
+            SFlowAddress addr( pActInfo->myID, static_cast<TFlowPortId>( nPort ), true );
             return pActInfo->pGraph->IsOutputConnected( addr );
         }
         //////////////////////////////////////////////////////////////////////////
